@@ -1,0 +1,33 @@
+stats:
+  name: 'Borge'
+  level: 14
+  hp: 428
+  power: 73.90
+  speed: 4.44
+  regen: 3.07
+  crit_chance: 0.1178
+  crit_damage: 1.42
+  damage_reduction: 0.3494
+  evade_chance: 0.0712
+  effect_chance: 0.195
+
+talents:
+  death_is_my_companion: 2
+  life_of_the_hunt: 0
+  unfair_advantage: 0
+  impeccable_impacts: 10
+  omen_of_defeat: 0
+  call_me_lucky_loot: 2
+  presence_of_god: 0
+  fires_of_war: 0
+
+attributes:
+  soul_of_ares: 1
+  essence_of_ylith: 1
+  helltouch_barrier: 1
+  lifedrain_inhalers: 10
+  spartan_lineage: 1
+  explosive_punches: 0
+  timeless_mastery: 5
+  book_of_baal: 0
+  superior_sensors: 0
