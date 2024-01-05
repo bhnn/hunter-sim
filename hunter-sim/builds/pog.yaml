@@ -1,15 +1,14 @@
 stats:
   name: 'Borge'
-  level: 20
-  hp: 719
+  hp: 722
   power: 71.28
   speed: 4.35
-  regen: 3.58
+  regen: 3.83
   special_chance: 0.1340
   special_damage: 1.50
   damage_reduction: 0.3926
   evade_chance: 0.0916
-  effect_chance: 0.22
+  effect_chance: 0.2250
 
 talents:
   death_is_my_companion: 2
@@ -17,7 +16,7 @@ talents:
   unfair_advantage: 0
   impeccable_impacts: 0
   omen_of_defeat: 0
-  call_me_lucky_loot: 3
+  call_me_lucky_loot: 4
   presence_of_god: 15
   fires_of_war: 0
 
