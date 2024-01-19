@@ -230,12 +230,15 @@ class Borge(Hunter):
         return round(
             (
                 42
-                + (self.base_stats["hp"] * (2.53 + 0.01 * (self.base_stats["hp"] // 5)))
                 + (self.inscryptions["i3"] * 6)
                 + (self.inscryptions["i27"] * 24)
             )
+            + 
+            (
+                + (self.base_stats["hp"] * (2.53 + 0.01 * (self.base_stats["hp"] // 5)))
+            )
             * (1 + (self.attributes["soul_of_ares"] * 0.01))
-        )
+        , 2)
 
     @max_hp.setter
     def max_hp(self, value: float) -> None:
