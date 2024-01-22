@@ -23,6 +23,8 @@ class Unit:
         self.total_crits: int = 0
         self.total_kills: int = 0
 
+        self.sim_queue_entry: tuple = None
+
         # either 0 or 1e-10, 0 gives an extra tick at the start, 1e-10 causes issues if your elapsed time hits a full integer along the way
         # since regen at max health doesnt do anything, 0 might be better
         self.elapsed_time: float = 0
@@ -38,30 +40,41 @@ class Unit:
             return ((self.speed - self.stun_duration) + self.stun_duration * 2)
         return self.speed
 
-    def receive_damage(self, _, damage: float) -> None:
+    def receive_damage(self, _, damage: float, __: bool) -> float:
         """Receive damage from an attack.
 
         Args:
             _ (NoneType): Child classes use this to pass in the attacker to apply damage reflection.
             damage (float): The amount of damage to receive. Child classes have ways to mitigate this damage.
+            __ (bool): Child classes use this to handle on-crit behaviour.
+
+        Returns:
+            float: The amount of damage received.
         """
         self.hp -= damage
         self.stun_duration = 0
-        logging.info(f"[{self.name:>{unit_name_spacing}}]:\tTAKE {damage:.2f} damage, {self.hp:.2f} left")
+        logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tTAKE\t{damage:>6.2f}, {self.hp:.2f} left")
         self.check_death()
+        return damage
+
+    def heal_hp(self, value: float, source: str) -> None:
+        """Applies healing to hp from different sources. Accounts for overhealing.
+
+        Args:
+            value (float): The amount of hp to heal.
+            source (str): The source of the healing. Valid: regen, lifesteal, life_of_the_hunt
+        """
+        effective_value = min(value, self.missing_hp)
+        self.hp += effective_value
+        logging.debug(f'[{self.name:>{unit_name_spacing}}]:\t{source.upper().replace("_", " ")}\t{effective_value:>6.2f}')
+        if source.casefold() == 'regen'.casefold():
+            self.total_regen += effective_value
 
     def regen_hp(self) -> None:
         """Regenerates hp according to the regen stat.
         """
         regen_value = self.regen
-        if (self.hp + regen_value) <= self.max_hp:
-            self.hp += regen_value
-            self.total_regen += regen_value
-            logging.info(f'[{self.name:>{unit_name_spacing}}]:\tREGEN {regen_value:.2f} hp')
-        else:
-            logging.info(f'[{self.name:>{unit_name_spacing}}]:\tREGEN {self.max_hp - self.hp:.2f} hp (full)')
-            self.total_regen += (self.max_hp - self.hp)
-            self.hp = self.max_hp
+        self.heal_hp(regen_value, 'regen')
 
     def stun(self, duration: float) -> None:
         """Apply a stun to the unit.
@@ -83,7 +96,7 @@ class Unit:
         """Check if the unit is dead and log it if it is.
         """
         if self.is_dead():
-            logging.info(f'[{self.name:>{unit_name_spacing}}]:\tDIED')
+            logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tDIED')
 
     @property
     def name(self) -> str:
@@ -171,21 +184,27 @@ class Crit_Unit(Unit):
         self.special_chance: float = special_chance
         self.special_damage: float = special_damage
 
-    def attack(self, target: Unit) -> None:
+    def attack(self, target: Unit) -> float:
         """Attack a target unit.
 
         Args:
             target (Unit): The unit to attack.
+
+        Returns:
+            float: The amount of damage dealt.
         """
         if random.random() < self.special_chance: # basic critical attack for extra damage
             damage = self.power * self.special_damage
             self.total_crits += 1
-            logging.info(f"[{self.name:>{unit_name_spacing}}]:\tATTACK {damage:.2f} (crit)")
+            is_crit = True
+            logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tATTACK\t{damage:>6.2f} (crit)")
         else:
             damage = self.power
-            logging.info(f"[{self.name:>{unit_name_spacing}}]:\tATTACK {damage:.2f} damage")
+            is_crit = False
+            logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tATTACK\t{damage:>6.2f}")
         self.total_damage += damage
-        target.receive_damage(self, damage)
+        target.receive_damage(self, damage, is_crit)
+        return damage
 
     @property
     def special_chance(self) -> float:
@@ -211,22 +230,23 @@ class Defence_Unit(Crit_Unit):
         self.damage_reduction: float = damage_reduction
         self.evade_chance: float = evade_chance
 
-    def receive_damage(self, _, damage) -> float:
+    def receive_damage(self, _, damage, is_crit: bool) -> float:
         """Receive damage from an attack. Accounts for damage reduction and evade chance.
 
         Args:
             _ (NoneType): The unit that is attacking. Used by child classes to apply damage reflection.
             damage (float): The amount of damage to receive.
+            is_crit (bool): Child classes use this to handle on-crit behaviour.
 
         Returns:
             float: The amount of damage received after damage reduction, or 0 if the attack was evaded.
         """
         if random.random() < self.evade_chance:
-            logging.info(f'[{self.name:>{unit_name_spacing}}]:\tEVADE')
+            logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tEVADE')
             return 0
         else:
             final_damage = damage * (1 - self.damage_reduction)
-            super().receive_damage(None, final_damage)
+            super(Defence_Unit, self).receive_damage(None, final_damage, is_crit)
             return final_damage
 
     @property
@@ -256,10 +276,22 @@ class Boss(Defence_Unit):
     """
     def __init__(self, name: str, hp: float, power: float, speed: float, regen: float, special_chance: float, special_damage: float, damage_reduction: float, evade_chance: float) -> None:
         super(Boss, self).__init__(name=name, hp=hp, power=power, speed=speed, regen=regen, special_chance=special_chance, special_damage=special_damage, damage_reduction=damage_reduction, evade_chance=evade_chance)
+        self.enrage_stacks = 0
+
+    def get_speed(self) -> float:
+        """Returns the speed of the unit, taking into account stun duration and enrage stacks. Enrage stacks are limited to 199 to maintain speed of >0.
+
+        Returns:
+            float: The speed of the unit.
+        """
+        # boss attack speed increases by 0.0475 every attack
+        return (self.speed - 0.0475 * min(self.enrage_stacks, 199)) + self.stun_duration
 
     def attack(self, target: Unit) -> None:
-        super().attack(target)
-        self.speed -= 0.0475 # boss attack speed increases by 0.0475 every attack
+        super(Boss, self).attack(target)
+        self.enrage_stacks += 1
+        logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tENRAGE\t{self.enrage_stacks:>6.2f} stacks")
+
 
 class Void:
     @staticmethod
@@ -273,7 +305,7 @@ class Void:
                     (4.53   - (stage * 0.006)),
                     (0.00   + ((stage - 1) * 0.08) if stage > 1 else 0) + ((stage // 100) * 0.42),
                     (0.0322 + (stage * 0.0004)),
-                    (1.21   + (stage * 0.008)),
+                    (1.21   + (stage * 0.008025)),
                     (0),
                     (0      + ((stage // 100) * 0.0004)),
                 ]
