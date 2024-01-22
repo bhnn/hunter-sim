@@ -1,0 +1,2702 @@
+
+Entering STAGE 100
+[  Borge]:	[HP:   870.57/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 36810.0/36810.0] [AP: 263.18] [Speed: 9.50] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	[PRESENCE OF A GOD] 30%
+[E100  1]:	[HP: 25767.0/36810.0] [AP: 263.18] [Speed: 9.50] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 25546.98 left
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 25326.95 left
+[E100  1]:	STUNNED	   0.50 sec
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 25326.09 left
+[E100  1]:	ENRAGE	   1.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:25326.09/36810.0] [AP: 263.18] [Speed: 9.45] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.04
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 25241.69 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.63
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.57
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.50
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.44
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 25172.50 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   7.36
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 752.36 left
+[E100  1]:	TAKE	   0.86, 25186.85 left
+[E100  1]:	ENRAGE	   2.00 stacks
+[  Borge]:	[HP:   752.36/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:25186.85/36810.0] [AP: 263.18] [Speed: 9.40] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.21
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.14
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 25087.24 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.73
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.67
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.60
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.54
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 24867.21 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   7.43
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	TAKE	  87.28, 770.06 left
+[E100  1]:	TAKE	   0.66, 24881.76 left
+[E100  1]:	ENRAGE	   3.00 stacks
+[  Borge]:	[HP:   770.06/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:24881.76/36810.0] [AP: 263.18] [Speed: 9.36] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.07
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 24631.32 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   7.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.82
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.76
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.70
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 24411.29 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   7.59
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 724.44 left
+[E100  1]:	TAKE	   0.86, 24425.64 left
+[E100  1]:	ENRAGE	   4.00 stacks
+[  Borge]:	[HP:   724.44/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:24425.64/36810.0] [AP: 263.18] [Speed: 9.31] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.43
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.37
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 24326.03 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   8.28
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.21
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.14
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.08
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 24256.84 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   7.99
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 674.42 left
+[E100  1]:	TAKE	   0.86, 24271.19 left
+[E100  1]:	ENRAGE	   5.00 stacks
+[  Borge]:	[HP:   674.42/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:24271.19/36810.0] [AP: 263.18] [Speed: 9.26] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.83
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.76
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 24020.74 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   8.64
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.57
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.50
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.43
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 23800.72 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   8.32
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 634.02 left
+[E100  1]:	TAKE	   0.86, 23815.07 left
+[E100  1]:	ENRAGE	   6.00 stacks
+[  Borge]:	[HP:   634.02/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:23815.07/36810.0] [AP: 263.18] [Speed: 9.21] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   9.16
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.08
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 23564.62 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	   8.25
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.18
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.12
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.05
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 23495.43 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   7.96
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 677.54 left
+[E100  1]:	TAKE	   0.86, 23509.78 left
+[E100  1]:	ENRAGE	   7.00 stacks
+[  Borge]:	[HP:   677.54/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:23509.78/36810.0] [AP: 263.18] [Speed: 9.17] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.81
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.74
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 23410.17 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   8.32
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.25
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.18
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.12
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 23340.98 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.70
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	   8.00 stacks
+[  Borge]:	[HP:   823.85/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:23356.19/36810.0] [AP: 263.18] [Speed: 9.62] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   7.64
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.58
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 23256.58 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   7.49
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.43
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.37
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   6.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 23036.56 left
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 23050.90 left
+[E100  1]:	ENRAGE	   9.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 23050.9/36810.0] [AP: 263.18] [Speed: 9.07] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 22951.29 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.69
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.63
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.57
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.51
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 22731.27 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   7.39
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	TAKE	  87.28, 774.44 left
+[E100  1]:	TAKE	   0.66, 22745.82 left
+[E100  1]:	ENRAGE	  10.00 stacks
+[  Borge]:	[HP:   774.44/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:22745.82/36810.0] [AP: 263.18] [Speed: 9.03] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.03
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.97
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 22495.37 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  73.57
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 22275.35 left
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 22289.70 left
+[E100  1]:	ENRAGE	  11.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 22289.7/36810.0] [AP: 263.18] [Speed: 8.98] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 22190.09 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   8.02
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.95
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.83
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 22120.90 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.41
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 745.92 left
+[E100  1]:	TAKE	   0.86, 22135.24 left
+[E100  1]:	ENRAGE	  12.00 stacks
+[  Borge]:	[HP:   745.92/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:22135.24/36810.0] [AP: 263.18] [Speed: 8.93] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.26
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.20
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 21884.80 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	   7.37
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   5.57
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 21815.61 left
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 21829.96 left
+[E100  1]:	ENRAGE	  13.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:21829.96/36810.0] [AP: 263.18] [Speed: 8.88] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 21730.35 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   8.02
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.95
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.83
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 21510.32 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   7.71
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 708.68 left
+[E100  1]:	TAKE	   0.86, 21524.67 left
+[E100  1]:	ENRAGE	  14.00 stacks
+[  Borge]:	[HP:   708.68/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:21524.67/36810.0] [AP: 263.18] [Speed: 8.84] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.56
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.49
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 21274.23 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	   7.66
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.60
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.54
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.48
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 21054.20 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  12.74
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 21068.55 left
+[E100  1]:	ENRAGE	  15.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:21068.55/36810.0] [AP: 263.18] [Speed: 8.79] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 20968.94 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   8.02
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.95
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.83
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 20748.92 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  56.01
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 20763.26 left
+[E100  1]:	ENRAGE	  16.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:20763.26/36810.0] [AP: 263.18] [Speed: 8.74] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 20512.82 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	   2.05
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 20292.80 left
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	TAKE	  87.28, 783.29 left
+[E100  1]:	TAKE	   0.66, 20307.34 left
+[E100  1]:	ENRAGE	  17.00 stacks
+[  Borge]:	[HP:   783.29/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:20307.34/36810.0] [AP: 263.18] [Speed: 8.69] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   7.96
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.90
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 20207.73 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   7.81
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.75
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.69
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.63
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 19987.71 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  30.94
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  18.00 stacks
+[  Borge]:	[HP:   870.57/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:20002.92/36810.0] [AP: 263.18] [Speed: 9.14] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 19903.31 left
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 19834.12 left
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 19848.47 left
+[E100  1]:	ENRAGE	  19.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:19848.47/36810.0] [AP: 263.18] [Speed: 8.60] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 19748.86 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   8.02
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.95
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.83
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 19679.67 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   7.74
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  20.00 stacks
+[  Borge]:	[HP:   818.77/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:19694.88/36810.0] [AP: 263.18] [Speed: 8.55] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   7.68
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.62
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 19595.27 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   7.53
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.47
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.41
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.35
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 19375.24 left
+[  Borge]:	STEAL	   3.69
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 19389.59 left
+[E100  1]:	ENRAGE	  21.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:19389.59/36810.0] [AP: 263.18] [Speed: 8.50] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 19289.98 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.69
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.63
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.57
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.51
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 19069.96 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   7.39
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 748.13 left
+[E100  1]:	TAKE	   0.86, 19084.30 left
+[E100  1]:	ENRAGE	  22.00 stacks
+[  Borge]:	[HP:   748.13/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 19084.3/36810.0] [AP: 263.18] [Speed: 8.46] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.24
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.18
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 18984.69 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   8.09
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.02
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.96
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.90
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 18915.50 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   7.81
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  23.00 stacks
+[  Borge]:	[HP:    810.4/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:18930.71/36810.0] [AP: 263.18] [Speed: 8.91] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   7.75
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.68
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 18680.27 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  38.17
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 18611.08 left
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 18625.43 left
+[E100  1]:	ENRAGE	  24.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:18625.43/36810.0] [AP: 263.18] [Speed: 8.36] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 18525.82 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   8.02
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.95
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.83
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 18456.63 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.41
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 745.92 left
+[E100  1]:	TAKE	   0.86, 18470.98 left
+[E100  1]:	ENRAGE	  25.00 stacks
+[  Borge]:	[HP:   745.92/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:18470.98/36810.0] [AP: 263.18] [Speed: 8.31] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.26
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.20
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 18220.53 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   8.08
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.01
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.95
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 18151.34 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   7.80
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	TAKE	  87.28, 724.42 left
+[E100  1]:	TAKE	   0.66, 18165.89 left
+[E100  1]:	ENRAGE	  26.00 stacks
+[  Borge]:	[HP:   724.42/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:18165.89/36810.0] [AP: 263.18] [Speed: 8.27] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.43
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.37
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 17915.45 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	   7.54
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.48
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.42
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.36
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 17695.42 left
+[  Borge]:	STEAL	   4.30
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 17709.77 left
+[E100  1]:	ENRAGE	  27.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:17709.77/36810.0] [AP: 263.18] [Speed: 8.22] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 17610.16 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.69
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.63
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.57
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.51
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 17540.97 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  19.77
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 17555.32 left
+[E100  1]:	ENRAGE	  28.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:17555.32/36810.0] [AP: 263.18] [Speed: 8.17] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 17455.71 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   8.02
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.95
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.83
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 17235.68 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  56.01
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 17250.03 left
+[E100  1]:	ENRAGE	  29.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:17250.03/36810.0] [AP: 263.18] [Speed: 8.12] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 17150.42 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   8.02
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.95
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.83
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 17081.23 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.41
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	TAKE	  87.28, 772.23 left
+[E100  1]:	TAKE	   0.66, 17095.78 left
+[E100  1]:	ENRAGE	  30.00 stacks
+[  Borge]:	[HP:   772.23/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:17095.78/36810.0] [AP: 263.18] [Speed: 8.07] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.05
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.99
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 16845.33 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  75.74
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 16625.31 left
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  31.00 stacks
+[  Borge]:	[HP:   870.57/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:16640.52/36810.0] [AP: 263.18] [Speed: 8.03] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 16540.91 left
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 16320.89 left
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 16335.23 left
+[E100  1]:	ENRAGE	  32.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:16335.23/36810.0] [AP: 263.18] [Speed: 7.98] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 16235.62 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.69
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.63
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.57
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.51
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 16166.43 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  19.77
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 16165.57 left
+[E100  1]:	ENRAGE	  33.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:16165.57/36810.0] [AP: 263.18] [Speed: 7.93] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.04
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 15930.34 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   7.93
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.86
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.80
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  34.00 stacks
+[  Borge]:	[HP:   811.46/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:15975.97/36810.0] [AP: 263.18] [Speed: 7.88] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   7.74
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 15861.15 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   7.65
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.59
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.53
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.47
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 15641.12 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  11.53
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 15655.47 left
+[E100  1]:	ENRAGE	  35.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:15655.47/36810.0] [AP: 263.18] [Speed: 7.84] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 15555.86 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.69
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.63
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.57
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.51
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 15486.67 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 737.21 left
+[E100  1]:	TAKE	   0.86, 15485.81 left
+[E100  1]:	ENRAGE	  36.00 stacks
+[  Borge]:	[HP:   737.21/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:15485.81/36810.0] [AP: 263.18] [Speed: 7.79] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.33
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.27
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.20
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 15250.57 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   8.08
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.02
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.95
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  37.00 stacks
+[  Borge]:	[HP:   792.62/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 15296.2/36810.0] [AP: 263.18] [Speed: 7.74] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   7.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 15181.38 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   7.80
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.74
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.68
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.62
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 15112.19 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   7.53
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 731.36 left
+[E100  1]:	TAKE	   0.86, 15126.54 left
+[E100  1]:	ENRAGE	  38.00 stacks
+[  Borge]:	[HP:   731.36/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:15126.54/36810.0] [AP: 263.18] [Speed: 7.70] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.38
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.31
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 15026.93 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.83
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.77
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.70
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 14806.91 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  39.00 stacks
+[  Borge]:	[HP:    829.9/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:14806.91/36810.0] [AP: 263.18] [Speed: 8.15] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   7.59
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.53
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.47
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 14571.67 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  11.52
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 14351.65 left
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  40.00 stacks
+[  Borge]:	[HP:   870.57/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:14351.65/36810.0] [AP: 263.18] [Speed: 7.60] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 14116.42 left
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 14161.18 left
+[E100  1]:	ENRAGE	  41.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:14161.18/36810.0] [AP: 263.18] [Speed: 7.55] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 14046.36 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.76
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.69
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.63
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.57
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 13977.17 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  27.62
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 13991.52 left
+[E100  1]:	ENRAGE	  42.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:13991.52/36810.0] [AP: 263.18] [Speed: 7.50] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 13891.91 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   8.02
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.95
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.83
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 13671.89 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  56.01
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  43.00 stacks
+[  Borge]:	[HP:   870.57/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:13671.89/36810.0] [AP: 263.18] [Speed: 7.46] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	EVADE
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	EVADE
+[E100  1]:	ENRAGE	  44.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:13763.15/36810.0] [AP: 263.18] [Speed: 7.41] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 13497.49 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	   7.35
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   2.81
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 13428.30 left
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  45.00 stacks
+[  Borge]:	[HP:   870.57/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:13443.51/36810.0] [AP: 263.18] [Speed: 7.36] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 13343.90 left
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 13123.88 left
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	TAKE	  87.28, 783.29 left
+[E100  1]:	TAKE	   0.66, 13123.22 left
+[E100  1]:	ENRAGE	  46.00 stacks
+[  Borge]:	[HP:   783.29/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:13123.22/36810.0] [AP: 263.18] [Speed: 7.31] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   7.96
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.90
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.84
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 13038.82 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   7.75
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.69
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.63
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 719.50 left
+[E100  1]:	TAKE	   0.86, 13083.58 left
+[E100  1]:	ENRAGE	  47.00 stacks
+[  Borge]:	[HP:    719.5/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:13083.58/36810.0] [AP: 263.18] [Speed: 7.27] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.47
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 12817.93 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   8.35
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.29
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.22
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.15
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 12748.74 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.74
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 705.80 left
+[E100  1]:	TAKE	   0.86, 12763.09 left
+[E100  1]:	ENRAGE	  48.00 stacks
+[  Borge]:	[HP:    705.8/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:12763.09/36810.0] [AP: 263.18] [Speed: 7.22] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.58
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.51
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 12512.64 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   8.39
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.33
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.26
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.19
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 12292.62 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	TAKE	  87.28, 770.61 left
+[E100  1]:	TAKE	   0.66, 12291.96 left
+[E100  1]:	ENRAGE	  49.00 stacks
+[  Borge]:	[HP:   770.61/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:12291.96/36810.0] [AP: 263.18] [Speed: 7.17] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.06
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.94
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 12056.72 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   7.82
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.76
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.70
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 710.86 left
+[E100  1]:	TAKE	   0.86, 12101.49 left
+[E100  1]:	ENRAGE	  50.00 stacks
+[  Borge]:	[HP:   710.86/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:12101.49/36810.0] [AP: 263.18] [Speed: 7.12] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.54
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 11835.84 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   8.42
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.35
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.29
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.22
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 11615.81 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   8.10
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 660.32 left
+[E100  1]:	TAKE	   0.86, 11630.16 left
+[E100  1]:	ENRAGE	  51.00 stacks
+[  Borge]:	[HP:   660.32/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:11630.16/36810.0] [AP: 263.18] [Speed: 7.08] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.95
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.88
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 11530.55 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   8.78
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.71
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.64
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.57
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  52.00 stacks
+[  Borge]:	[HP:   715.89/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:11591.39/36810.0] [AP: 263.18] [Speed: 7.53] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 11461.36 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   8.48
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.41
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.34
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.28
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 11392.17 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.86
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 690.80 left
+[E100  1]:	TAKE	   0.86, 11406.52 left
+[E100  1]:	ENRAGE	  53.00 stacks
+[  Borge]:	[HP:    690.8/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:11406.52/36810.0] [AP: 263.18] [Speed: 6.98] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.70
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.63
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 11156.07 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	   7.80
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.74
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.68
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 713.02 left
+[E100  1]:	TAKE	   0.86, 11200.84 left
+[E100  1]:	ENRAGE	  54.00 stacks
+[  Borge]:	[HP:   713.02/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:11200.84/36810.0] [AP: 263.18] [Speed: 6.94] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.53
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 10935.19 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   8.40
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.34
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.27
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.20
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 10866.00 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 650.78 left
+[E100  1]:	TAKE	   0.86, 10865.13 left
+[E100  1]:	ENRAGE	  55.00 stacks
+[  Borge]:	[HP:   650.78/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:10865.13/36810.0] [AP: 263.18] [Speed: 6.89] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   9.02
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.95
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.88
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 10780.73 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   8.46
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.39
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 624.99 left
+[E100  1]:	TAKE	   0.86, 10810.29 left
+[E100  1]:	ENRAGE	  56.00 stacks
+[  Borge]:	[HP:   624.99/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:10810.29/36810.0] [AP: 263.18] [Speed: 6.84] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   9.23
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 10544.64 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   9.10
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.03
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.96
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 10475.45 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  57.00 stacks
+[  Borge]:	[HP:   720.86/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:10475.45/36810.0] [AP: 263.18] [Speed: 6.79] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.46
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.39
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.33
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 10391.05 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   7.91
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.84
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	TAKE	  87.28, 718.62 left
+[E100  1]:	TAKE	   0.66, 10420.80 left
+[E100  1]:	ENRAGE	  58.00 stacks
+[  Borge]:	[HP:   718.62/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 10420.8/36810.0] [AP: 263.18] [Speed: 6.75] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.48
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 10305.99 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   8.39
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.32
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.25
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.19
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 10085.96 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 744.96 left
+[E100  1]:	TAKE	   0.86, 10085.10 left
+[E100  1]:	ENRAGE	  59.00 stacks
+[  Borge]:	[HP:   744.96/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 10085.1/36810.0] [AP: 263.18] [Speed: 6.70] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.27
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.20
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.14
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 9849.86 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	   5.74
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   0.00
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	TAKE	  87.28, 783.29 left
+[E100  1]:	TAKE	   0.66, 9879.62 left
+[E100  1]:	ENRAGE	  60.00 stacks
+[  Borge]:	[HP:   783.29/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 9879.62/36810.0] [AP: 263.18] [Speed: 6.65] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   7.96
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 9764.80 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   7.88
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.81
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.75
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.69
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 9544.78 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  38.59
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	TAKE	  87.28, 783.29 left
+[E100  1]:	TAKE	   0.66, 9544.11 left
+[E100  1]:	ENRAGE	  61.00 stacks
+[  Borge]:	[HP:   783.29/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 9544.11/36810.0] [AP: 263.18] [Speed: 6.60] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   7.96
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.90
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.84
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 9459.71 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   7.75
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.69
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	TAKE	  87.28, 738.18 left
+[E100  1]:	TAKE	   0.66, 9489.47 left
+[E100  1]:	ENRAGE	  62.00 stacks
+[  Borge]:	[HP:   738.18/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 9489.47/36810.0] [AP: 263.18] [Speed: 6.55] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.32
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 9223.82 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	   7.50
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.44
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.38
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   6.50
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 9003.79 left
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 756.98 left
+[E100  1]:	TAKE	   0.86, 9002.93 left
+[E100  1]:	ENRAGE	  63.00 stacks
+[  Borge]:	[HP:   756.98/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 9002.93/36810.0] [AP: 263.18] [Speed: 6.51] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.04
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 8767.70 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   7.93
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.86
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 690.07 left
+[E100  1]:	TAKE	   0.86, 8797.25 left
+[E100  1]:	ENRAGE	  64.00 stacks
+[  Borge]:	[HP:   690.07/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 8797.25/36810.0] [AP: 263.18] [Speed: 6.46] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.71
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 8531.60 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   8.59
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.52
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.45
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.38
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 8462.41 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 669.79 left
+[E100  1]:	TAKE	   0.86, 8461.55 left
+[E100  1]:	ENRAGE	  65.00 stacks
+[  Borge]:	[HP:   669.79/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 8461.55/36810.0] [AP: 263.18] [Speed: 6.41] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.87
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.80
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.73
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 8377.15 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   8.64
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.57
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  66.00 stacks
+[  Borge]:	[HP:   716.43/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 8407.57/36810.0] [AP: 263.18] [Speed: 6.87] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.50
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 8292.75 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   8.08
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.01
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.95
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   7.88
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 8223.56 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 690.40 left
+[E100  1]:	TAKE	   0.86, 8222.69 left
+[E100  1]:	ENRAGE	  67.00 stacks
+[  Borge]:	[HP:    690.4/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 8222.69/36810.0] [AP: 263.18] [Speed: 6.32] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.71
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.64
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.57
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 8138.30 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   8.47
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.41
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 622.65 left
+[E100  1]:	TAKE	   0.86, 8167.85 left
+[E100  1]:	ENRAGE	  68.00 stacks
+[  Borge]:	[HP:   622.65/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 8167.85/36810.0] [AP: 263.18] [Speed: 6.27] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   9.25
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 8053.03 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   8.82
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.75
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.68
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.61
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 7833.01 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 692.53 left
+[E100  1]:	TAKE	   0.86, 7832.15 left
+[E100  1]:	ENRAGE	  69.00 stacks
+[  Borge]:	[HP:   692.53/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 7832.15/36810.0] [AP: 263.18] [Speed: 6.22] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.69
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.62
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.55
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 7747.75 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   8.13
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.06
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	TAKE	  87.28, 691.40 left
+[E100  1]:	TAKE	   0.66, 7777.50 left
+[E100  1]:	ENRAGE	  70.00 stacks
+[  Borge]:	[HP:    691.4/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:  7777.5/36810.0] [AP: 263.18] [Speed: 6.17] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.70
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 7662.68 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   8.28
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.21
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.14
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.08
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 7593.49 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 666.36 left
+[E100  1]:	TAKE	   0.86, 7592.63 left
+[E100  1]:	ENRAGE	  71.00 stacks
+[  Borge]:	[HP:   666.36/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 7592.63/36810.0] [AP: 263.18] [Speed: 6.13] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.90
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.83
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.76
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 7508.23 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   8.66
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.59
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 599.54 left
+[E100  1]:	TAKE	   0.86, 7537.79 left
+[E100  1]:	ENRAGE	  72.00 stacks
+[  Borge]:	[HP:   599.54/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 7537.79/36810.0] [AP: 263.18] [Speed: 6.08] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   9.43
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 7422.97 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   9.33
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.26
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.18
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.11
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 535.31 left
+[E100  1]:	TAKE	   0.86, 7482.94 left
+[E100  1]:	ENRAGE	  73.00 stacks
+[  Borge]:	[HP:   535.31/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 7482.94/36810.0] [AP: 263.18] [Speed: 6.03] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 7352.92 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   9.92
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.84
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.76
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.69
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 7283.73 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   9.58
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 476.60 left
+[E100  1]:	TAKE	   0.86, 7298.07 left
+[E100  1]:	ENRAGE	  74.00 stacks
+[  Borge]:	[HP:    476.6/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 7298.07/36810.0] [AP: 263.18] [Speed: 5.98] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  10.42
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.33
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 7047.63 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	  10.20
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.12
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 410.64 left
+[E100  1]:	TAKE	   0.86, 7077.19 left
+[E100  1]:	ENRAGE	  75.00 stacks
+[  Borge]:	[HP:   410.64/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 7077.19/36810.0] [AP: 263.18] [Speed: 5.94] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  10.94
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 6962.37 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	  10.50
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.42
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.34
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 383.36 left
+[E100  1]:	TAKE	   0.86, 7007.13 left
+[E100  1]:	ENRAGE	  76.00 stacks
+[  Borge]:	[HP:   383.36/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 7007.13/36810.0] [AP: 263.18] [Speed: 5.89] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  11.16
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 6892.31 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	  11.05
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.96
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.87
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 316.85 left
+[E100  1]:	TAKE	   0.86, 6937.08 left
+[E100  1]:	ENRAGE	  77.00 stacks
+[  Borge]:	[HP:   316.85/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 6937.08/36810.0] [AP: 263.18] [Speed: 5.84] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  11.69
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 6671.43 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	  11.55
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.46
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.36
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 255.89 left
+[E100  1]:	TAKE	   0.86, 6716.19 left
+[E100  1]:	ENRAGE	  78.00 stacks
+[  Borge]:	[HP:   255.89/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 6716.19/36810.0] [AP: 263.18] [Speed: 5.79] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.18
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 6450.54 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	  12.03
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.94
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.84
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 196.86 left
+[E100  1]:	TAKE	   0.86, 6495.31 left
+[E100  1]:	ENRAGE	  79.00 stacks
+[  Borge]:	[HP:   196.86/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 6495.31/36810.0] [AP: 263.18] [Speed: 5.75] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.65
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 6380.49 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	  12.53
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.43
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.33
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  80.00 stacks
+[  Borge]:	[HP:   249.84/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 6426.12/36810.0] [AP: 263.18] [Speed: 5.70] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.23
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 6311.30 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	  12.11
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.01
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.92
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 187.56 left
+[E100  1]:	TAKE	   0.86, 6356.06 left
+[E100  1]:	ENRAGE	  81.00 stacks
+[  Borge]:	[HP:   187.56/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 6356.06/36810.0] [AP: 263.18] [Speed: 5.65] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.73
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 6241.24 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	  12.27
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.18
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.08
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 167.33 left
+[E100  1]:	TAKE	   0.86, 6286.01 left
+[E100  1]:	ENRAGE	  82.00 stacks
+[  Borge]:	[HP:   167.33/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 6286.01/36810.0] [AP: 263.18] [Speed: 5.61] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.89
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 6171.19 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	  12.76
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.66
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.56
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  83.00 stacks
+[  Borge]:	[HP:   221.24/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 6216.82/36810.0] [AP: 263.18] [Speed: 5.56] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.46
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 5951.17 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	  12.31
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.21
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.11
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 163.30 left
+[E100  1]:	TAKE	   0.86, 5995.93 left
+[E100  1]:	ENRAGE	  84.00 stacks
+[  Borge]:	[HP:    163.3/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 5995.93/36810.0] [AP: 263.18] [Speed: 5.51] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.92
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 5881.11 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	  12.47
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.37
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.27
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	TAKE	  87.28, 170.14 left
+[E100  1]:	TAKE	   0.66, 5926.08 left
+[E100  1]:	ENRAGE	  85.00 stacks
+[  Borge]:	[HP:   170.14/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 5926.08/36810.0] [AP: 263.18] [Speed: 5.46] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.87
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 5811.26 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	  12.74
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.64
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.54
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	  86.00 stacks
+[  Borge]:	[HP:   223.97/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 5856.89/36810.0] [AP: 263.18] [Speed: 5.42] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.44
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 5591.24 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	  11.58
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.48
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.39
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 252.53 left
+[E100  1]:	TAKE	   0.86, 5636.00 left
+[E100  1]:	ENRAGE	  87.00 stacks
+[  Borge]:	[HP:   252.53/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:  5636.0/36810.0] [AP: 263.18] [Speed: 5.37] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.21
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 5521.18 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	  11.76
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.66
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.57
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 230.24 left
+[E100  1]:	TAKE	   0.86, 5565.95 left
+[E100  1]:	ENRAGE	  88.00 stacks
+[  Borge]:	[HP:   230.24/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 5565.95/36810.0] [AP: 263.18] [Speed: 5.32] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.39
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 5451.13 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	  12.26
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.07
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 168.58 left
+[E100  1]:	TAKE	   0.86, 5495.90 left
+[E100  1]:	ENRAGE	  89.00 stacks
+[  Borge]:	[HP:   168.58/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:  5495.9/36810.0] [AP: 263.18] [Speed: 5.27] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.88
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 5381.08 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	  12.75
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.65
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.55
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 108.86 left
+[E100  1]:	TAKE	   0.86, 5425.85 left
+[E100  1]:	ENRAGE	  90.00 stacks
+[  Borge]:	[HP:   108.86/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 5425.85/36810.0] [AP: 263.18] [Speed: 5.22] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  13.36
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 5160.19 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	  12.49
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.39
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.29
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 141.06 left
+[E100  1]:	TAKE	   0.86, 5204.96 left
+[E100  1]:	ENRAGE	  91.00 stacks
+[  Borge]:	[HP:   141.06/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 5204.96/36810.0] [AP: 263.18] [Speed: 5.18] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  13.10
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 4939.30 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	  12.94
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.84
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.74
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 85.66 left
+[E100  1]:	TAKE	   0.86, 4984.07 left
+[E100  1]:	ENRAGE	  92.00 stacks
+[  Borge]:	[HP:    85.66/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 4984.07/36810.0] [AP: 263.18] [Speed: 5.13] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  13.54
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 4869.25 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	  13.41
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  13.30
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  13.20
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 28.56 left
+[E100  1]:	TAKE	   0.86, 4914.02 left
+[E100  1]:	ENRAGE	  93.00 stacks
+[  Borge]:	[HP:    28.56/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 4914.02/36810.0] [AP: 263.18] [Speed: 5.08] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  14.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 4799.20 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	  13.86
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  13.75
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  13.64
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, -26.72 left
+[  Borge]:	REVIVED, 1 left
+[E100  1]:	TAKE	   0.86, 4843.97 left
+[E100  1]:	ENRAGE	  94.00 stacks
+[  Borge]:	[HP:   696.46/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 4843.97/36810.0] [AP: 263.18] [Speed: 5.04] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.66
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 4729.15 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   8.56
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.50
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.43
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 620.05 left
+[E100  1]:	TAKE	   0.86, 4773.91 left
+[E100  1]:	ENRAGE	  95.00 stacks
+[  Borge]:	[HP:   620.05/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 4773.91/36810.0] [AP: 263.18] [Speed: 4.99] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   9.27
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 4508.26 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	   9.14
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.07
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 540.51 left
+[E100  1]:	TAKE	   0.86, 4537.82 left
+[E100  1]:	ENRAGE	  96.00 stacks
+[  Borge]:	[HP:   540.51/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 4537.82/36810.0] [AP: 263.18] [Speed: 4.94] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   9.91
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 4423.00 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   9.80
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.72
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 459.39 left
+[E100  1]:	TAKE	   0.86, 4452.55 left
+[E100  1]:	ENRAGE	  97.00 stacks
+[  Borge]:	[HP:   459.39/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 4452.55/36810.0] [AP: 263.18] [Speed: 4.89] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  10.55
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 4186.90 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	  10.42
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.33
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 383.67 left
+[E100  1]:	TAKE	   0.86, 4216.46 left
+[E100  1]:	ENRAGE	  98.00 stacks
+[  Borge]:	[HP:   383.67/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 4216.46/36810.0] [AP: 263.18] [Speed: 4.84] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  11.16
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 3950.80 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	  11.02
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.93
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 309.75 left
+[E100  1]:	TAKE	   0.86, 3980.36 left
+[E100  1]:	ENRAGE	  99.00 stacks
+[  Borge]:	[HP:   309.75/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 3980.36/36810.0] [AP: 263.18] [Speed: 4.80] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  11.75
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	EVADE
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	  11.30
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.21
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 274.53 left
+[E100  1]:	TAKE	   0.86, 4025.13 left
+[E100  1]:	ENRAGE	 100.00 stacks
+[  Borge]:	[HP:   274.53/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 4025.13/36810.0] [AP: 263.18] [Speed: 4.75] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.03
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 3759.47 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	  11.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.09
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	 101.00 stacks
+[  Borge]:	[HP:   404.08/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 3789.89/36810.0] [AP: 263.18] [Speed: 4.70] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  11.00
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 3524.24 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	  10.15
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.07
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	 102.00 stacks
+[  Borge]:	[HP:   530.55/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 3554.66/36810.0] [AP: 263.18] [Speed: 5.16] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   9.98
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 3289.00 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	   9.85
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.77
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.70
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 462.83 left
+[E100  1]:	TAKE	   0.86, 3333.77 left
+[E100  1]:	ENRAGE	 103.00 stacks
+[  Borge]:	[HP:   462.83/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 3333.77/36810.0] [AP: 263.18] [Speed: 4.61] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  10.53
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 3218.95 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	  10.42
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.33
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	 104.00 stacks
+[  Borge]:	[HP:   497.15/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 3249.37/36810.0] [AP: 263.18] [Speed: 5.06] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  10.25
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 3134.55 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   9.82
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.74
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.66
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 467.13 left
+[E100  1]:	TAKE	   0.86, 3179.32 left
+[E100  1]:	ENRAGE	 105.00 stacks
+[  Borge]:	[HP:   467.13/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 3179.32/36810.0] [AP: 263.18] [Speed: 4.51] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  10.49
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 2913.66 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	  10.36
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.27
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 391.23 left
+[E100  1]:	TAKE	   0.86, 2943.22 left
+[E100  1]:	ENRAGE	 106.00 stacks
+[  Borge]:	[HP:   391.23/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 2943.22/36810.0] [AP: 263.18] [Speed: 4.46] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  11.10
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 2828.40 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	  10.66
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.57
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 354.07 left
+[E100  1]:	TAKE	   0.86, 2857.96 left
+[E100  1]:	ENRAGE	 107.00 stacks
+[  Borge]:	[HP:   354.07/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 2857.96/36810.0] [AP: 263.18] [Speed: 4.42] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  11.40
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 2592.31 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	  11.25
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.16
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 280.86 left
+[E100  1]:	TAKE	   0.86, 2621.86 left
+[E100  1]:	ENRAGE	 108.00 stacks
+[  Borge]:	[HP:   280.86/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 2621.86/36810.0] [AP: 263.18] [Speed: 4.37] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  11.98
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 2507.04 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	  11.86
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.77
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 205.92 left
+[E100  1]:	TAKE	   0.86, 2536.60 left
+[E100  1]:	ENRAGE	 109.00 stacks
+[  Borge]:	[HP:   205.92/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:  2536.6/36810.0] [AP: 263.18] [Speed: 4.32] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  12.58
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 2421.78 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	  12.46
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.36
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 132.77 left
+[E100  1]:	TAKE	   0.86, 2451.34 left
+[E100  1]:	ENRAGE	 110.00 stacks
+[  Borge]:	[HP:   132.77/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 2451.34/36810.0] [AP: 263.18] [Speed: 4.28] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  13.17
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 2336.52 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	  13.04
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  12.93
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 61.35 left
+[E100  1]:	TAKE	   0.86, 2366.07 left
+[E100  1]:	ENRAGE	 111.00 stacks
+[  Borge]:	[HP:    61.35/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 2366.07/36810.0] [AP: 263.18] [Speed: 4.23] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  13.74
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 2251.25 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	  13.60
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  13.50
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, -8.36 left
+[  Borge]:	REVIVED, 0 left
+[E100  1]:	TAKE	   0.86, 2280.81 left
+[E100  1]:	ENRAGE	 112.00 stacks
+[  Borge]:	[HP:   696.46/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 2280.81/36810.0] [AP: 263.18] [Speed: 4.18] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   8.66
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 2165.99 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   8.24
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.17
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 652.03 left
+[E100  1]:	TAKE	   0.86, 2195.55 left
+[E100  1]:	ENRAGE	 113.00 stacks
+[  Borge]:	[HP:   652.03/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 2195.55/36810.0] [AP: 263.18] [Speed: 4.13] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   9.01
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 2080.73 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   8.92
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   8.85
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 568.26 left
+[E100  1]:	TAKE	   0.86, 2110.28 left
+[E100  1]:	ENRAGE	 114.00 stacks
+[  Borge]:	[HP:   568.26/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 2110.28/36810.0] [AP: 263.18] [Speed: 4.08] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   9.68
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 1995.47 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   9.25
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.18
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 526.88 left
+[E100  1]:	TAKE	   0.86, 2025.02 left
+[E100  1]:	ENRAGE	 115.00 stacks
+[  Borge]:	[HP:   526.88/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 2025.02/36810.0] [AP: 263.18] [Speed: 4.04] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  10.01
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 1910.20 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   9.58
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.50
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 486.50 left
+[E100  1]:	TAKE	   0.86, 1939.76 left
+[E100  1]:	ENRAGE	 116.00 stacks
+[  Borge]:	[HP:    486.5/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 1939.76/36810.0] [AP: 263.18] [Speed: 3.99] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  10.34
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 1824.94 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	  10.23
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 396.51 left
+[E100  1]:	TAKE	   0.86, 1839.29 left
+[E100  1]:	ENRAGE	 117.00 stacks
+[  Borge]:	[HP:   396.51/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 1839.29/36810.0] [AP: 263.18] [Speed: 3.94] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  11.06
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.97
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 1588.84 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	  10.12
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 410.33 left
+[E100  1]:	TAKE	   0.86, 1603.19 left
+[E100  1]:	ENRAGE	 118.00 stacks
+[  Borge]:	[HP:   410.33/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 1603.19/36810.0] [AP: 263.18] [Speed: 3.89] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  10.95
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.86
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 1503.58 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	  10.75
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 332.33 left
+[E100  1]:	TAKE	   0.86, 1517.93 left
+[E100  1]:	ENRAGE	 119.00 stacks
+[  Borge]:	[HP:   332.33/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 1517.93/36810.0] [AP: 263.18] [Speed: 3.85] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  11.57
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.48
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 1267.48 left
+[  Borge]:	STEAL	   6.56
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	REGEN	  11.33
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	 120.00 stacks
+[  Borge]:	[HP:   373.28/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 1282.69/36810.0] [AP: 263.18] [Speed: 4.30] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  11.24
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.15
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 1183.08 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	  10.71
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 594.79 (crit)
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	 121.00 stacks
+[  Borge]:	[HP:   450.49/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 1198.29/36810.0] [AP: 263.18] [Speed: 4.25] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  10.63
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.54
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 1098.68 left
+[  Borge]:	STEAL	   3.04
+[E100  1]:	STUNNED	   0.50 sec
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	  10.10
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	 122.00 stacks
+[  Borge]:	[HP:   525.86/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 1113.89/36810.0] [AP: 263.18] [Speed: 4.21] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  10.02
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.94
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 1014.28 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   9.51
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	EVADE
+[E100  1]:	ENRAGE	 123.00 stacks
+[  Borge]:	[HP:   599.43/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP: 1029.49/36810.0] [AP: 263.18] [Speed: 3.66] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   9.43
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.36
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 779.05 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
+[  Borge]:	REGEN	   8.52
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 608.41 left
+[E100  1]:	TAKE	   0.86, 793.40 left
+[E100  1]:	ENRAGE	 124.00 stacks
+[  Borge]:	[HP:   608.41/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:   793.4/36810.0] [AP: 263.18] [Speed: 3.61] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   9.36
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.29
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 693.79 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	[LOTH]	  41.06
+[  Borge]:	REGEN	   8.86
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 566.43 left
+[E100  1]:	TAKE	   0.86, 708.13 left
+[E100  1]:	ENRAGE	 125.00 stacks
+[  Borge]:	[HP:   566.43/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:  708.13/36810.0] [AP: 263.18] [Speed: 3.56] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	   9.70
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	   9.62
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 136.87
+[E100  1]:	TAKE	 130.03, 608.52 left
+[  Borge]:	STEAL	   3.04
+[  Borge]:	REGEN	   9.52
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 484.72 left
+[E100  1]:	TAKE	   0.86, 622.87 left
+[E100  1]:	ENRAGE	 126.00 stacks
+[  Borge]:	[HP:   484.72/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:  622.87/36810.0] [AP: 263.18] [Speed: 3.51] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  10.35
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.27
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 372.43 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	  10.13
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 408.45 left
+[E100  1]:	TAKE	   0.86, 386.77 left
+[E100  1]:	ENRAGE	 127.00 stacks
+[  Borge]:	[HP:   408.45/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:  386.77/36810.0] [AP: 263.18] [Speed: 3.47] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  10.96
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  10.87
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, 136.33 left
+[  Borge]:	STEAL	   6.56
+[  Borge]:	REGEN	  10.73
+[E100  1]:	REGEN	  15.21
+[E100  1]:	ATTACK	 263.18
+[  Borge]:	TAKE	 113.59, 334.00 left
+[E100  1]:	TAKE	   0.86, 150.68 left
+[E100  1]:	ENRAGE	 128.00 stacks
+[  Borge]:	[HP:    334.0/870.57] [AP: 136.87] [Speed: 4.11] [Regen:  7.26] [CHC: 0.4340] [CHD:  2.16] [DR: 0.5684] [Evasion: 0.2148] [Effect: 0.3370] [LS: 0.02]
+[E100  1]:	[HP:  150.68/36810.0] [AP: 263.18] [Speed: 3.42] [Regen: 15.21] [CHC: 0.1122] [CHD:  2.26] [DR: 0.0500] [Evasion: 0.0040]
+[  Borge]:	REGEN	  11.56
+[E100  1]:	REGEN	  15.21
+[  Borge]:	REGEN	  11.46
+[E100  1]:	REGEN	  15.21
+[  Borge]:	ATTACK	 295.65 (crit)
+[E100  1]:	TAKE	 280.86, -99.77 left
+[E100  1]:	DIED
+[  Borge]:	STEAL	   6.56
+[  Borge]:	[LOTH]	  88.69
