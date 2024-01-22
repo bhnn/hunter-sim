@@ -1,18 +1,28 @@
-from units import *
 import yaml
+from units import *
 
 
 class Hunter(Defence_Unit):
-    """Base class for hunter units. Extends enemy classes to add lifesteal and effect chance. Only used for inheritance.
+    """Base class for hunter units. Extends enemy classes to add effect chance. Only used for inheritance.
     """
     def __init__(self, effect_chance: float, **kwargs):
         super(Hunter, self).__init__(**kwargs)
         self.effect_chance: float = effect_chance
-        self.lifesteal: float = 0
         self.current_stage = 0
         self.revive_log = []
 
-    def apply_stun(self, target: Unit) -> None:
+    def apply_stun(self, target: Unit) -> float:
+        """Apply a stun effect to a target unit.
+
+        Args:
+            target (Unit): The unit to stun.
+
+        Raises:
+            ValueError: If no stun talent is found.
+
+        Returns:
+            float: The duration of the stun.
+        """
         if "impeccable_impacts" in self.talents:
             stun_duration = self.talents["impeccable_impacts"] * 0.1
         elif "thousand_needles" in self.talents:
@@ -20,8 +30,10 @@ class Hunter(Defence_Unit):
         else:
             raise ValueError("No stun talent found")
         if stun_duration > 0:
+            stun_duration = stun_duration * (0.5 if isinstance(target, Boss) else 1)
             target.stun(stun_duration)
-            logging.info(f'[{target.name:>{unit_name_spacing}}]:\tSTUNNED {stun_duration} sec')
+            logging.debug(f'[{target.name:>{unit_name_spacing}}]:\tSTUNNED\t{stun_duration:>6.2f} sec')
+        return stun_duration
 
     def get_results(self) -> List:
         """Get the results of the simulation: Total damage, kills, crits, regen and final hp.
@@ -47,60 +59,61 @@ class Borge(Hunter):
     def __init__(self, file_path: str):
         self.load_full(file_path)
         super(Borge, self).__init__(name="Borge", **self.base_stats)
-        self.leftover_attackspeed: float = 0
         self.hp = self.max_hp
 
     def get_speed(self) -> float:
-        """Returns the speed of the unit, taking into account the leftover attack speed from any previous attacks.
+        """Returns the speed of the unit, taking into account Fires of War.
 
         Returns:
             float: Current attack speed.
         """
-        if self.leftover_attackspeed > 0:
-            leftover_windup = abs(self.leftover_attackspeed - self.speed)
-            # if (self.speed - leftover_windup) < 0:
-            return self.speed - leftover_windup
         return self.speed
 
-    def attack(self, target: Unit) -> None:
+    def attack(self, target: Unit) -> dict:
         """Attack a target unit.
 
         Args:
             target (Unit): The unit to attack.
-        """
-        super(Borge, self).attack(target)
-        self.leftover_attackspeed = 0 # reset leftover wind-up time after successful attack
-        if random.random() < self.effect_chance:
-            self.apply_stun(target)
 
-    def receive_damage(self, attacker: Unit, damage: float) -> None:
+        Returns:
+            dict: A dictionary of events the attack caused.
+        """
+        events = dict()
+        damage = super(Borge, self).attack(target)
+        events["damage"] = damage
+        if self.lifesteal > 0 and self.missing_hp > 0:
+            self.heal_hp(damage * self.lifesteal, "steal")
+        if random.random() < self.effect_chance:
+            events["stun"] = True
+        if random.random() < self.special_chance and self.talents["life_of_the_hunt"] and self.missing_hp > 0:
+            self.heal_hp(damage * self.talents["life_of_the_hunt"] * 0.06, "[LOTH]")
+        return events
+
+
+    def receive_damage(self, attacker: Unit, damage: float, is_crit) -> None:
         """Receive damage from an attack. Accounts for damage reduction, evade chance and reflected damage.
 
         Args:
             attacker (Unit): The unit that is attacking. Used to apply damage reflection.
             damage (float): The amount of damage to receive.
+            is_crit (bool): Whether the attack was a critical hit or not.
         """
-        final_damage = super().receive_damage(attacker, damage)
+        if is_crit:
+            reduced_crit_damage = damage * (1 - self.attributes["weakspot_analysis"] * 0.11)
+            final_damage = super(Borge, self).receive_damage(attacker, reduced_crit_damage, is_crit)
+        else:
+            final_damage = super(Borge, self).receive_damage(attacker, damage, is_crit)
         if self.attributes["helltouch_barrier"] > 0 and final_damage > 0 and not self.is_dead():
             # reflected damage from helltouch barrier
-            attacker.receive_damage(None, final_damage * self.attributes["helltouch_barrier"] * 0.08)
-            if attacker.is_dead():
-                # attacker died from helltouck backlash while we were winding up an attack
-                self.leftover_attackspeed = attacker.get_speed()
-                logging.info(f'[{self.name:>{unit_name_spacing}}]:\tWIND-UP -{self.leftover_attackspeed - self.speed:.3f} sec')
+            reflected_damage = final_damage * self.attributes["helltouch_barrier"] * 0.08 * (0.1 if isinstance(attacker, Boss) else 1)
+            attacker.receive_damage(None, reflected_damage, False)
+
 
     def regen_hp(self) -> None:
-        """Regenerates hp according to the regen stat.
+        """Regenerates hp according to the regen stat, modified by the `Lifedrain Inhalers` attribute.
         """
         regen_value = self.regen + ((self.attributes["lifedrain_inhalers"] * 0.0008) * self.missing_hp)
-        if (self.hp + regen_value) <= self.max_hp:
-            self.hp += regen_value
-            self.total_regen += regen_value
-            logging.info(f'[{self.name:>{unit_name_spacing}}]:\tREGEN {round(regen_value, 2)} hp')
-        else:
-            logging.info(f'[{self.name:>{unit_name_spacing}}]:\tREGEN {round(self.max_hp - self.hp, 2)} hp (full)')
-            self.total_regen += (self.max_hp - self.hp)
-            self.hp = self.max_hp
+        self.heal_hp(regen_value, 'regen')
 
     def apply_pog(self, enemy: Unit) -> None:
         """Apply the Presence of a God effect to an enemy.
@@ -109,10 +122,10 @@ class Borge(Hunter):
             enemy (Unit): The enemy to apply the effect to.
         """
         if self.talents["presence_of_god"] > 0:
-            pog_effect = self.talents["presence_of_god"] * 0.04
-            enemy.hp = enemy.max_hp * pog_effect
-            logging.info(f'[{self.name:>{unit_name_spacing}}]:\tUSE {pog_effect*100:.0f}% [Presence of a God]')
-            logging.info(enemy)
+            pog_effect = (self.talents["presence_of_god"] * 0.04) * (0.5 if isinstance(enemy, Boss) else 1)
+            enemy.hp = enemy.max_hp * (1 - pog_effect)
+            logging.debug(f'[{self.name:>{unit_name_spacing}}]:\t[PRESENCE OF A GOD] {pog_effect*100:.0f}%')
+            logging.debug(enemy)
 
 
     def apply_trample(self, enemies: List[Enemy]) -> int:
@@ -145,9 +158,10 @@ class Borge(Hunter):
             if self.talents["death_is_my_companion"] > 0:
                 self.talents["death_is_my_companion"] -= 1
                 self.hp = self.max_hp * 0.8
-                logging.info(f'[{self.name:>{unit_name_spacing}}]:\tREVIVED. {self.talents["death_is_my_companion"]} revives left')
+                self.revive_log.append((self.current_stage, self.total_kills))
+                logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tREVIVED, {self.talents["death_is_my_companion"]} left')
             else:
-                logging.info(f'[{self.name:>{unit_name_spacing}}]:\tDIED')
+                logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tDIED')
 
     def load_full(self, file_path: str) -> None:
         """Load a full build loadout from a yaml file.
@@ -157,6 +171,8 @@ class Borge(Hunter):
         """
         with open(file_path, 'r') as f:
             cfg = yaml.safe_load(f)
+        if not self.validate_config(cfg):
+            raise ValueError("Invalid config file")
         self.load_base_stats(cfg)
         self.load_build(cfg)
 
@@ -225,20 +241,100 @@ class Borge(Hunter):
         else:
             raise ValueError("Invalid hunter type")
 
+    def validate_config(self, cfg: dict) -> bool:
+        """Validate a build config dict against a perfect dummy build to see if they have identical keys in themselves and all value entries.
+
+        Args:
+            cfg (dict): The build config
+
+        Returns:
+            bool: Whether the configs contain identical keys.
+        """
+        return cfg.keys() == self.load_dummy().keys() and all(cfg[k].keys() == self.load_dummy()[k].keys() for k in cfg.keys())
+
+    def load_dummy(self) -> dict:
+        """Create a dummy build dictionary with empty stats to compare against loaded configs.
+
+        Returns:
+            dict: The dummy build dict.
+        """
+        return {
+            "meta": {
+                "hunter": "_",
+                "build_only": False,
+                "level": 0
+            },
+            "stats": {
+                "hp": 0,
+                "power": 0,
+                "regen": 0,
+                "damage_reduction": 0,
+                "evade_chance": 0,
+                "effect_chance": 0,
+                "special_chance": 0,
+                "special_damage": 0,
+                "speed": 0,
+            },
+            "talents": {
+                "death_is_my_companion": 0,
+                "life_of_the_hunt": 0,
+                "unfair_advantage": 0,
+                "impeccable_impacts": 0,
+                "omen_of_defeat": 0,
+                "call_me_lucky_loot": 0,
+                "presence_of_god": 0,
+                "fires_of_war": 0
+            },
+            "attributes": {
+                "soul_of_ares": 0,
+                "essence_of_ylith": 0,
+                "helltouch_barrier": 0,
+                "lifedrain_inhalers": 0,
+                "spartan_lineage": 0,
+                "explosive_punches": 0,
+                "timeless_mastery": 0,
+                "book_of_baal": 0,
+                "superior_sensors": 0,
+                "atlas_protocol": 0,
+                "weakspot_analysis": 0,
+                "born_for_battle": 0
+            },
+            "inscryptions": {
+                "i3": 0,
+                "i4": 0,
+                "i11": 0,
+                "i13": 0,
+                "i14": 0,
+                "i23": 0,
+                "i24": 0,
+                "i27": 0,
+                "i31": 0,
+                "i32": 0,
+                "i33": 0,
+                "i40": 0,
+                "i44": 0,
+            },
+            "mods": {
+                "trample": False
+            },
+            "relics": {
+                "disk_of_dawn": 0
+            }
+        }
+
     @property
     def max_hp(self) -> float:
         return round(
             (
-                42
+                43
+                + (self.base_stats["hp"] * (2.50 + 0.01 * (self.base_stats["hp"] // 5)))
                 + (self.inscryptions["i3"] * 6)
                 + (self.inscryptions["i27"] * 24)
             )
-            + 
-            (
-                + (self.base_stats["hp"] * (2.53 + 0.01 * (self.base_stats["hp"] // 5)))
-            )
             * (1 + (self.attributes["soul_of_ares"] * 0.01))
         , 2)
+        # borge hp before relic: 871, after relic: 888
+    
 
     @max_hp.setter
     def max_hp(self, value: float) -> None:
@@ -274,9 +370,9 @@ class Borge(Hunter):
             (
                 0.02
                 + (self.base_stats["regen"] * (0.03 + 0.01 * (self.base_stats["regen"] // 30)))
-                + (self.attributes["essence_of_ylith"] * 0.03)
+                + (self.attributes["essence_of_ylith"] * 0.04)
             )
-            * (1 + (self.attributes["essence_of_ylith"] * 0.0075))
+            * (1 + (self.attributes["essence_of_ylith"] * 0.009))
         )
 
     @regen.setter
@@ -357,3 +453,11 @@ class Borge(Hunter):
     @speed.setter
     def speed(self, value: float) -> None:
         self._speed = value
+
+    @property
+    def lifesteal(self) -> float:
+        return self.attributes["book_of_baal"] * 0.0111
+
+    @lifesteal.setter
+    def lifesteal(self, value: float) -> None:
+        self._lifesteal = value
