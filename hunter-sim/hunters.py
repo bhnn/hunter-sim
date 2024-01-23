@@ -7,11 +7,8 @@ import yaml
 
 hunter_name_spacing: int = 7
 
-# TODO: add total_kills etc to Hunter and total_potion etc to Borge/Ozzy
 # TODO: add Lucky Loot mechanics
-# TODO: maybe implement a kill() for enemies for apply_trample()?
 # TODO: maybe find a better way to trample()
-# TODO: add statistic 'Enrage stacks on boss kill'
 
 class Hunter:
     ### SETUP
@@ -19,16 +16,35 @@ class Hunter:
         self.name = name
         self.missing_hp: float
         self.sim = None
-        self.current_stage = 0
 
         # statistics
+        # main
+        self.current_stage = 0
         self.total_kills: int = 0
-        self.total_damage: float = 0
-        self.total_taken: float = 0
-        self.total_crits: int = 0
-        self.total_regen: float = 0
-        self.total_lifesteal: float = 0
         self.revive_log = []
+        self.enrage_log = []
+
+        # offence
+        self.total_attacks: int = 0
+        self.total_damage: float = 0
+        self.total_crits: int = 0
+        self.total_extra_from_crits: float = 0
+
+        # sustain
+        self.total_taken: float = 0
+        self.total_regen: float = 0
+        self.total_attacks_suffered: int = 0
+        self.total_lifesteal: float = 0
+
+        # defence
+        self.total_evades: int = 0
+        self.total_mitigated: float = 0
+
+        # effects
+        self.total_effect_procs: int = 0
+
+        # loot
+        # TODO include loot
 
     def load_dummy(self) -> dict:
         """Abstract placeholder for load_dummy() method. Must be implemented by child classes.
@@ -42,6 +58,14 @@ class Hunter:
         raise NotImplementedError('load_dummy() not implemented for Hunter() base class')
 
     def load_build(self, config_path: str) -> None:
+        """Load a build config from a yaml file, validate it and assign the stats to the hunter's internal dictionaries.
+
+        Args:
+            config_path (str): The path to the config file.
+
+        Raises:
+            ValueError: If the config file is invalid.
+        """
         with open(config_path, 'r') as f:
             cfg = yaml.safe_load(f)
         if not self.validate_config(cfg):
@@ -74,14 +98,16 @@ class Hunter:
             float: The damage dealt.
         """
         if random.random() < self.special_chance:
-            self.total_crits += 1
             damage = self.power * self.special_damage
+            self.total_crits += 1
+            self.total_extra_from_crits += (damage - self.power)
             logging.debug(f"[{self.name:>{hunter_name_spacing}}]:\tATTACK\t{damage:>6.2f} (crit)")
         else:
             damage = self.power
             logging.debug(f"[{self.name:>{hunter_name_spacing}}]:\tATTACK\t{damage:>6.2f}")
         target.receive_damage(damage)
         self.total_damage += damage
+        self.total_attacks += 1
         return damage
 
     def receive_damage(self, damage: float) -> float:
@@ -91,12 +117,15 @@ class Hunter:
             damage (float): The amount of damage to receive.
         """
         if random.random() < self.evade_chance:
+            self.total_evades += 1
             logging.debug(f'[{self.name:>{hunter_name_spacing}}]:\tEVADE')
             return 0
         else:
             mitigated_damage = damage * (1 - self.damage_reduction)
             self.hp -= mitigated_damage
             self.total_taken += mitigated_damage
+            self.total_mitigated += (damage - mitigated_damage)
+            self.total_attacks_suffered += 1
             logging.debug(f"[{self.name:>{hunter_name_spacing}}]:\tTAKE\t{mitigated_damage:>6.2f}, {self.hp:.2f} HP left")
             if self.is_dead():
                 self.on_death()
@@ -165,7 +194,11 @@ class Borge(Hunter):
         super(Borge, self).__init__(name='Borge')
         self.__create__(config_path)
 
-        # statisticss
+        # statistics
+        # offence
+        self.total_helltouch: float = 0
+
+        # sustain
         self.total_loth: float = 0
         self.total_potion: float = 0
 
@@ -316,13 +349,18 @@ class Borge(Hunter):
         self.heal_hp(damage * self.lifesteal, 'steal')
         if random.random() < self.effect_chance and (LotH := self.talents["life_of_the_hunt"]):
             # Talent: Life of the Hunt
-            self.heal_hp(damage * LotH * 0.06, "loth")
+            LotH_healing = damage * LotH * 0.06
+            self.heal_hp(LotH_healing, "loth")
+            self.total_loth += LotH_healing
+            self.total_effect_procs += 1
         if random.random() < self.effect_chance and self.talents["impeccable_impacts"]:
             # Talent: Impeccable Impacts, will call apply_stun()
             hpush(self.sim.queue, (0, 0, 'stun'))
+            self.total_effect_procs += 1
         if random.random() < self.effect_chance and self.talents["fires_of_war"]:
             # Talent: Fires of War
             self.apply_fow()
+            self.total_effect_procs += 1
         if target.is_dead():
             self.on_kill()
 
@@ -342,6 +380,7 @@ class Borge(Hunter):
         if (not self.is_dead()) and final_damage > 0:
             helltouch_effect = (0.1 if (self.current_stage % 100 == 0 and self.current_stage > 0) else 1)
             reflected_damage = final_damage * self.attributes["helltouch_barrier"] * 0.08 * helltouch_effect
+            self.total_helltouch += reflected_damage
             attacker.receive_damage(reflected_damage)
 
     def regen_hp(self) -> None:
@@ -354,10 +393,14 @@ class Borge(Hunter):
     def on_kill(self) -> None:
         if random.random() < self.effect_chance and (ua := self.talents["unfair_advantage"]):
             # Talent: Unfair Advantage
-            self.heal_hp(self.max_hp * (ua * 0.02), "potion")
+            potion_healing = self.max_hp * (ua * 0.02)
+            self.heal_hp(potion_healing, "potion")
+            self.total_potion += potion_healing
+            self.total_effect_procs += 1
         if random.random() < self.effect_chance and (LL := self.talents["call_me_lucky_loot"]):
             # Talent: Call Me Lucky Loot
             # 1 + (0.2 x LL) extra loot
+            self.total_effect_procs += 1
             pass
 
     def apply_stun(self, enemy) -> None:
