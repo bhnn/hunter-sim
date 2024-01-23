@@ -2,10 +2,12 @@ import logging
 from random import random
 from heapq import heapify
 from heapq import heappush as hpush
-from hunters import *
+from hunters import Hunter, Borge, Ozzy
 from sim import Simulation
 
 unit_name_spacing: int = 7
+
+# TODO: reverse Benchy attack speed. 6.73 in-game, then maybe different decrement?
 
 class Enemy:
     ### CREATION
@@ -64,11 +66,13 @@ class Enemy:
         """
         if random.random() < self.special_chance:
             damage = self.power * self.special_damage
+            is_crit = True
             logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tATTACK\t{damage:>6.2f} (crit)")
         else:
             damage = self.power
+            is_crit = False
             logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tATTACK\t{damage:>6.2f}")
-        hunter.receive_damage(damage)
+        hunter.receive_damage(damage, is_crit)
 
     def receive_damage(self, damage: float) -> None:
         """Receive damage from an attack. Accounts for damage reduction and evade chance.
@@ -83,7 +87,6 @@ class Enemy:
             self.hp -= mitigated_damage
             logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tTAKE\t{mitigated_damage:>6.2f}, {self.hp:.2f} left")
             if self.is_dead():
-                logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tDIED\n')
                 self.on_death()
 
     def heal_hp(self, value: float, source: str) -> None:
@@ -95,7 +98,7 @@ class Enemy:
         """
         effective_heal = min(value, self.missing_hp)
         self.hp += effective_heal
-        logging.debug(f'[{self.name:>{unit_name_spacing}}]:\t{source.upper().replace("_", " ")}\t{effective_value:>6.2f}')
+        logging.debug(f'[{self.name:>{unit_name_spacing}}]:\t{source.upper().replace("_", " ")}\t{effective_heal:>6.2f}')
 
     def regen_hp(self) -> None:
         """Regenerates hp according to the regen stat.
@@ -109,10 +112,10 @@ class Enemy:
         Args:
             duration (float): The duration of the stun.
         """
-        qe = [(p1, p2, u) for p1, p2, u in queue if u != 'enemy']
+        qe = [(p1, p2, u) for p1, p2, u in self.sim.queue if u != 'enemy']
         self.sim.queue.remove(qe)
         hpush(self.sim.queue, (qe[0][0] + duration, qe[0][1], qe[0][2]))
-        logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tSTUNNED\t{stun_duration:>6.2f} sec')
+        logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tSTUNNED\t{duration:>6.2f} sec')
 
     def is_dead(self) -> bool:
         """Check if the unit is dead.
@@ -123,7 +126,8 @@ class Enemy:
         return self.hp <= 0
 
     def on_death(self) -> None:
-        self.sim.queue = [(p1, p2, u) for p1, p2, u in queue if u != 'enemy']
+        logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tDIED\n')
+        self.sim.queue = [(p1, p2, u) for p1, p2, u in self.sim.queue if u != 'enemy']
         heapify(self.sim.queue)
 
     ### UTILITY
@@ -133,10 +137,10 @@ class Enemy:
         return self.max_hp - self.hp
 
     def __str__(self) -> str:
-        """Prints the enemy's stats.
+        """Prints the stats of this Enemy's instance.
 
         Returns:
-            str: The enemy's stats as a formatted string.
+            str: The stats as a formatted string.
         """
         return f'[{self.name:>{unit_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>16}] [AP:{self.power:>7.2f}] [Speed:{self.speed:>5.2f}] [Regen:{self.regen:>6.2f}] [CHC: {self.special_chance:>6.4f}] [CHD: {self.special_damage:>5.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}]'
 
@@ -169,7 +173,7 @@ class Boss(Enemy):
                 'special_damage': 1.83,
                 'damage_reduction': 0,
                 'evade_chance': 0,
-                'speed': 6.75,
+                'speed': 6.75, # 6.73 base in-game
             }
         else:
             raise ValueError(f'Unknown hunter: {hunter}')
