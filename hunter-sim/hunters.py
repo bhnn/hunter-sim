@@ -378,7 +378,7 @@ class Borge(Hunter):
             self.total_loth += LotH_healing
             self.total_effect_procs += 1
         if random.random() < self.effect_chance and self.talents["impeccable_impacts"]:
-            # Talent: Impeccable Impacts, will call apply_stun()
+            # Talent: Impeccable Impacts, will call Hunter.apply_stun()
             hpush(self.sim.queue, (0, 0, 'stun'))
             self.total_effect_procs += 1
         if random.random() < self.effect_chance and self.talents["fires_of_war"]:
@@ -427,13 +427,14 @@ class Borge(Hunter):
             self.total_effect_procs += 1
             pass
 
-    def apply_stun(self, enemy) -> None:
+    def apply_stun(self, enemy, is_boss: bool) -> None:
         """Apply a stun to an enemy.
 
         Args:
             enemy (Enemy): The enemy to stun.
         """
-        stun_duration = self.talents['impeccable_impacts'] * 0.1
+        stun_effect = 0.5 if is_boss else 1
+        stun_duration = self.talents['impeccable_impacts'] * 0.1 * stun_effect
         enemy.stun(stun_duration)
 
     def apply_pog(self, enemy) -> None:

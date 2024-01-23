@@ -121,9 +121,9 @@ class Enemy:
         Args:
             duration (float): The duration of the stun.
         """
-        qe = [(p1, p2, u) for p1, p2, u in self.sim.queue if u != 'enemy']
+        qe = [(p1, p2, u) for p1, p2, u in self.sim.queue if u == 'enemy'][0]
         self.sim.queue.remove(qe)
-        hpush(self.sim.queue, (qe[0][0] + duration, qe[0][1], qe[0][2]))
+        hpush(self.sim.queue, (qe[0] + duration, qe[1], qe[2]))
         logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tSTUNNED\t{duration:>6.2f} sec')
 
     def is_dead(self) -> bool:
