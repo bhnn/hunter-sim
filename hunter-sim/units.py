@@ -1,9 +1,8 @@
 import logging
-from random import random
+import random
 from heapq import heapify
 from heapq import heappush as hpush
 from hunters import Hunter, Borge, Ozzy
-from sim import Simulation
 
 unit_name_spacing: int = 7
 
@@ -11,7 +10,15 @@ unit_name_spacing: int = 7
 
 class Enemy:
     ### CREATION
-    def __init__(self, name: str, hunter: Hunter, stage: int, sim: Simulation) -> None:
+    def __init__(self, name: str, hunter: Hunter, stage: int, sim) -> None:
+        """Creates an Enemy instance.
+
+        Args:
+            name (str): Name of the enemy. Usually `E{stage}{number}`.
+            hunter (Hunter): The hunter that this enemy is fighting.
+            stage (int): The stage of the enemy, for stat selection.
+            sim (Simulation): The simulation that this enemy is a part of.
+        """
         self.__create__(name=name, **self.fetch_stats(hunter, stage))
         self.sim = sim
         if 'presence_of_god' in hunter.talents:
@@ -59,7 +66,6 @@ class Enemy:
         self.missing_hp: float
 
     ### CONTENT
-
     def attack(self, hunter: Hunter) -> None:
         """Attack the hunter.
 
@@ -87,7 +93,7 @@ class Enemy:
         else:
             mitigated_damage = damage * (1 - self.damage_reduction)
             self.hp -= mitigated_damage
-            logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tTAKE\t{mitigated_damage:>6.2f}, {self.hp:.2f} left")
+            logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tTAKE\t{mitigated_damage:>6.2f}, {self.hp:.2f} HP left")
             if self.is_dead():
                 self.on_death()
 
@@ -128,9 +134,16 @@ class Enemy:
         return self.hp <= 0
 
     def on_death(self) -> None:
-        logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tDIED\n')
+        logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tDIED')
         self.sim.queue = [(p1, p2, u) for p1, p2, u in self.sim.queue if u != 'enemy']
         heapify(self.sim.queue)
+
+    def kill(self) -> None:
+        """Kills the unit.
+        """
+        self.hp = 0
+        # not sure about this one yet
+        # self.on_death()
 
     ### UTILITY
 
@@ -149,7 +162,15 @@ class Enemy:
 
 class Boss(Enemy):
     ### CREATION
-    def __init__(self, name: str, hunter: Hunter, stage: int, sim: Simulation) -> None:
+    def __init__(self, name: str, hunter: Hunter, stage: int, sim) -> None:
+        """Creates a Boss instance.
+
+        Args:
+            name (str): Name of the boss. Usually `E{stage}{number}`.
+            hunter (Hunter): The hunter that this boss is fighting.
+            stage (int): The stage of the boss, for stat selection.
+            sim (Simulation): The simulation that this enemy is a part of.
+        """
         super(Boss, self).__create__(name=name, **self.fetch_stats(hunter, stage))
         self.sim = sim
         self.enrage_stacks = 0
