@@ -135,6 +135,9 @@ class Enemy:
         return self.hp <= 0
 
     def on_death(self) -> None:
+        """Executes on death effects. For enemy units, that is mostly just removing them from the sim queue and incrementing hunter kills.
+        """
+        self.sim.hunter.total_kills += 1
         logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tDIED')
         self.sim.queue = [(p1, p2, u) for p1, p2, u in self.sim.queue if u != 'enemy']
         heapify(self.sim.queue)
@@ -150,6 +153,11 @@ class Enemy:
 
     @property
     def missing_hp(self) -> float:
+        """Calculates the missing hp of the unit.
+
+        Returns:
+            float: The missing hp of the unit.
+        """
         return self.max_hp - self.hp
 
     def __str__(self) -> str:
@@ -177,6 +185,18 @@ class Boss(Enemy):
         self.enrage_stacks = 0
 
     def fetch_stats(self, hunter: Hunter, stage: int) -> dict:
+        """Fetches the stats of the boss.
+
+        Args:
+            hunter (Hunter): The hunter that this boss is fighting.
+            stage (int): The stage of the boss, for stat selection.
+
+        Raises:
+            ValueError: If the hunter is not a valid hunter.
+
+        Returns:
+            dict: The stats of the boss.
+        """
         if isinstance(hunter, Borge):
             return {
                 'hp': 36810,
@@ -212,8 +232,16 @@ class Boss(Enemy):
         self.enrage_stacks += 1
         logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tENRAGE\t{self.enrage_stacks:>6.2f} stacks")
 
+    def on_death(self) -> None:
+        """Extends the Enemy::enrage() method to log enrage stacks on death.
+        """
+        super(Boss, self).on_death()
+        self.sim.hunter.enrage_log.append(self.enrage_stacks)
+
     @property
     def speed(self) -> float:
+        """Calculates the speed of the boss, taking enrage stacks into account.
+        """
         return (self.speed - 0.0475 * min(self.enrage_stacks, 199))
 
 
