@@ -2,7 +2,8 @@ import logging
 import random
 from heapq import heapify
 from heapq import heappush as hpush
-from hunters import Hunter, Borge, Ozzy
+
+from hunters import Borge, Hunter, Ozzy
 
 unit_name_spacing: int = 7
 
