@@ -14,6 +14,8 @@ class Enemy:
     def __init__(self, name: str, hunter: Hunter, stage: int, sim: Simulation) -> None:
         self.__create__(name=name, **self.fetch_stats(hunter, stage))
         self.sim = sim
+        if 'presence_of_god' in hunter.talents:
+            hunter.apply_pog(self)
 
     def fetch_stats(self, hunter: Hunter, stage: int) -> dict:
         if isinstance(hunter, Borge):
