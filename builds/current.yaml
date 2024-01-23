@@ -1,18 +1,18 @@
 meta:
   hunter: Borge
   build_only: False
-  level: 32
+  level: 34
 
 stats:
-  hp: 185
-  power: 160
-  regen: 115
-  damage_reduction: 30
+  hp: 190
+  power: 165
+  regen: 120
+  damage_reduction: 31
   evade_chance: 32
-  effect_chance: 33
-  special_chance: 43
+  effect_chance: 35
+  special_chance: 45
   special_damage: 38
-  speed: 21
+  speed: 25
 
 talents:
   death_is_my_companion: 2
@@ -20,7 +20,7 @@ talents:
   unfair_advantage: 0
   impeccable_impacts: 10
   omen_of_defeat: 0
-  call_me_lucky_loot: 0
+  call_me_lucky_loot: 2
   presence_of_god: 15
   fires_of_war: 0
 
@@ -32,7 +32,7 @@ attributes:
   spartan_lineage: 6
   explosive_punches: 6
   timeless_mastery: 5
-  book_of_baal: 1
+  book_of_baal: 3
   superior_sensors: 6
   atlas_protocol: 0
   weakspot_analysis: 6
@@ -47,11 +47,10 @@ inscryptions:
   i23: 5
   i24: 8
   i27: 10
-  i31: 10
-  i32: 9
-  i33: 5
-  i40: 8
-  i44: 9
+  i44: 10
+
+relics:
+  disk_of_dawn: 1
 
 mods:
   trample: True
