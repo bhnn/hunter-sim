@@ -46,6 +46,30 @@ class Hunter:
         # loot
         # TODO include loot
 
+    def get_results(self) -> List:
+        """Fetch the hunter results for end-of-run statistics.
+
+        Returns:
+            List: List of all collected stats.
+        """
+        return {
+            'final_stage': self.current_stage,
+            'total_kills': self.total_kills,
+            'revive_log': self.revive_log,
+            'enrage_log': self.enrage_log,
+            'total_attacks': self.total_attacks,
+            'total_damage': self.total_damage,
+            'total_crits': self.total_crits,
+            'total_extra_from_crits': self.total_extra_from_crits,
+            'total_taken': self.total_taken,
+            'total_regen': self.total_regen,
+            'total_attacks_suffered': self.total_attacks_suffered,
+            'total_lifesteal': self.total_lifesteal,
+            'total_evades': self.total_evades,
+            'total_mitigated': self.total_mitigated,
+            'total_effect_procs': self.total_effect_procs,
+        }
+
     def load_dummy(self) -> dict:
         """Abstract placeholder for load_dummy() method. Must be implemented by child classes.
 
@@ -462,20 +486,10 @@ class Borge(Hunter):
         Returns:
             List: List of all collected stats.
         """
-        return {
-            'total_damage': self.total_damage,
-            'total_kills': self.total_kills,
-            'total_crits': self.total_crits,
-            'total_regen': self.total_regen,
-            'total_lifesteal': self.total_lifesteal,
-            'total_taken': self.total_taken,
+        return super(Borge, self).get_results() | {
+            'total_helltouch': self.total_helltouch,
             'total_loth': self.total_loth,
             'total_potion': self.total_potion,
-            'revive_log': self.revive_log,
-            'final_hp': self.hp,
-            'survived': not self.is_dead(),
-            'elapsed_time': self.elapsed_time,
-            'final_stage': self.current_stage,
         }
 
 class Ozzy(Hunter):
