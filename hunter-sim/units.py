@@ -72,7 +72,7 @@ class Enemy:
             damage = self.power
             is_crit = False
             logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tATTACK\t{damage:>6.2f}")
-        hunter.receive_damage(damage, is_crit)
+        hunter.receive_damage(self, damage, is_crit)
 
     def receive_damage(self, damage: float) -> None:
         """Receive damage from an attack. Accounts for damage reduction and evade chance.
