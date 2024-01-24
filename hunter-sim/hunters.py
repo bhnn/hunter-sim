@@ -6,6 +6,8 @@ from typing import List
 import yaml
 
 hunter_name_spacing: int = 7
+c_on = '\033[92m' # green
+c_off = '\033[0m' # reset
 
 # TODO: add Lucky Loot mechanics
 # TODO: maybe find a better way to trample()
@@ -125,10 +127,10 @@ class Hunter:
             damage = self.power * self.special_damage
             self.total_crits += 1
             self.total_extra_from_crits += (damage - self.power)
-            logging.debug(f"[{self.name:>{hunter_name_spacing}}]:\tATTACK\t{damage:>6.2f} (crit)")
+            logging.debug(f"{c_on}[{self.name:>{hunter_name_spacing}}]:\tATTACK\t{damage:>6.2f} (crit){c_off}")
         else:
             damage = self.power
-            logging.debug(f"[{self.name:>{hunter_name_spacing}}]:\tATTACK\t{damage:>6.2f}")
+            logging.debug(f"{c_on}[{self.name:>{hunter_name_spacing}}]:\tATTACK\t{damage:>6.2f}{c_off}")
         target.receive_damage(damage)
         self.total_damage += damage
         self.total_attacks += 1
@@ -142,7 +144,7 @@ class Hunter:
         """
         if random.random() < self.evade_chance:
             self.total_evades += 1
-            logging.debug(f'[{self.name:>{hunter_name_spacing}}]:\tEVADE')
+            logging.debug(f'{c_on}[{self.name:>{hunter_name_spacing}}]:\tEVADE{c_off}')
             return 0
         else:
             mitigated_damage = damage * (1 - self.damage_reduction)
@@ -150,7 +152,7 @@ class Hunter:
             self.total_taken += mitigated_damage
             self.total_mitigated += (damage - mitigated_damage)
             self.total_attacks_suffered += 1
-            logging.debug(f"[{self.name:>{hunter_name_spacing}}]:\tTAKE\t{mitigated_damage:>6.2f}, {self.hp:.2f} HP left")
+            logging.debug(f"{c_on}[{self.name:>{hunter_name_spacing}}]:\tTAKE\t{mitigated_damage:>6.2f}, {self.hp:.2f} HP left{c_off}")
             if self.is_dead():
                 self.on_death()
             return mitigated_damage
@@ -165,7 +167,7 @@ class Hunter:
         effective_heal = min(value, self.missing_hp)
         overhealing = value - effective_heal
         self.hp += effective_heal
-        logging.debug(f'[{self.name:>{hunter_name_spacing}}]:\t{source.upper().replace("_", " ")}\t{effective_heal:>6.2f} (+{overhealing:>6.2f} OVERHEAL)')
+        logging.debug(f'{c_on}[{self.name:>{hunter_name_spacing}}]:\t{source.upper().replace("_", " ")}\t{effective_heal:>6.2f} (+{overhealing:>6.2f} OVERHEAL){c_off}')
         match source.lower():
             case 'regen':
                 self.total_regen += effective_heal
@@ -193,9 +195,9 @@ class Hunter:
         if len(self.revive_log) < self.talents["death_is_my_companion"]:
             self.hp = self.max_hp * 0.8
             self.revive_log.append((self.current_stage, self.total_kills))
-            logging.debug(f'[{self.name:>{hunter_name_spacing}}]:\tREVIVED, {self.talents["death_is_my_companion"]} left')
+            logging.debug(f'{c_on}[{self.name:>{hunter_name_spacing}}]:\tREVIVED, {self.talents["death_is_my_companion"]} left{c_off}')
         else:
-            logging.debug(f'[{self.name:>{hunter_name_spacing}}]:\tDIED\n')
+            logging.debug(f'{c_on}[{self.name:>{hunter_name_spacing}}]:\tDIED{c_off}\n')
 
 
     ### UTILITY
@@ -209,7 +211,7 @@ class Hunter:
         Returns:
             str: The stats as a formatted string.
         """
-        return f'[{self.name:>{hunter_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>16}] [AP:{self.power:>7.2f}] [Speed:{self.speed:>5.2f}] [Regen:{self.regen:>6.2f}] [CHC: {self.special_chance:>6.4f}] [CHD: {self.special_damage:>5.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: {self.effect_chance:>6.4f}] [LS: {self.lifesteal:>4.2f}]'
+        return f'{c_on}[{self.name:>{hunter_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>16}] [AP:{self.power:>7.2f}] [Speed:{self.speed:>5.2f}] [Regen:{self.regen:>6.2f}] [CHC: {self.special_chance:>6.4f}] [CHD: {self.special_damage:>5.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: {self.effect_chance:>6.4f}] [LS: {self.lifesteal:>4.2f}]{c_off}'
 
 
 class Borge(Hunter):
@@ -225,6 +227,7 @@ class Borge(Hunter):
         # sustain
         self.total_loth: float = 0
         self.total_potion: float = 0
+        self.total_inhaler: float = 0
 
     def __create__(self, config_path: str) -> None:
         self.load_build(config_path)
@@ -410,7 +413,9 @@ class Borge(Hunter):
     def regen_hp(self) -> None:
         """Regenerates hp according to the regen stat, modified by the `Lifedrain Inhalers` attribute.
         """
-        regen_value = self.regen + ((self.attributes["lifedrain_inhalers"] * 0.0008) * self.missing_hp)
+        inhaler_contrib = ((self.attributes["lifedrain_inhalers"] * 0.0008) * self.missing_hp)
+        regen_value = self.regen + inhaler_contrib
+        self.total_inhaler += inhaler_contrib
         self.heal_hp(regen_value, 'regen')
 
     ### SPECIALS
@@ -451,7 +456,7 @@ class Borge(Hunter):
         """Apply the temporaryFires of War effect to Borge.
         """
         self.fires_of_war = self.talents["fires_of_war"] * 0.1
-        logging.debug(f'[{self.name:>{hunter_name_spacing}}]:\t[FoW]]\t{self.fires_of_war:>6.2f} sec')
+        logging.debug(f'{c_on}[{self.name:>{hunter_name_spacing}}]:\t[FoW]]\t{self.fires_of_war:>6.2f} sec{c_off}')
 
     def apply_trample(self, enemies: List) -> int:
         alive_index = [i for i, e in enumerate(enemies) if not e.is_dead()]

@@ -6,8 +6,12 @@ from heapq import heappush as hpush
 from hunters import Borge, Hunter, Ozzy
 
 unit_name_spacing: int = 7
+c_on = '\033[91m' # green
+c_off = '\033[0m' # reset
 
 # TODO: reverse Benchy attack speed. 6.73 in-game, then maybe different decrement?
+
+# TODO: look at everything that uses inheritance and check whether the correct methods are called
 
 class Enemy:
     ### CREATION
@@ -76,11 +80,11 @@ class Enemy:
         if random.random() < self.special_chance:
             damage = self.power * self.special_damage
             is_crit = True
-            logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tATTACK\t{damage:>6.2f} (crit)")
+            logging.debug(f"{c_on}[{self.name:>{unit_name_spacing}}]:\tATTACK\t{damage:>6.2f} (crit){c_off}")
         else:
             damage = self.power
             is_crit = False
-            logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tATTACK\t{damage:>6.2f}")
+            logging.debug(f"{c_on}[{self.name:>{unit_name_spacing}}]:\tATTACK\t{damage:>6.2f}{c_off}")
         hunter.receive_damage(self, damage, is_crit)
 
     def receive_damage(self, damage: float) -> None:
@@ -90,11 +94,11 @@ class Enemy:
             damage (float): Damage to receive.
         """
         if random.random() < self.evade_chance:
-            logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tEVADE')
+            logging.debug(f"{c_on}[{self.name:>{unit_name_spacing}}]:\tEVADE{c_off}")
         else:
             mitigated_damage = damage * (1 - self.damage_reduction)
             self.hp -= mitigated_damage
-            logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tTAKE\t{mitigated_damage:>6.2f}, {self.hp:.2f} HP left")
+            logging.debug(f"{c_on}[{self.name:>{unit_name_spacing}}]:\tTAKE\t{mitigated_damage:>6.2f}, {self.hp:.2f} HP left{c_off}")
             if self.is_dead():
                 self.on_death()
 
@@ -107,7 +111,7 @@ class Enemy:
         """
         effective_heal = min(value, self.missing_hp)
         self.hp += effective_heal
-        logging.debug(f'[{self.name:>{unit_name_spacing}}]:\t{source.upper().replace("_", " ")}\t{effective_heal:>6.2f}')
+        logging.debug(f"{c_on}[{self.name:>{unit_name_spacing}}]:\t{source.upper().replace('_', ' ')}\t{effective_heal:>6.2f}{c_off}")
 
     def regen_hp(self) -> None:
         """Regenerates hp according to the regen stat.
@@ -124,7 +128,7 @@ class Enemy:
         qe = [(p1, p2, u) for p1, p2, u in self.sim.queue if u == 'enemy'][0]
         self.sim.queue.remove(qe)
         hpush(self.sim.queue, (qe[0] + duration, qe[1], qe[2]))
-        logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tSTUNNED\t{duration:>6.2f} sec')
+        logging.debug(f"{c_on}[{self.name:>{unit_name_spacing}}]:\tSTUNNED\t{duration:>6.2f} sec{c_off}")
 
     def is_dead(self) -> bool:
         """Check if the unit is dead.
@@ -138,7 +142,7 @@ class Enemy:
         """Executes on death effects. For enemy units, that is mostly just removing them from the sim queue and incrementing hunter kills.
         """
         self.sim.hunter.total_kills += 1
-        logging.debug(f'[{self.name:>{unit_name_spacing}}]:\tDIED')
+        logging.debug(f"{c_on}[{self.name:>{unit_name_spacing}}]:\tDIED{c_off}")
         self.sim.queue = [(p1, p2, u) for p1, p2, u in self.sim.queue if u != 'enemy']
         heapify(self.sim.queue)
 
@@ -166,7 +170,7 @@ class Enemy:
         Returns:
             str: The stats as a formatted string.
         """
-        return f'[{self.name:>{unit_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>16}] [AP:{self.power:>7.2f}] [Speed:{self.speed:>5.2f}] [Regen:{self.regen:>6.2f}] [CHC: {self.special_chance:>6.4f}] [CHD: {self.special_damage:>5.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}]'
+        return f'{c_on}[{self.name:>{unit_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>16}] [AP:{self.power:>7.2f}] [Speed:{self.speed:>5.2f}] [Regen:{self.regen:>6.2f}] [CHC: {self.special_chance:>6.4f}] [CHD: {self.special_damage:>5.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}]{c_off}'
 
 
 class Boss(Enemy):
@@ -230,19 +234,37 @@ class Boss(Enemy):
         """
         super(Boss, self).attack(hunter)
         self.enrage_stacks += 1
-        logging.debug(f"[{self.name:>{unit_name_spacing}}]:\tENRAGE\t{self.enrage_stacks:>6.2f} stacks")
+        logging.debug(f"{c_on}[{self.name:>{unit_name_spacing}}]:\tENRAGE\t{self.enrage_stacks:>6.2f} stacks{c_off}")
+
+    # def receive_damage(self, damage: float) -> None:
+    #     """Receive damage from an attack. Accounts for damage reduction and evade chance.
+
+    #     Args:
+    #         damage (float): Damage to receive.
+    #     """
+    #     super(Boss, self).receive_damage(damage)
+    #     if self.is_dead():
+    #         self.on_death()
 
     def on_death(self) -> None:
         """Extends the Enemy::enrage() method to log enrage stacks on death.
         """
-        super(Boss, self).on_death()
         self.sim.hunter.enrage_log.append(self.enrage_stacks)
 
     @property
     def speed(self) -> float:
         """Calculates the speed of the boss, taking enrage stacks into account.
         """
-        return (self.speed - 0.0475 * min(self.enrage_stacks, 199))
+        return (self._speed - 0.0475 * min(self.enrage_stacks, 199))
+
+    @speed.setter
+    def speed(self, value: float) -> None:
+        """Sets the speed of the boss.
+
+        Args:
+            value (float): The speed of the boss.
+        """
+        self._speed = value
 
 
 if __name__ == "__main__":
