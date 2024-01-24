@@ -1,0 +1,59 @@
+# max 100, avg 91, time 03:08:53, avg kills 908
+# max loot 310.5k, 254.5k, 185k, 63.3k; avg loot 145.6k, 128.4k, 97.8k, 30.9k
+
+meta:
+  hunter: Borge
+  build_only: False
+  level: 20
+ 
+stats:
+  hp: 133
+  power: 108
+  regen: 73
+  damage_reduction: 24
+  evade_chance: 24
+  effect_chance: 22
+  special_chance: 15
+  special_damage: 3
+  speed: 15
+ 
+talents:
+  death_is_my_companion: 2
+  life_of_the_hunt: 0
+  unfair_advantage: 0
+  impeccable_impacts: 10
+  omen_of_defeat: 0
+  call_me_lucky_loot: 8
+  presence_of_god: 0
+  fires_of_war: 0
+ 
+attributes:
+  soul_of_ares: 3
+  essence_of_ylith: 2
+  helltouch_barrier: 1
+  lifedrain_inhalers: 10
+  spartan_lineage: 6
+  explosive_punches: 0
+  timeless_mastery: 5
+  book_of_baal: 1
+  superior_sensors: 1
+  atlas_protocol: 0
+  weakspot_analysis: 0
+  born_for_battle: 0
+ 
+inscryptions:
+  i3: 8
+  i4: 6
+  i11: 3
+  i13: 8
+  i14: 5
+  i23: 5
+  i24: 8
+  i27: 10
+  i44: 0
+ 
+relics:
+  disk_of_dawn: 0
+ 
+mods:
+  trample: False
