@@ -9,8 +9,6 @@ unit_name_spacing: int = 7
 
 # TODO: reverse Benchy attack speed. 6.73 in-game, then maybe different decrement?
 
-# TODO: look at everything that uses inheritance and check whether the correct methods are called
-
 class Enemy:
     ### CREATION
     def __init__(self, name: str, hunter: Hunter, stage: int, sim) -> None:

@@ -2,7 +2,6 @@ import logging
 import random
 from heapq import heappush as hpush
 from typing import List
-import inspect
 
 import yaml
 
