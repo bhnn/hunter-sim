@@ -2,12 +2,11 @@ import logging
 import random
 from heapq import heappush as hpush
 from typing import List
+import inspect
 
 import yaml
 
 hunter_name_spacing: int = 7
-c_on = '\033[92m' # green
-c_off = '\033[0m' # reset
 
 # TODO: add Lucky Loot mechanics
 # TODO: maybe find a better way to trample()
@@ -23,6 +22,7 @@ class Hunter:
         # main
         self.current_stage = 0
         self.total_kills: int = 0
+        self.elapsed_time: int = 0
         self.revive_log = []
         self.enrage_log = []
 
@@ -127,10 +127,10 @@ class Hunter:
             damage = self.power * self.special_damage
             self.total_crits += 1
             self.total_extra_from_crits += (damage - self.power)
-            logging.debug(f"{c_on}[{self.name:>{hunter_name_spacing}}]:\tATTACK\t{damage:>6.2f} (crit){c_off}")
+            logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f} (crit)")
         else:
             damage = self.power
-            logging.debug(f"{c_on}[{self.name:>{hunter_name_spacing}}]:\tATTACK\t{damage:>6.2f}{c_off}")
+            logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f}")
         target.receive_damage(damage)
         self.total_damage += damage
         self.total_attacks += 1
@@ -144,7 +144,7 @@ class Hunter:
         """
         if random.random() < self.evade_chance:
             self.total_evades += 1
-            logging.debug(f'{c_on}[{self.name:>{hunter_name_spacing}}]:\tEVADE{c_off}')
+            logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tEVADE')
             return 0
         else:
             mitigated_damage = damage * (1 - self.damage_reduction)
@@ -152,7 +152,7 @@ class Hunter:
             self.total_taken += mitigated_damage
             self.total_mitigated += (damage - mitigated_damage)
             self.total_attacks_suffered += 1
-            logging.debug(f"{c_on}[{self.name:>{hunter_name_spacing}}]:\tTAKE\t{mitigated_damage:>6.2f}, {self.hp:.2f} HP left{c_off}")
+            logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tTAKE\t{mitigated_damage:>6.2f}, {self.hp:.2f} HP left")
             if self.is_dead():
                 self.on_death()
             return mitigated_damage
@@ -167,7 +167,7 @@ class Hunter:
         effective_heal = min(value, self.missing_hp)
         overhealing = value - effective_heal
         self.hp += effective_heal
-        logging.debug(f'{c_on}[{self.name:>{hunter_name_spacing}}]:\t{source.upper().replace("_", " ")}\t{effective_heal:>6.2f} (+{overhealing:>6.2f} OVERHEAL){c_off}')
+        logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\t{source.upper().replace("_", " ")}\t{effective_heal:>6.2f} (+{overhealing:>6.2f} OVERHEAL)')
         match source.lower():
             case 'regen':
                 self.total_regen += effective_heal
@@ -194,10 +194,10 @@ class Hunter:
         """
         if len(self.revive_log) < self.talents["death_is_my_companion"]:
             self.hp = self.max_hp * 0.8
-            self.revive_log.append((self.current_stage, self.total_kills))
-            logging.debug(f'{c_on}[{self.name:>{hunter_name_spacing}}]:\tREVIVED, {self.talents["death_is_my_companion"]} left{c_off}')
+            self.revive_log.append(self.current_stage)
+            logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tREVIVED, {self.talents["death_is_my_companion"] - len(self.revive_log)} left')
         else:
-            logging.debug(f'{c_on}[{self.name:>{hunter_name_spacing}}]:\tDIED{c_off}\n')
+            logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tDIED\n')
 
 
     ### UTILITY
@@ -211,7 +211,7 @@ class Hunter:
         Returns:
             str: The stats as a formatted string.
         """
-        return f'{c_on}[{self.name:>{hunter_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>16}] [AP:{self.power:>7.2f}] [Speed:{self.speed:>5.2f}] [Regen:{self.regen:>6.2f}] [CHC: {self.special_chance:>6.4f}] [CHD: {self.special_damage:>5.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: {self.effect_chance:>6.4f}] [LS: {self.lifesteal:>4.2f}]{c_off}'
+        return f'[{self.name:>{hunter_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>16}] [AP:{self.power:>7.2f}] [Speed:{self.speed:>5.2f}] [Regen:{self.regen:>6.2f}] [CHC: {self.special_chance:>6.4f}] [CHD: {self.special_damage:>5.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: {self.effect_chance:>6.4f}] [LS: {self.lifesteal:>4.2f}]'
 
 
 class Borge(Hunter):
@@ -456,7 +456,7 @@ class Borge(Hunter):
         """Apply the temporaryFires of War effect to Borge.
         """
         self.fires_of_war = self.talents["fires_of_war"] * 0.1
-        logging.debug(f'{c_on}[{self.name:>{hunter_name_spacing}}]:\t[FoW]]\t{self.fires_of_war:>6.2f} sec{c_off}')
+        logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\t[FoW]]\t{self.fires_of_war:>6.2f} sec')
 
     def apply_trample(self, enemies: List) -> int:
         alive_index = [i for i, e in enumerate(enemies) if not e.is_dead()]
@@ -560,6 +560,9 @@ class Ozzy(Hunter):
                 "disk_of_dawn": 0
             }
         }
+
+# Tested on 90.80 Attack Damage, 10 crippling (+30%) and 10 omen (8%). 59 HP mobs. Omen does 4.72 at full. It's either (90.80 * 1.3) + 4.72 = 122.76 damage or (90.8 + 4.72) * 1.3 = 124.176. It did 124.18 damage 
+
 
 if __name__ == "__main__":
     b = Borge('./builds/current.yaml')
