@@ -185,6 +185,9 @@ class Boss(Enemy):
         super(Boss, self).__create__(name=name, **self.fetch_stats(hunter, stage))
         self.sim = sim
         self.enrage_stacks = 0
+        if 'presence_of_god' in hunter.talents:
+            hunter.apply_pog(self)
+        logging.debug(f'BOSS_INIT {self}')
 
     def fetch_stats(self, hunter: Hunter, stage: int) -> dict:
         """Fetches the stats of the boss.
