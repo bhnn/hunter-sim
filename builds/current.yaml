@@ -5,13 +5,13 @@ meta:
 
 stats:
   hp: 190
-  power: 165
+  power: 168
   regen: 120
   damage_reduction: 31
-  evade_chance: 32
+  evade_chance: 33
   effect_chance: 35
   special_chance: 45
-  special_damage: 38
+  special_damage: 40
   speed: 25
 
 talents:
