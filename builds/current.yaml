@@ -5,7 +5,7 @@ meta:
 
 stats:
   hp: 190
-  power: 168
+  power: 169
   regen: 120
   damage_reduction: 31
   evade_chance: 33
