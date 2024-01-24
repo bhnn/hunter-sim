@@ -85,13 +85,13 @@ class Enemy:
             logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f}")
         hunter.receive_damage(self, damage, is_crit)
 
-    def receive_damage(self, damage: float) -> None:
+    def receive_damage(self, damage: float, is_reflected: bool = False) -> None:
         """Receive damage from an attack. Accounts for damage reduction and evade chance.
 
         Args:
             damage (float): Damage to receive.
         """
-        if random.random() < self.evade_chance:
+        if not is_reflected and random.random() < self.evade_chance:
             logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tEVADE")
         else:
             mitigated_damage = damage * (1 - self.damage_reduction)
@@ -247,6 +247,7 @@ class Boss(Enemy):
     def on_death(self) -> None:
         """Extends the Enemy::enrage() method to log enrage stacks on death.
         """
+        super(Boss, self).on_death()
         self.sim.hunter.enrage_log.append(self.enrage_stacks)
 
     @property

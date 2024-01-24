@@ -408,7 +408,7 @@ class Borge(Hunter):
             helltouch_effect = (0.1 if (self.current_stage % 100 == 0 and self.current_stage > 0) else 1)
             reflected_damage = final_damage * self.attributes["helltouch_barrier"] * 0.08 * helltouch_effect
             self.total_helltouch += reflected_damage
-            attacker.receive_damage(reflected_damage)
+            attacker.receive_damage(reflected_damage, is_reflected=True)
 
     def regen_hp(self) -> None:
         """Regenerates hp according to the regen stat, modified by the `Lifedrain Inhalers` attribute.
