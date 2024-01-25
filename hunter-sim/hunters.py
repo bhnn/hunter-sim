@@ -451,6 +451,16 @@ class Borge(Hunter):
         pog_effect = (self.talents["presence_of_god"] * 0.04) * stage_effect
         enemy.hp = enemy.max_hp * (1 - pog_effect)
 
+    def apply_ood(self, enemy) -> None:
+        """Apply the Omen of Defeat effect to an enemy.
+
+        Args:
+            enemy (Unit): The enemy to apply the effect to.
+        """
+        stage_effect = 0.5 if self.current_stage % 100 == 0 and self.current_stage > 0 else 1
+        ood_effect = self.talents["omen_of_defeat"] * 0.08 * stage_effect
+        enemy.regen = enemy.regen * (1 - ood_effect)
+
     def apply_fow(self) -> None:
         """Apply the temporaryFires of War effect to Borge.
         """
