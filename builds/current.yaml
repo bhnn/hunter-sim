@@ -1,18 +1,18 @@
 meta:
   hunter: Borge
   build_only: False
-  level: 34
+  level: 35
 
 stats:
-  hp: 190
-  power: 169
+  hp: 195
+  power: 170
   regen: 120
   damage_reduction: 31
   evade_chance: 33
   effect_chance: 35
   special_chance: 45
   special_damage: 40
-  speed: 25
+  speed: 26
 
 talents:
   death_is_my_companion: 2
@@ -20,7 +20,7 @@ talents:
   unfair_advantage: 0
   impeccable_impacts: 10
   omen_of_defeat: 0
-  call_me_lucky_loot: 2
+  call_me_lucky_loot: 3
   presence_of_god: 15
   fires_of_war: 0
 
