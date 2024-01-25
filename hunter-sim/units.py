@@ -231,12 +231,12 @@ class Boss(Enemy):
             return {
                 'hp': 29330,
                 'power': 229.05,
-                'regen': 85.7,
+                'regen': 59.52,
                 'special_chance': 0.3094,
                 'special_damage': 1.83,
                 'damage_reduction': 0,
                 'evade_chance': 0,
-                'speed': 6.75, # 6.73 base in-game
+                'speed': 6.73,
             }
         else:
             raise ValueError(f'Unknown hunter: {hunter}')
@@ -271,7 +271,7 @@ class Boss(Enemy):
     def speed(self) -> float:
         """Calculates the speed of the boss, taking enrage stacks into account.
         """
-        return (self._speed - 0.0475 * min(self.enrage_stacks, 199))
+        return max((self._speed - self.enrage_effect * self.enrage_stacks), 0.5)
 
     @speed.setter
     def speed(self, value: float) -> None:
@@ -284,9 +284,11 @@ class Boss(Enemy):
 
 
 if __name__ == "__main__":
-    h = Borge('./builds/current.yaml')
+    h = Borge('./builds/current_borge.yaml')
+    o = Ozzy('./builds/current_ozzy.yaml')
     e = Enemy("Enemy", h, 99, None)
     h.current_stage = 100
-    b = Boss("Boss", h, 100, None)
+    b = Boss("Boss", o, 100, None)
+    b.enrage_stacks = 200
     print(e)
     print(b)
