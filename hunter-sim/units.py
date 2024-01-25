@@ -22,8 +22,7 @@ class Enemy:
         """
         self.__create__(name=name, **self.fetch_stats(hunter, stage))
         self.sim = sim
-        if 'presence_of_god' in hunter.talents:
-            hunter.apply_pog(self)
+        self.on_create(hunter)
 
     def fetch_stats(self, hunter: Hunter, stage: int) -> dict:
         if isinstance(hunter, Borge):
@@ -60,11 +59,26 @@ class Enemy:
         self.regen: float = regen
         self.damage_reduction: float = damage_reduction
         self.evade_chance: float = evade_chance
-        self.special_chance: float = special_chance
-        self.special_damage: float = special_damage
+        # patch 2024-01-24: enemies cant exceed 25% crit chance and 250% crit damage
+        self.special_chance: float = min(special_chance, 0.25)
+        self.special_damage: float = min(special_damage, 2.5)
         self.speed: float = speed
         self.stun_duration: float = 0
         self.missing_hp: float
+
+    def on_create(self, hunter: Hunter) -> None:
+        """Executes on creation effects such as Presence of God, Omen of Defeat, and Soul of Snek.
+
+        Args:
+            hunter (Hunter): The hunter that this enemy is fighting.
+        """
+        if 'presence_of_god' in hunter.talents:
+            hunter.apply_pog(self)
+        if 'omen_of_defeat' in hunter.talents:
+            hunter.apply_ood(self)
+        if 'soul_of_snek' in hunter.attributes:
+            hunter.apply_snek(self)
+
 
     ### CONTENT
     def attack(self, hunter: Hunter) -> None:
@@ -180,12 +194,14 @@ class Boss(Enemy):
             stage (int): The stage of the boss, for stat selection.
             sim (Simulation): The simulation that this enemy is a part of.
         """
-        super(Boss, self).__create__(name=name, **self.fetch_stats(hunter, stage))
-        self.sim = sim
-        self.enrage_stacks = 0
-        if 'presence_of_god' in hunter.talents:
-            hunter.apply_pog(self)
-        logging.debug(f'BOSS_INIT {self}')
+        super(Boss, self).__init__(name, hunter, stage, sim)
+        self.enrage_stacks: int = 0
+        if isinstance(hunter, Borge):
+            self.enrage_effect = 0.0475
+        elif isinstance(hunter, Ozzy):
+            self.enrage_effect = 0.033658536585365856
+        else:
+            raise ValueError(f'Unknown hunter: {hunter}')
 
     def fetch_stats(self, hunter: Hunter, stage: int) -> dict:
         """Fetches the stats of the boss.
@@ -268,5 +284,9 @@ class Boss(Enemy):
 
 
 if __name__ == "__main__":
-    e = Enemy("Enemy", Borge('./builds/current.yaml'), 99)
+    h = Borge('./builds/current.yaml')
+    e = Enemy("Enemy", h, 99, None)
+    h.current_stage = 100
+    b = Boss("Boss", h, 100, None)
     print(e)
+    print(b)
