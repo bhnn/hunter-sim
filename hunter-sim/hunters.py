@@ -71,7 +71,8 @@ class Hunter:
             'total_effect_procs': self.total_effect_procs,
         }
 
-    def load_dummy(self) -> dict:
+    @staticmethod
+    def load_dummy() -> dict:
         """Abstract placeholder for load_dummy() method. Must be implemented by child classes.
 
         Raises:
@@ -304,7 +305,8 @@ class Borge(Hunter):
         self.lifesteal = (self.attributes["book_of_baal"] * 0.0111)
         self.fires_of_war: float = 0
 
-    def load_dummy(self) -> dict:
+    @staticmethod
+    def load_dummy() -> dict:
         """Create a dummy build dictionary with empty stats to compare against loaded configs.
 
         Returns:
@@ -508,7 +510,8 @@ class Borge(Hunter):
         }
 
 class Ozzy(Hunter):
-    def load_dummy(self) -> dict:
+    @staticmethod
+    def load_dummy() -> dict:
         """Create a dummy build dictionary with empty stats to compare against loaded configs.
 
         Returns:
