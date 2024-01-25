@@ -15,6 +15,7 @@ class Hunter:
     def __init__(self, name: str) -> None:
         self.name = name
         self.missing_hp: float
+        self.missing_hp_pct: float
         self.sim = None
 
         # statistics
@@ -204,6 +205,10 @@ class Hunter:
     @property
     def missing_hp(self) -> float:
         return self.max_hp - self.hp
+
+    @property
+    def missing_hp_pct(self) -> float:
+        return self.hp / self.max_hp
 
     def __str__(self) -> str:
         """Prints the stats of this Hunter's instance.
@@ -572,6 +577,15 @@ class Ozzy(Hunter):
                 "disk_of_dawn": 0
             }
         }
+
+    def apply_snek(self, enemy) -> None:
+        """Apply the Soul of Snek effect to an enemy.
+
+        Args:
+            enemy (Unit): The enemy to apply the effect to.
+        """
+        ood_effect = self.attributes["soul_of_snek"] * 0.088
+        enemy.regen = enemy.regen * (1 - ood_effect)
 
 # Tested on 90.80 Attack Damage, 10 crippling (+30%) and 10 omen (8%). 59 HP mobs. Omen does 4.72 at full. It's either (90.80 * 1.3) + 4.72 = 122.76 damage or (90.8 + 4.72) * 1.3 = 124.176. It did 124.18 damage 
 
