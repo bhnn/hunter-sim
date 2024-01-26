@@ -7,8 +7,10 @@ import yaml
 
 hunter_name_spacing: int = 7
 
-# TODO: add Lucky Loot mechanics
 # TODO: maybe find a better way to trample()
+# TODO: Ozzy: check priority on multistrike and Echo proc
+# TODO: validate vectid elixir
+# TODO: add Cycle of Death, Deal with Death, Medusa
 
 class Hunter:
     ### SETUP
@@ -227,7 +229,7 @@ class Hunter:
         Returns:
             str: The stats as a formatted string.
         """
-        return f'[{self.name:>{hunter_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>16}] [AP:{self.power:>7.2f}] [Speed:{self.speed:>5.2f}] [Regen:{self.regen:>6.2f}] [CHC: {self.special_chance:>6.4f}] [CHD: {self.special_damage:>5.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: {self.effect_chance:>6.4f}] [LS: {self.lifesteal:>4.2f}]'
+        return f'[{self.name:>{hunter_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>16}] [AP:{self.power:>7.2f}] [Regen:{self.regen:>6.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: {self.effect_chance:>6.4f}] [SpC: {self.special_chance:>6.4f}] [SpD: {self.special_damage:>5.2f}] [Speed:{self.speed:>5.2f}] [LS: {self.lifesteal:>4.3f}]'
 
 
 class Borge(Hunter):
@@ -404,7 +406,7 @@ class Borge(Hunter):
         else:
             damage = self.power
             logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f}")
-        damage = super(Borge, self).attack(target, damage)
+        super(Borge, self).attack(target, damage)
 
         #  on_attack() effects
         self.heal_hp(damage * self.lifesteal, 'steal')
@@ -554,6 +556,89 @@ class Borge(Hunter):
         }
 
 class Ozzy(Hunter):
+    ### SETUP
+    def __init__(self, config_path: str):
+        super(Ozzy, self).__init__(name='Ozzy')
+        self.__create__(config_path)
+        self.trickster_charges: int = 0
+        self.crippling_on_target: int = 0
+        self.empowered_regen: int = 0
+        self.attack_queue: List = []
+
+        # statistics
+        # offence
+
+        # sustain
+        self.total_potion: float = 0
+
+    def __create__(self, config_path: str) -> None:
+        self.load_build(config_path)
+        # hp
+        self.max_hp = (
+            (
+                16
+                + (self.base_stats["hp"] * (2 + 0.03 * (self.base_stats["hp"] // 5)))
+            )
+            * (1 + (self.attributes["living_off_the_land"] * 0.02))
+            * (1 + (self.relics["disk_of_dawn"] * 0.02))
+        )
+        self.hp = self.max_hp
+        # power
+        self.power = (
+            (
+                2
+                + (self.base_stats["power"] * (0.3 + 0.01 * (self.base_stats["power"] // 10)))
+            )
+            * (1 + (self.attributes["exo_piercers"] * 0.012))
+        )
+        # regen
+        self.regen = (
+            (
+                0.1
+                + (self.base_stats["regen"] * (0.05 + 0.01 * (self.base_stats["regen"] // 30)))
+            )
+            * (1 + (self.attributes["living_off_the_land"] * 0.02))
+        )
+        self.damage_reduction = (
+            0
+            + (self.base_stats["damage_reduction"] * 0.0035)
+            + (self.attributes["wings_of_ibu"] * 0.026)
+            + (self.inscryptions["i37"] * 0.0111)
+        )
+        # evade_chance
+        self.evade_chance = (
+            0.05
+            + (self.base_stats["evade_chance"] * 0.0062)
+            + (self.attributes["wings_of_ibu"] * 0.005)
+        )
+        # effect_chance
+        self.effect_chance = (
+            0.04
+            + (self.base_stats["effect_chance"] * 0.0035)
+            + (self.attributes["extermination_protocol"] * 0.028)
+            + (self.inscryptions["i31"] * 0.006)
+        )
+        # special_chance
+        self.special_chance = (
+            0.05
+            + (self.base_stats["special_chance"] * 0.0038)
+            + (self.inscryptions["i40"] * 0.005)
+        )
+        # special_damage
+        self.special_damage = (
+            0.25
+            + (self.base_stats["special_damage"] * 0.01)
+        )
+        # speed
+        self.speed = (
+            4
+            - (self.base_stats["speed"] * 0.02)
+            - (self.talents["thousand_needles"] * 0.06)
+            - (self.inscryptions["i36"] * 0.03)
+        )
+        # lifesteal
+        self.lifesteal = (self.attributes["shimmering_scorpion"] * 0.033)
+
     @staticmethod
     def load_dummy() -> dict:
         """Create a dummy build dictionary with empty stats to compare against loaded configs.
@@ -617,6 +702,114 @@ class Ozzy(Hunter):
             }
         }
 
+    def attack(self, target) -> None:
+        """Attack the enemy unit.
+
+        Args:
+            target (Enemy): The enemy to attack.
+        """
+        if not self.attack_queue:
+            if random.random() < self.special_chance:
+                # Stat: Multi-Strike
+                self.attack_queue.append('(MS)')
+                hpush(self.sim.queue, (0, 0, 'hunter'))
+            if random.random() < (self.effect_chance / 2) and self.talents["echo_bullets"]:
+                # Talent: Echo Bullets
+                self.attack_queue.append('(ECHO)')
+                hpush(self.sim.queue, (0, 0, 'hunter'))
+            damage = self.power
+            atk_type = ''
+        else:
+            atk_type = self.attack_queue.pop(0)
+            match atk_type:
+                case '(MS)':
+                    damage = self.power * self.special_damage
+                case '(ECHO)':
+                    if random.random() < self.special_chance:
+                        # Stat: Multi-Strike
+                        self.attack_queue.append('(ECHO-MS)')
+                        hpush(self.sim.queue, (0, 0, 'hunter'))
+                    damage = self.power * (self.talents["echo_bullets"] * 0.05)
+                case '(ECHO-MS)':
+                    damage = self.power * (self.talents["echo_bullets"] * 0.05) * self.special_damage
+                case _:
+                    raise ValueError(f'Unknown attack type: {atk_type}')
+        # omen of decay
+        omen_effect = 0.1 if self.current_stage % 100 == 0 and self.current_stage > 0 else 1
+        damage += damage * (self.talents["omen_of_decay"] * 0.008) * omen_effect
+        # crippling strikes
+        damage *= (1 + (self.crippling_on_target * 0.03))
+        self.crippling_on_target = 0
+        super(Ozzy, self).attack(target, damage)
+        logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f} {atk_type}")
+
+        #  on_attack() effects
+        self.heal_hp(damage * self.lifesteal, 'steal')
+        if random.random() < self.effect_chance and self.talents["tricksters_boon"]:
+            # Talent: Trickster's Boon
+            self.trickster_charges += 1
+            self.total_effect_procs += 1
+        if random.random() < self.effect_chance and self.talents["thousand_needles"]:
+            # Talent: Thousand Needles, will call Hunter.apply_stun()
+            hpush(self.sim.queue, (0, 0, 'stun'))
+            self.total_effect_procs += 1
+        if random.random() < self.effect_chance and (cs := self.talents["crippling_shots"]):
+            # Talent: Crippling Shots
+            self.crippling_on_target += cs
+            self.total_effect_procs += 1
+        if target.is_dead():
+            self.on_kill()
+
+    def receive_damage(self, _, damage: float, is_crit: bool) -> None:
+        """Receive damage from an attack. Accounts for damage reduction, evade chance and trickster charges.
+
+        Args:
+            _ (Enemy): The unit that is attacking. Not used for Ozzy.
+            damage (float): The amount of damage to receive.
+            is_crit (bool): Whether the attack was a critical hit or not.
+        """
+        if self.trickster_charges:
+            self.trickster_charges -= 1
+            logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tEVADE (TRICKSTER)')
+        else:
+            _ = super(Ozzy, self).receive_damage(damage)
+            if is_crit:
+                if (dod := self.attributes["dance_of_dashes"]) and random.random() < dod * 0.15:
+                    # Talent: Dance of Dashes
+                    self.trickster_charges += 1
+                    self.total_effect_procs += 1
+
+    def regen_hp(self) -> None:
+        """Regenerates hp according to the regen stat, modified by the `Vectid Elixir` attribute.
+        """
+        regen_value = self.regen
+        if self.empowered_regen > 0:
+            regen_value *= 1 + (self.attributes["vectid_elixir"] * 0.15)
+            self.empowered_regen -= 1
+        self.heal_hp(regen_value, 'regen')
+
+    ### SPECIALS
+    def on_kill(self) -> None:
+        super(Ozzy, self).on_kill()
+        if random.random() < self.effect_chance and (ua := self.talents["unfair_advantage"]):
+            # Talent: Unfair Advantage
+            potion_healing = self.max_hp * (ua * 0.02)
+            self.heal_hp(potion_healing, "potion")
+            self.total_potion += potion_healing
+            self.total_effect_procs += 1
+            # Attribute: Vectid Elixir
+            self.empowered_regen += 5
+
+    def apply_stun(self, enemy, is_boss: bool) -> None:
+        """Apply a stun to an enemy.
+
+        Args:
+            enemy (Enemy): The enemy to stun.
+        """
+        stun_effect = 0.5 if is_boss else 1
+        stun_duration = self.talents['thousand_needles'] * 0.05 * stun_effect
+        enemy.stun(stun_duration)
+
     def apply_snek(self, enemy) -> None:
         """Apply the Soul of Snek effect to an enemy.
 
@@ -628,5 +821,5 @@ class Ozzy(Hunter):
 
 
 if __name__ == "__main__":
-    b = Borge('./builds/current.yaml')
-    print(b)
+    o = Ozzy('./builds/current_ozzy.yaml')
+    print(o)
