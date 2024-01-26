@@ -27,13 +27,28 @@ class Enemy:
     def fetch_stats(self, hunter: Hunter, stage: int) -> dict:
         if isinstance(hunter, Borge):
             return {
-                'hp':               (9      + (stage * 4)) * (1 + ((stage // 100) * 1.85)),
-                'power':            (2.5    + (stage * 0.7)) * (1 + ((stage // 100) * 1.85)),
-                'regen':            (0.00   + ((stage - 1) * 0.08) if stage > 1 else 0) + ((stage // 100) * 0.42),
-                'special_chance':   (0.0322 + (stage * 0.0004)),
-                'special_damage':   (1.21   + (stage * 0.008025)),
+                'hp': (
+                    (9 + (stage * 4))
+                    * (2.85 if stage > 100 else 1)
+                    * (1 + ((stage // 150) * (stage-149) * (0.006 + 0.006 * (stage-150) // 50)) if stage >= 150 else 1)
+                ),
+                'power': (
+                    (2.5    + (stage * 0.7))
+                    * (2.85 if stage > 100 else 1)
+                    * (1 + ((stage-149) * (0.006 + 0.006 * (stage-150) // 50)) if stage >= 150 else 1)
+                ),
+                'regen': (
+                    (0.00   + ((stage - 1) * 0.08) if stage > 1 else 0)
+                    * (1.052 if stage > 100 else 1)
+                    * (1 + ((stage-149) * (0.006 + 0.006 * (stage-150) // 50)) if stage >= 150 else 1)
+                ),
+                'special_chance': (0.0322 + (stage * 0.0004)),
+                'special_damage': (1.21   + (stage * 0.008025)),
                 'damage_reduction': (0),
-                'evade_chance':     (0      + ((stage // 100) * 0.0004)),
+                'evade_chance': (
+                    0
+                    + (0.004 if stage > 100 else 0)
+                ),
                 'speed':            (4.53   - (stage * 0.006)),
             }
         elif isinstance(hunter, Ozzy):
@@ -229,14 +244,14 @@ class Boss(Enemy):
             }
         elif isinstance(hunter, Ozzy):
             return {
-                'hp': 29330,
+                'hp': 29328,
                 'power': 229.05,
                 'regen': 59.52,
                 'special_chance': 0.3094,
                 'special_damage': 1.83,
                 'damage_reduction': 0,
                 'evade_chance': 0,
-                'speed': 6.73,
+                'speed': 6.87,
             }
         else:
             raise ValueError(f'Unknown hunter: {hunter}')
