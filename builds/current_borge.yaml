@@ -4,14 +4,14 @@ meta:
   level: 35
 
 stats:
-  hp: 195
+  hp: 200
   power: 170
   regen: 120
   damage_reduction: 31
   evade_chance: 33
   effect_chance: 35
-  special_chance: 45
-  special_damage: 40
+  special_chance: 47
+  special_damage: 41
   speed: 26
 
 talents:

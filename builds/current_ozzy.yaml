@@ -4,15 +4,15 @@ meta:
   level: 41
 
 stats:
-  hp: 185
-  power: 189
+  hp: 205
+  power: 190
   regen: 150
   damage_reduction: 46
-  evade_chance: 28
+  evade_chance: 29
   effect_chance: 34
   special_chance: 32
   special_damage: 22
-  speed: 24
+  speed: 25
 
 talents:
   death_is_my_companion: 2
@@ -21,11 +21,11 @@ talents:
   thousand_needles: 10
   omen_of_decay: 10
   call_me_lucky_loot: 10
-  crippling_shots: 2
+  crippling_shots: 3
   echo_bullets: 1
 
 attributes:
-  living_off_the_land: 41
+  living_off_the_land: 44
   exo_piercers: 17
   wings_of_ibu: 5
   timeless_mastery: 5
