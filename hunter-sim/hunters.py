@@ -29,8 +29,6 @@ class Hunter:
         # offence
         self.total_attacks: int = 0
         self.total_damage: float = 0
-        self.total_crits: int = 0
-        self.total_extra_from_crits: float = 0
 
         # sustain
         self.total_taken: float = 0
@@ -46,7 +44,7 @@ class Hunter:
         self.total_effect_procs: int = 0
 
         # loot
-        # TODO include loot
+        self.total_loot: float = 0
 
     def get_results(self) -> List:
         """Fetch the hunter results for end-of-run statistics.
@@ -115,27 +113,16 @@ class Hunter:
         """
         return cfg.keys() == self.load_dummy().keys() and all(cfg[k].keys() == self.load_dummy()[k].keys() for k in cfg.keys())
 
-    def attack(self, target) -> float:
+    def attack(self, target, damage: float) -> None:
         """Attack the enemy unit.
 
         Args:
             target (Enemy): The enemy to attack.
-
-        Returns:
-            float: The damage dealt.
+            damage (float): The amount of damage to deal.
         """
-        if random.random() < self.special_chance:
-            damage = self.power * self.special_damage
-            self.total_crits += 1
-            self.total_extra_from_crits += (damage - self.power)
-            logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f} (crit)")
-        else:
-            damage = self.power
-            logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f}")
         target.receive_damage(damage)
         self.total_damage += damage
         self.total_attacks += 1
-        return damage
 
     def receive_damage(self, damage: float) -> float:
         """Receive damage from an attack. Accounts for damage reduction, evade chance and reflected damage.
@@ -180,6 +167,30 @@ class Hunter:
                 self.unfair_advantage += effective_heal
             case _:
                 raise ValueError(f'Unknown heal source: {source}')
+
+    def on_kill(self) -> None:
+        """Actions to take when the hunter kills an enemy. The Hunter() implementation only handles loot.
+        """
+        loot = self.compute_loot()
+        if random.random() < self.effect_chance and (LL := self.talents["call_me_lucky_loot"]):
+            # Talent: Call Me Lucky Loot
+            loot *= 1 + (self.talents["call_me_lucky_loot"] * 0.2)
+            self.total_effect_procs += 1
+        self.total_loot += loot
+
+    def compute_loot(self) -> float:
+        """Compute the amount of loot gained from a kill. Affected by stage loot bonus, talents and attributes.
+
+        Returns:
+            float: The amount of loot gained.
+        """
+        stage_mult = (1.05 ** (self.current_stage+1)) * (self.current_stage // 100 * 5.0)
+        base_loot = 1.0 if self.current_stage != 100 else 1300.0
+        if isinstance(self, Borge):
+            timeless_mastery = 1 + self.attributes["timeless_mastery"] * 0.14
+        elif isinstance(self, Ozzy):
+            timeless_mastery = 1 + (self.attributes["timeless_mastery"] * 0.16)
+        return base_loot * stage_mult + timeless_mastery
 
     def is_dead(self) -> bool:
         """Check if the hunter is dead.
@@ -227,6 +238,8 @@ class Borge(Hunter):
 
         # statistics
         # offence
+        self.total_crits: int = 0
+        self.total_extra_from_crits: float = 0
         self.total_helltouch: float = 0
 
         # sustain
@@ -378,7 +391,22 @@ class Borge(Hunter):
         }
 
     def attack(self, target) -> None:
-        damage = super(Borge, self).attack(target)
+        """Attack the enemy unit.
+
+        Args:
+            target (_type_): The enemy to attack.
+        """
+        if random.random() < self.special_chance:
+            damage = self.power * self.special_damage
+            self.total_crits += 1
+            self.total_extra_from_crits += (damage - self.power)
+            logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f} (crit)")
+        else:
+            damage = self.power
+            logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f}")
+        damage = super(Borge, self).attack(target, damage)
+
+        #  on_attack() effects
         self.heal_hp(damage * self.lifesteal, 'steal')
         if random.random() < self.effect_chance and (LotH := self.talents["life_of_the_hunt"]):
             # Talent: Life of the Hunt
@@ -426,17 +454,13 @@ class Borge(Hunter):
 
     ### SPECIALS
     def on_kill(self) -> None:
+        super(Borge, self).on_kill()
         if random.random() < self.effect_chance and (ua := self.talents["unfair_advantage"]):
             # Talent: Unfair Advantage
             potion_healing = self.max_hp * (ua * 0.02)
             self.heal_hp(potion_healing, "potion")
             self.total_potion += potion_healing
             self.total_effect_procs += 1
-        if random.random() < self.effect_chance and (LL := self.talents["call_me_lucky_loot"]):
-            # Talent: Call Me Lucky Loot
-            # 1 + (0.2 x LL) extra loot
-            self.total_effect_procs += 1
-            pass
 
     def apply_stun(self, enemy, is_boss: bool) -> None:
         """Apply a stun to an enemy.
@@ -487,6 +511,21 @@ class Borge(Hunter):
         return trample_kills
 
     ### UTILITY
+    @property
+    def power(self) -> float:
+        """Getter for the power attribute. Accounts for the Born for Battle effect.
+
+        Returns:
+            float: The power of the hunter.
+        """
+        # 100 * (1 + 0.5 (1 + 1 * 0.001))
+        # return self._power * ((1 + self.get_missing_pct) * (1 + self.attributes["born_for_battle"] * 0.001))
+        return self._power
+
+    @power.setter
+    def power(self, value: float) -> None:
+        self._power = value
+
     @property
     def speed(self) -> float:
         """Getter for the speed attribute. Accounts for the Fires of War effect and resets it afterwards.
@@ -586,8 +625,6 @@ class Ozzy(Hunter):
         """
         ood_effect = self.attributes["soul_of_snek"] * 0.088
         enemy.regen = enemy.regen * (1 - ood_effect)
-
-# Tested on 90.80 Attack Damage, 10 crippling (+30%) and 10 omen (8%). 59 HP mobs. Omen does 4.72 at full. It's either (90.80 * 1.3) + 4.72 = 122.76 damage or (90.8 + 4.72) * 1.3 = 124.176. It did 124.18 damage 
 
 
 if __name__ == "__main__":
