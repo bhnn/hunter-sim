@@ -73,9 +73,12 @@ class SimulationManager():
         res_dict["enrage_log"] = list(chain.from_iterable(res_dict["enrage_log"]))
         res_dict["first_revive"] = [r[0] for r in res_dict["revive_log"] if r]
         res_dict["second_revive"] = [r[1] for r in res_dict["revive_log"] if r and len(r) > 1]
-        final_stages = {i:j/len(res_dict["final_stage"]) for i,j in Counter(res_dict["final_stage"]).items()}
-        avg = {k: statistics.fmean(v) for k, v in res_dict.items() if v and type(v[0]) != list}
-        std = {k: statistics.stdev(v) for k, v in res_dict.items() if v and type(v[0]) != list}
+        if len(res_dict["final_stage"]) > 1:
+            avg = {k: statistics.fmean(v) for k, v in res_dict.items() if v and type(v[0]) != list}
+            std = {k: statistics.stdev(v) for k, v in res_dict.items() if v and type(v[0]) != list}
+        else:
+            avg = res_dict
+            std = {k: 0 for k in res_dict}
         out = []
         divider = "-" * 10
         c_off = '\033[0m'
@@ -118,10 +121,13 @@ class SimulationManager():
         out.append(f'{c_on}{divider}{c_off}')
         c_on = '\033[38;2;98;65;169m' if coloured else ''
         out.append(f'{c_on}Loot:{c_off}')
-        out.append(f'Final stage reached:  MAX({max(res_dict["final_stage"])}), MED({floor(statistics.median(res_dict["final_stage"]))}), MIN({min(res_dict["final_stage"])})')
+        out.append(f'Final stage reached:  MAX({max(res_dict["final_stage"])}), MED({floor(statistics.median(res_dict["final_stage"]))}), AVG({floor(statistics.mean(res_dict["final_stage"]))}), MIN({min(res_dict["final_stage"])})')
         out.append('')
-        for i, k in enumerate(sorted([*final_stages])):
-            out.append(f'{k:>3d}: {final_stages[k]:>6.2%}   ' + ("\n" if (i + 1) % 5 == 0 and i > 0 else ""))
+        stage_out = []
+        final_stage_pct = {i:j/len(res_dict["final_stage"]) for i,j in Counter(res_dict["final_stage"]).items()}
+        for i, k in enumerate(sorted([*final_stage_pct])):
+            stage_out.append(f'{k:>3d}: {final_stage_pct[k]:>6.2%}   ' + ("\n" if (i + 1) % 5 == 0 and i > 0 else ""))
+        out.append(''.join(stage_out))
         out.append('')
         print('\n'.join(out))
 
@@ -182,13 +188,13 @@ class Simulation():
                     match action:
                         case 'hunter':
                             hunter.attack(enemy)
-                            hpush(self.queue, (self.elapsed_time + 1 + hunter.speed, 1, 'hunter'))
-                            self.elapsed_time += 1
+                            hpush(self.queue, (self.elapsed_time + hunter.speed, 1, 'hunter'))
+                            # self.elapsed_time += 1
                         case 'enemy':
                             enemy.attack(hunter)
                             if not enemy.is_dead():
-                                hpush(self.queue, (self.elapsed_time + 1 + enemy.speed, 2, 'enemy'))
-                            self.elapsed_time += 1
+                                hpush(self.queue, (self.elapsed_time + enemy.speed, 2, 'enemy'))
+                            # self.elapsed_time += 1
                         case 'stun':
                             hunter.apply_stun(enemy, isinstance(enemy, Boss))
                         case 'regen':
@@ -216,17 +222,18 @@ class Simulation():
     #     print(sorted_res)
 
 def main():
-    logging.basicConfig(
-        # filename='nrwoope_log.txt',
-        # filemode='w',
-        # force=True,
-        # level=logging.DEBUG,
-    )
-    logging.getLogger().setLevel(logging.INFO)
-
     import timing
-    smgr = SimulationManager('./builds/current.yaml')
-    res = smgr.run_sims(3, threaded=30)
+    num_sims = 50
+    if num_sims == 1:
+        logging.basicConfig(
+            # filename='./logs/1_time_advance_log.txt',
+            # filemode='w',
+            # force=True,
+            # level=logging.DEBUG,
+        )
+        logging.getLogger().setLevel(logging.DEBUG)
+    smgr = SimulationManager('./builds/current_borge.yaml')
+    res = smgr.run_sims(num_sims, threaded=30)
     smgr.pprint_res(res, 'Test')
 
 
