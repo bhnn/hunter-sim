@@ -21,11 +21,11 @@ talents:
   thousand_needles: 10
   omen_of_decay: 10
   call_me_lucky_loot: 10
-  crippling_shots: 3
+  crippling_shots: 4
   echo_bullets: 1
 
 attributes:
-  living_off_the_land: 44
+  living_off_the_land: 47
   exo_piercers: 17
   wings_of_ibu: 5
   timeless_mastery: 5
