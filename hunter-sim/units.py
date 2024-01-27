@@ -7,8 +7,6 @@ from hunters import Borge, Hunter, Ozzy
 
 unit_name_spacing: int = 7
 
-# TODO: reverse Benchy attack speed. 6.73 in-game, then maybe different decrement?
-
 class Enemy:
     ### CREATION
     def __init__(self, name: str, hunter: Hunter, stage: int, sim) -> None:
@@ -33,34 +31,46 @@ class Enemy:
                     * (1 + ((stage // 150) * (stage-149) * (0.006 + 0.006 * (stage-150) // 50)) if stage >= 150 else 1)
                 ),
                 'power': (
-                    (2.5    + (stage * 0.7))
+                    (2.5 + (stage * 0.7))
                     * (2.85 if stage > 100 else 1)
                     * (1 + ((stage-149) * (0.006 + 0.006 * (stage-150) // 50)) if stage >= 150 else 1)
                 ),
                 'regen': (
-                    (0.00   + ((stage - 1) * 0.08) if stage > 1 else 0)
+                    (0.00 + ((stage - 1) * 0.08) if stage > 1 else 0)
                     * (1.052 if stage > 100 else 1)
                     * (1 + ((stage-149) * (0.006 + 0.006 * (stage-150) // 50)) if stage >= 150 else 1)
                 ),
                 'special_chance': (0.0322 + (stage * 0.0004)),
-                'special_damage': (1.21   + (stage * 0.008025)),
+                'special_damage': (1.21 + (stage * 0.008025)),
                 'damage_reduction': (0),
                 'evade_chance': (
                     0
                     + (0.004 if stage > 100 else 0)
                 ),
-                'speed':            (4.53   - (stage * 0.006)),
+                'speed':(4.53 - (stage * 0.006)),
             }
         elif isinstance(hunter, Ozzy):
             return {
-                'hp':               11     + (stage * 6),
-                'power':            1.35   + (stage * 0.75),
-                'regen':            0.02   + ((stage-1) * 0.1) if stage >= 1 else 0,
-                'special_chance':   0.0994 + (stage * 0.0006),
-                'special_damage':   1.03   + (stage * 0.008),
+                'hp': (
+                    (11 + (stage * 6))
+                    * (2.9 if stage > 100 else 1)
+                ),
+                'power': (
+                    (1.35 + (stage * 0.75))
+                    * (2.7 if stage > 100 else 1)
+                ),
+                'regen': (
+                    (0.02 + ((stage-1) * 0.1) if stage > 0 else 0)
+                    * (1.25 if stage > 100 else 1)
+                ),
+                'special_chance': 0.0994 + (stage * 0.0006),
+                'special_damage': 1.03 + (stage * 0.008),
                 'damage_reduction': 0,
-                'evade_chance':     0,
-                'speed':            3.20   - (stage * 0.004),
+                'evade_chance': (
+                    0
+                    + (0.01 if stage > 100 else 0)
+                ),
+                'speed': 3.20 - (stage * 0.004),
             }
         else:
             raise ValueError(f'Unknown hunter: {hunter}')
@@ -250,8 +260,8 @@ class Boss(Enemy):
                 'regen': 59.52,
                 'special_chance': 0.3094,
                 'special_damage': 1.83,
-                'damage_reduction': 0,
-                'evade_chance': 0,
+                'damage_reduction': 0.05,
+                'evade_chance': 0.01,
                 'speed': 6.87,
             }
         else:
@@ -301,7 +311,6 @@ class Boss(Enemy):
 
 if __name__ == "__main__":
     # h = Borge('./builds/current_borge.yaml')
-    o = Ozzy('./builds/current_ozzy.yaml')
-    e = Enemy("Enemy", o, 15, None)
-    o.current_stage = 100
+    o = Ozzy('./builds/medusa_test.yaml')
+    e = Enemy("Enemy", o, 114, None)
     print(e)
