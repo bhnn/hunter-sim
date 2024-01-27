@@ -93,7 +93,8 @@ class Enemy:
             hunter.apply_ood(self)
         if 'soul_of_snek' in hunter.attributes:
             hunter.apply_snek(self)
-
+        if 'gift_of_medusa' in hunter.attributes:
+            hunter.apply_medusa(self)
 
     ### CONTENT
     def attack(self, hunter: Hunter) -> None:
@@ -299,11 +300,8 @@ class Boss(Enemy):
 
 
 if __name__ == "__main__":
-    h = Borge('./builds/current_borge.yaml')
+    # h = Borge('./builds/current_borge.yaml')
     o = Ozzy('./builds/current_ozzy.yaml')
-    e = Enemy("Enemy", h, 99, None)
-    h.current_stage = 100
-    b = Boss("Boss", o, 100, None)
-    b.enrage_stacks = 200
+    e = Enemy("Enemy", o, 15, None)
+    o.current_stage = 100
     print(e)
-    print(b)
