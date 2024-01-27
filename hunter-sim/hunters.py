@@ -8,9 +8,14 @@ import yaml
 hunter_name_spacing: int = 7
 
 # TODO: maybe find a better way to trample()
-# TODO: Ozzy: check priority on multistrike and Echo proc
 # TODO: validate vectid elixir
-# TODO: check how much the getters are slowing down the sim. maybe move them to on_death to increase stats permanently instead
+# TODO: Ozzy: move @property code to on_death() to speed things up?
+# TODO: Borge: move @property code as well?
+
+""" Assumptions:
+- order of attacks: main -> ms -> echo -> echo ms
+- out of all triggered attacks, only 1 can stun
+"""
 
 class Hunter:
     ### SETUP
@@ -62,8 +67,6 @@ class Hunter:
             'enrage_log': self.enrage_log,
             'total_attacks': self.total_attacks,
             'total_damage': self.total_damage,
-            'total_crits': self.total_crits,
-            'total_extra_from_crits': self.total_extra_from_crits,
             'total_taken': self.total_taken,
             'total_regen': self.total_regen,
             'total_attacks_suffered': self.total_attacks_suffered,
@@ -167,7 +170,7 @@ class Hunter:
             case 'loth':
                 self.total_loth += effective_heal
             case 'potion':
-                self.unfair_advantage += effective_heal
+                self.total_potion += effective_heal
             case _:
                 raise ValueError(f'Unknown heal source: {source}')
 
@@ -552,6 +555,8 @@ class Borge(Hunter):
             List: List of all collected stats.
         """
         return super(Borge, self).get_results() | {
+            'total_crits': self.total_crits,
+            'total_extra_from_crits': self.total_extra_from_crits,
             'total_helltouch': self.total_helltouch,
             'total_loth': self.total_loth,
             'total_potion': self.total_potion,
@@ -562,6 +567,7 @@ class Ozzy(Hunter):
     def __init__(self, config_path: str):
         super(Ozzy, self).__init__(name='Ozzy')
         self.__create__(config_path)
+        self.can_stun: bool = False
         self.trickster_charges: int = 0
         self.crippling_on_target: int = 0
         self.empowered_regen: int = 0
@@ -711,14 +717,15 @@ class Ozzy(Hunter):
             target (Enemy): The enemy to attack.
         """
         if not self.attack_queue:
+            self.can_stun = True
             if random.random() < self.special_chance:
                 # Stat: Multi-Strike
                 self.attack_queue.append('(MS)')
-                hpush(self.sim.queue, (0, 0, 'hunter'))
+                hpush(self.sim.queue, (0, 1, 'hunter_special'))
             if random.random() < (self.effect_chance / 2) and self.talents["echo_bullets"]:
                 # Talent: Echo Bullets
                 self.attack_queue.append('(ECHO)')
-                hpush(self.sim.queue, (0, 0, 'hunter'))
+                hpush(self.sim.queue, (0, 2, 'hunter_special'))
             damage = self.power
             atk_type = ''
         else:
@@ -730,7 +737,7 @@ class Ozzy(Hunter):
                     if random.random() < self.special_chance:
                         # Stat: Multi-Strike
                         self.attack_queue.append('(ECHO-MS)')
-                        hpush(self.sim.queue, (0, 0, 'hunter'))
+                        hpush(self.sim.queue, (0, 3, 'hunter_special'))
                     damage = self.power * (self.talents["echo_bullets"] * 0.05)
                 case '(ECHO-MS)':
                     damage = self.power * (self.talents["echo_bullets"] * 0.05) * self.special_damage
@@ -738,14 +745,15 @@ class Ozzy(Hunter):
                     raise ValueError(f'Unknown attack type: {atk_type}')
         # omen of decay
         omen_effect = 0.1 if self.current_stage % 100 == 0 and self.current_stage > 0 else 1
-        damage += damage * (self.talents["omen_of_decay"] * 0.008) * omen_effect
+        omen_damage = target.hp * (self.talents["omen_of_decay"] * 0.008) * omen_effect
+        damage += omen_damage
         # crippling shots
-        cripple_damage *= (1 + (self.crippling_on_target * 0.03))
+        cripple_damage = damage * (1 + (self.crippling_on_target * 0.03))
         self.crippling_on_target = 0
+        logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{cripple_damage:>6.2f} {atk_type} OMEN: {omen_damage:>6.2f}")
         super(Ozzy, self).attack(target, cripple_damage)
-        logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f} {atk_type}")
 
-        #  on_attack() effects
+        # on_attack() effects
         # crippling shots inflicts _extra damage_ that does not count towards lifesteal
         self.heal_hp(damage * self.lifesteal, 'steal')
         if random.random() < self.effect_chance and self.talents["tricksters_boon"]:
@@ -754,11 +762,13 @@ class Ozzy(Hunter):
             self.total_effect_procs += 1
         if random.random() < self.effect_chance and self.talents["thousand_needles"]:
             # Talent: Thousand Needles, will call Hunter.apply_stun()
+            self.can_stun = False
             hpush(self.sim.queue, (0, 0, 'stun'))
             self.total_effect_procs += 1
         if random.random() < self.effect_chance and (cs := self.talents["crippling_shots"]):
             # Talent: Crippling Shots
             self.crippling_on_target += cs
+            logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tCRIPPLE\t+{cs}")
             self.total_effect_procs += 1
         if target.is_dead():
             self.on_kill()
@@ -882,8 +892,18 @@ class Ozzy(Hunter):
     def special_damage(self, value: float) -> None:
         self._special_damage = value
 
+    def get_results(self) -> List:
+        """Fetch the hunter results for end-of-run statistics.
+
+        Returns:
+            List: List of all collected stats.
+        """
+        return super(Ozzy, self).get_results() | {
+            'total_potion': self.total_potion,
+        }
+
 if __name__ == "__main__":
-    o = Ozzy('./builds/medusa_test.yaml')
+    o = Ozzy('./builds/current_ozzy.yaml')
     print(o)
     o.times_revived = 2
     print(o)
