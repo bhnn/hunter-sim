@@ -61,8 +61,8 @@ class SimulationManager():
             for _ in tqdm(range(repetitions), leave=False):
                 self.results.append(Simulation(hunter_class(self.hunter_config_path)).run())
         
-        # print results
-        res = {}
+        # prepare results
+        res = {'hunter': hunter_class}
         for d in self.results:
             for k, v in d.items():
                 res.setdefault(k, []).append(v)
@@ -70,6 +70,7 @@ class SimulationManager():
 
     @staticmethod
     def pprint_res(res_dict: dict, custom_message: str = None, coloured: bool = False) -> None:
+        hunter_class = res_dict.pop('hunter')
         res_dict["enrage_log"] = list(chain.from_iterable(res_dict["enrage_log"]))
         res_dict["first_revive"] = [r[0] for r in res_dict["revive_log"] if r]
         res_dict["second_revive"] = [r[1] for r in res_dict["revive_log"] if r and len(r) > 1]
@@ -87,9 +88,12 @@ class SimulationManager():
         c_on = '\033[38;2;93;101;173m' if coloured else ''
         out.append(f'{c_on}Main stats:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Enrage log: {avg["enrage_log"]:>25.2f}\t(+/- {std["enrage_log"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Revive stage 1st: {avg["first_revive"]:>19.2f}\t(+/- {std["first_revive"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Revive stage 2nd: {avg["second_revive"]:>19.2f}\t(+/- {std["second_revive"]:>10.2f}){c_off}')
+        if res_dict["enrage_log"]:
+            out.append(f'{c_on}Enrage log: {avg["enrage_log"]:>25.2f}\t(+/- {std["enrage_log"]:>10.2f}){c_off}')
+        if res_dict["first_revive"]:
+            out.append(f'{c_on}Revive stage 1st: {avg["first_revive"]:>19.2f}\t(+/- {std["first_revive"]:>10.2f}){c_off}')
+        if res_dict["second_revive"]:
+            out.append(f'{c_on}Revive stage 2nd: {avg["second_revive"]:>19.2f}\t(+/- {std["second_revive"]:>10.2f}){c_off}')
         out.append(f'{c_on}Avg total kills: {avg["total_kills"]:>20.2f}\t(+/- {std["total_kills"]:>10.2f}){c_off}')
         out.append(f'{c_on}Elapsed time: {str(timedelta(seconds=round(avg["elapsed_time"], 0))):>23}\t(+/- {str(timedelta(seconds=round(std["elapsed_time"], 0))):>10}){c_off}')
         c_on = '\033[38;2;195;61;3m' if coloured else ''
@@ -97,8 +101,12 @@ class SimulationManager():
         out.append(f'{c_on}{divider}{c_off}')
         out.append(f'{c_on}Avg total attacks: {avg["total_attacks"]:>18.2f}\t(+/- {std["total_attacks"]:>10.2f}){c_off}')
         out.append(f'{c_on}Avg total damage: {avg["total_damage"]:>19.2f}\t(+/- {std["total_damage"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Avg total crits: {avg["total_crits"]:>20.2f}\t(+/- {std["total_crits"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Avg total extra from crits: {avg["total_extra_from_crits"]:>3.2f}\t(+/- {std["total_extra_from_crits"]:>10.2f}){c_off}')
+        if hunter_class == Borge:
+            out.append(f'{c_on}Avg total crits: {avg["total_crits"]:>20.2f}\t(+/- {std["total_crits"]:>10.2f}){c_off}')
+            out.append(f'{c_on}Avg total extra from crits: {avg["total_extra_from_crits"]:>9.2f}\t(+/- {std["total_extra_from_crits"]:>10.2f}){c_off}')
+        elif hunter_class == Ozzy:
+            out.append(f'{c_on}Avg total multistrikes: {avg["total_multistrikes"]:>13.2f}\t(+/- {std["total_multistrikes"]:>10.2f}){c_off}')
+            out.append(f'{c_on}Avg total extra from ms: {avg["total_ms_extra_damage"]:>9.2f}\t(+/- {std["total_ms_extra_damage"]:>10.2f}){c_off}')
         c_on = '\033[38;2;1;163;87m' if coloured else ''
         out.append(f'{c_on}Sustain:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
@@ -110,17 +118,23 @@ class SimulationManager():
         out.append(f'{c_on}Defence:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         out.append(f'{c_on}Avg total evades: {avg["total_evades"]:>19.2f}\t(+/- {std["total_evades"]:>10.2f}){c_off}')
+        if hunter_class == Ozzy:
+            out.append(f'{c_on}Avg trickster evades: {avg["total_trickster_evades"]:>15.2f}\t(+/- {std["total_trickster_evades"]:>10.2f}){c_off}')
         out.append(f'{c_on}Avg total mitigated: {avg["total_mitigated"]:>16.2f}\t(+/- {std["total_mitigated"]:>10.2f}){c_off}')
         c_on = '\033[38;2;14;156;228m' if coloured else ''
         out.append(f'{c_on}Effects:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         out.append(f'{c_on}Avg total effect procs: {avg["total_effect_procs"]:>13.2f}\t(+/- {std["total_effect_procs"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Avg total helltouch: {avg["total_helltouch"]:>16.2f}\t(+/- {std["total_helltouch"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Avg total loth: {avg["total_loth"]:>21.2f}\t(+/- {std["total_loth"]:>10.2f}){c_off}')
+        if hunter_class == Borge:
+            out.append(f'{c_on}Avg total helltouch: {avg["total_helltouch"]:>16.2f}\t(+/- {std["total_helltouch"]:>10.2f}){c_off}')
+            out.append(f'{c_on}Avg total loth: {avg["total_loth"]:>21.2f}\t(+/- {std["total_loth"]:>10.2f}){c_off}')
         out.append(f'{c_on}Avg total potion: {avg["total_potion"]:>19.2f}\t(+/- {std["total_potion"]:>10.2f}){c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         c_on = '\033[38;2;98;65;169m' if coloured else ''
         out.append(f'{c_on}Loot:{c_off}')
+        out.append(f'{c_on}{divider}{c_off}')
+        out.append(f'{c_on}Avg LPM: {avg["total_loot"]/(avg["elapsed_time"]/60):>28.2f}\t(+/- {std["total_loot"]/(std["elapsed_time"]/60):>10.2f}){c_off}')
+        out.append(f'{c_on}{divider}{c_off}')
         out.append(f'Final stage reached:  MAX({max(res_dict["final_stage"])}), MED({floor(statistics.median(res_dict["final_stage"]))}), AVG({floor(statistics.mean(res_dict["final_stage"]))}), MIN({min(res_dict["final_stage"])})')
         out.append('')
         stage_out = []
@@ -168,7 +182,7 @@ class Simulation():
             while self.enemies:
                 logging.debug('')
                 logging.debug(hunter)
-                if not isinstance(self.enemies[0], Boss):
+                if 'trample' in hunter.mods and not isinstance(self.enemies[0], Boss):
                     trample_kills = hunter.apply_trample(self.enemies)
                     if trample_kills > 0:
                         logging.debug(f'[{hunter.name:>7}]:\tTRAMPLE {trample_kills} enemies')
@@ -194,6 +208,8 @@ class Simulation():
                                 hpush(self.queue, (round(prev_time + enemy.speed, 3), 2, 'enemy'))
                         case 'stun':
                             hunter.apply_stun(enemy, isinstance(enemy, Boss))
+                        case 'hunter_special':
+                            hunter.attack(enemy)
                         case 'regen':
                             hunter.regen_hp()
                             enemy.regen_hp()
@@ -220,13 +236,13 @@ class Simulation():
 
 def main():
     import timing
-    num_sims = 50
+    num_sims = 100
     if num_sims == 1:
         logging.basicConfig(
-            # filename='./logs/1_time_advance_log.txt',
-            # filemode='w',
-            # force=True,
-            # level=logging.DEBUG,
+            filename='./logs/ozzy_test.txt',
+            filemode='w',
+            force=True,
+            level=logging.DEBUG,
         )
         logging.getLogger().setLevel(logging.DEBUG)
     smgr = SimulationManager('./builds/current_borge.yaml')
@@ -235,5 +251,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # import timing
     main()
