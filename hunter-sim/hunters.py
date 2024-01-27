@@ -10,7 +10,7 @@ hunter_name_spacing: int = 7
 # TODO: maybe find a better way to trample()
 # TODO: Ozzy: check priority on multistrike and Echo proc
 # TODO: validate vectid elixir
-# TODO: add Cycle of Death, Deal with Death, Medusa
+# TODO: check how much the getters are slowing down the sim. maybe move them to on_death to increase stats permanently instead
 
 class Hunter:
     ### SETUP
@@ -25,6 +25,7 @@ class Hunter:
         self.current_stage = 0
         self.total_kills: int = 0
         self.elapsed_time: int = 0
+        self.times_revived: int = 0
         self.revive_log = []
         self.enrage_log = []
 
@@ -206,10 +207,11 @@ class Hunter:
         """Actions to take when the hunter dies. Logs the revive and resets the hp to 80% of max hp if a `Death is my Companion`
         charge can be used. If no revives are left, the hunter is marked as dead.
         """
-        if len(self.revive_log) < self.talents["death_is_my_companion"]:
+        if self.times_revived < self.talents["death_is_my_companion"]:
             self.hp = self.max_hp * 0.8
             self.revive_log.append(self.current_stage)
-            logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tREVIVED, {self.talents["death_is_my_companion"] - len(self.revive_log)} left')
+            self.times_revived += 1
+            logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tREVIVED, {self.talents["death_is_my_companion"] - self.times_revived} left')
         else:
             logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tDIED\n')
 
@@ -431,7 +433,7 @@ class Borge(Hunter):
         """Receive damage from an attack. Accounts for damage reduction, evade chance and reflected damage.
 
         Args:
-            attacker (Unit): The unit that is attacking. Used to apply damage reflection.
+            attacker (Enemy): The unit that is attacking. Used to apply damage reflection.
             damage (float): The amount of damage to receive.
             is_crit (bool): Whether the attack was a critical hit or not.
         """
@@ -478,7 +480,7 @@ class Borge(Hunter):
         """Apply the Presence of a God effect to an enemy.
 
         Args:
-            enemy (Unit): The enemy to apply the effect to.
+            enemy (Enemy): The enemy to apply the effect to.
         """
         stage_effect = 0.5 if self.current_stage % 100 == 0 and self.current_stage > 0 else 1
         pog_effect = (self.talents["presence_of_god"] * 0.04) * stage_effect
@@ -488,7 +490,7 @@ class Borge(Hunter):
         """Apply the Omen of Defeat effect to an enemy.
 
         Args:
-            enemy (Unit): The enemy to apply the effect to.
+            enemy (Enemy): The enemy to apply the effect to.
         """
         stage_effect = 0.5 if self.current_stage % 100 == 0 and self.current_stage > 0 else 1
         ood_effect = self.talents["omen_of_defeat"] * 0.08 * stage_effect
@@ -737,13 +739,14 @@ class Ozzy(Hunter):
         # omen of decay
         omen_effect = 0.1 if self.current_stage % 100 == 0 and self.current_stage > 0 else 1
         damage += damage * (self.talents["omen_of_decay"] * 0.008) * omen_effect
-        # crippling strikes
-        damage *= (1 + (self.crippling_on_target * 0.03))
+        # crippling shots
+        cripple_damage *= (1 + (self.crippling_on_target * 0.03))
         self.crippling_on_target = 0
-        super(Ozzy, self).attack(target, damage)
+        super(Ozzy, self).attack(target, cripple_damage)
         logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f} {atk_type}")
 
         #  on_attack() effects
+        # crippling shots inflicts _extra damage_ that does not count towards lifesteal
         self.heal_hp(damage * self.lifesteal, 'steal')
         if random.random() < self.effect_chance and self.talents["tricksters_boon"]:
             # Talent: Trickster's Boon
@@ -814,12 +817,73 @@ class Ozzy(Hunter):
         """Apply the Soul of Snek effect to an enemy.
 
         Args:
-            enemy (Unit): The enemy to apply the effect to.
+            enemy (Enemy): The enemy to apply the effect to.
         """
         ood_effect = self.attributes["soul_of_snek"] * 0.088
         enemy.regen = enemy.regen * (1 - ood_effect)
 
+    def apply_medusa(self, enemy) -> None:
+        """Apply the Gift of Medusa effect to an enemy.
+
+        Args:
+            enemy (Enemy): The enemy to apply the effect to.
+        """
+        enemy.regen -= self.regen * self.attributes["gift_of_medusa"] * 0.05
+
+    @property
+    def power(self) -> float:
+        """Getter for the power attribute. Accounts for the Deal with Death effect.
+
+        Returns:
+            float: The power of the hunter.
+        """
+        return self._power * (1 + (self.attributes["deal_with_death"] * 0.02 * self.times_revived))
+
+    @power.setter
+    def power(self, value: float) -> None:
+        self._power = value
+    
+    @property
+    def damage_reduction(self) -> float:
+        """Getter for the damage_reduction attribute. Accounts for the Deal with Death effect.
+
+        Returns:
+            float: The damage_reduction of the hunter.
+        """
+        return self._damage_reduction * (1 + (self.attributes["deal_with_death"] * 0.016 * self.times_revived))
+
+    @damage_reduction.setter
+    def damage_reduction(self, value: float) -> None:
+        self._damage_reduction = value
+
+    @property
+    def special_chance(self) -> float:
+        """Getter for the special_chance attribute. Accounts for the Cycle of Death effect.
+
+        Returns:
+            float: The special_chance of the hunter.
+        """
+        return self._special_chance + (self.times_revived * self.attributes["cycle_of_death"] * 0.023)
+
+    @special_chance.setter
+    def special_chance(self, value: float) -> None:
+        self._special_chance = value
+
+    @property
+    def special_damage(self) -> float:
+        """Getter for the special_damage attribute. Accounts for the Cycle of Death effect.
+
+        Returns:
+            float: The special_chance of the hunter.
+        """
+        return self._special_damage + (self.times_revived * self.attributes["cycle_of_death"] * 0.02)
+
+    @special_damage.setter
+    def special_damage(self, value: float) -> None:
+        self._special_damage = value
 
 if __name__ == "__main__":
-    o = Ozzy('./builds/current_ozzy.yaml')
+    o = Ozzy('./builds/medusa_test.yaml')
+    print(o)
+    o.times_revived = 2
     print(o)
