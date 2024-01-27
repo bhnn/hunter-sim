@@ -159,8 +159,8 @@ class Simulation():
         self.current_stage = 0
         self.elapsed_time = 0
         self.queue = []
-        hpush(self.queue, (self.elapsed_time + hunter.speed, 1, 'hunter'))
-        hpush(self.queue, (self.elapsed_time + 1, 3, 'regen'))
+        hpush(self.queue, (hunter.speed, 1, 'hunter'))
+        hpush(self.queue, (self.elapsed_time, 3, 'regen'))
         while not hunter.is_dead():
             logging.debug('')
             logging.debug(f'Entering STAGE {self.current_stage}')
@@ -179,29 +179,26 @@ class Simulation():
                         continue
                 enemy = self.enemies.pop(0)
                 logging.debug(enemy)
-                hunter.apply_pog(enemy)
-                hpush(self.queue, (self.elapsed_time + enemy.speed, 2, 'enemy'))
+                hpush(self.queue, (round(self.elapsed_time + enemy.speed, 3), 2, 'enemy'))
                 # combat loop
                 while not enemy.is_dead() and not hunter.is_dead():
                     logging.debug(f'[  QUEUE]:           {self.queue}')
-                    _, _, action = hpop(self.queue)
+                    prev_time, _, action = hpop(self.queue)
                     match action:
                         case 'hunter':
                             hunter.attack(enemy)
-                            hpush(self.queue, (self.elapsed_time + hunter.speed, 1, 'hunter'))
-                            # self.elapsed_time += 1
+                            hpush(self.queue, (round(prev_time + hunter.speed, 3), 1, 'hunter'))
                         case 'enemy':
                             enemy.attack(hunter)
                             if not enemy.is_dead():
-                                hpush(self.queue, (self.elapsed_time + enemy.speed, 2, 'enemy'))
-                            # self.elapsed_time += 1
+                                hpush(self.queue, (round(prev_time + enemy.speed, 3), 2, 'enemy'))
                         case 'stun':
                             hunter.apply_stun(enemy, isinstance(enemy, Boss))
                         case 'regen':
                             hunter.regen_hp()
                             enemy.regen_hp()
-                            hpush(self.queue, (self.elapsed_time + 1, 3, 'regen'))
                             self.elapsed_time += 1
+                            hpush(self.queue, (self.elapsed_time, 3, 'regen'))
                         case _:
                             raise ValueError(f'Unknown action: {action}')
                 if hunter.is_dead():
@@ -233,7 +230,7 @@ def main():
         )
         logging.getLogger().setLevel(logging.DEBUG)
     smgr = SimulationManager('./builds/current_borge.yaml')
-    res = smgr.run_sims(num_sims, threaded=30)
+    res = smgr.run_sims(num_sims, threaded=-1)
     smgr.pprint_res(res, 'Test')
 
 
