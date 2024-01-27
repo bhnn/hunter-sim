@@ -5,14 +5,14 @@ meta:
 
 stats:
   hp: 200
-  power: 170
+  power: 174
   regen: 120
-  damage_reduction: 31
+  damage_reduction: 32
   evade_chance: 33
   effect_chance: 35
-  special_chance: 47
-  special_damage: 41
-  speed: 26
+  special_chance: 49
+  special_damage: 43
+  speed: 27
 
 talents:
   death_is_my_companion: 2
@@ -20,7 +20,7 @@ talents:
   unfair_advantage: 0
   impeccable_impacts: 10
   omen_of_defeat: 0
-  call_me_lucky_loot: 3
+  call_me_lucky_loot: 4
   presence_of_god: 15
   fires_of_war: 0
 
@@ -32,7 +32,7 @@ attributes:
   spartan_lineage: 6
   explosive_punches: 6
   timeless_mastery: 5
-  book_of_baal: 3
+  book_of_baal: 5
   superior_sensors: 6
   atlas_protocol: 0
   weakspot_analysis: 6
