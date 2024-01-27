@@ -11,6 +11,7 @@ hunter_name_spacing: int = 7
 # TODO: validate vectid elixir
 # TODO: Ozzy: move @property code to on_death() to speed things up?
 # TODO: Borge: move @property code as well?
+# TODO: are ECHO-MS dependent on ECHO damage?
 
 """ Assumptions:
 - order of attacks: main -> ms -> echo -> echo ms
@@ -575,9 +576,14 @@ class Ozzy(Hunter):
 
         # statistics
         # offence
+        self.total_multistrikes: int = 0
+        self.total_ms_extra_damage: float = 0
 
         # sustain
         self.total_potion: float = 0
+
+        # defence
+        self.total_trickster_evades: int = 0
 
     def __create__(self, config_path: str) -> None:
         self.load_build(config_path)
@@ -721,6 +727,7 @@ class Ozzy(Hunter):
             if random.random() < self.special_chance:
                 # Stat: Multi-Strike
                 self.attack_queue.append('(MS)')
+                self.total_multistrikes += 1
                 hpush(self.sim.queue, (0, 1, 'hunter_special'))
             if random.random() < (self.effect_chance / 2) and self.talents["echo_bullets"]:
                 # Talent: Echo Bullets
@@ -733,14 +740,17 @@ class Ozzy(Hunter):
             match atk_type:
                 case '(MS)':
                     damage = self.power * self.special_damage
+                    self.total_ms_extra_damage += damage
                 case '(ECHO)':
                     if random.random() < self.special_chance:
                         # Stat: Multi-Strike
                         self.attack_queue.append('(ECHO-MS)')
+                        self.total_multistrikes += 1
                         hpush(self.sim.queue, (0, 3, 'hunter_special'))
                     damage = self.power * (self.talents["echo_bullets"] * 0.05)
                 case '(ECHO-MS)':
                     damage = self.power * (self.talents["echo_bullets"] * 0.05) * self.special_damage
+                    self.total_ms_extra_damage += damage
                 case _:
                     raise ValueError(f'Unknown attack type: {atk_type}')
         # omen of decay
@@ -783,6 +793,7 @@ class Ozzy(Hunter):
         """
         if self.trickster_charges:
             self.trickster_charges -= 1
+            self.total_trickster_evades += 1
             logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tEVADE (TRICKSTER)')
         else:
             _ = super(Ozzy, self).receive_damage(damage)
@@ -899,8 +910,12 @@ class Ozzy(Hunter):
             List: List of all collected stats.
         """
         return super(Ozzy, self).get_results() | {
+            'total_multistrikes': self.total_multistrikes,
+            'total_ms_extra_damage': self.total_ms_extra_damage,
             'total_potion': self.total_potion,
+            'total_trickster_evades': self.total_trickster_evades,
         }
+
 
 if __name__ == "__main__":
     o = Ozzy('./builds/current_ozzy.yaml')
