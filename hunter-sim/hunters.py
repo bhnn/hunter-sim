@@ -12,12 +12,12 @@ hunter_name_spacing: int = 7
 # TODO: validate vectid elixir
 # TODO: Ozzy: move @property code to on_death() to speed things up?
 # TODO: Borge: move @property code as well?
-# TODO: are ECHO-MS dependent on ECHO damage?
 # TODO: BfB, Atlas
 
 """ Assumptions:
 - order of attacks: main -> ms -> echo -> echo ms
-- out of all triggered attacks, only 1 can stun
+- only the main attack can stun
+- multistrike damage (irrespective of trigger source) always depends on main attack power
 """
 
 class Hunter:
@@ -259,6 +259,12 @@ class Borge(Hunter):
         self.total_inhaler: float = 0
 
     def __create__(self, config_path: str) -> None:
+        """Create a Borge instance from a build config file. Computes all final stats from stat growth formulae and additional
+        power sources.
+
+        Args:
+            config_path (str): The path to the build config file.
+        """
         self.load_build(config_path)
         # hp
         self.max_hp = (
@@ -465,6 +471,8 @@ class Borge(Hunter):
 
     ### SPECIALS
     def on_kill(self) -> None:
+        """Actions to take when the hunter kills an enemy. Loot is handled by the parent class.
+        """
         super(Borge, self).on_kill()
         if random.random() < self.effect_chance and (ua := self.talents["unfair_advantage"]):
             # Talent: Unfair Advantage
@@ -510,6 +518,14 @@ class Borge(Hunter):
         logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\t[FoW]]\t{self.fires_of_war:>6.2f} sec')
 
     def apply_trample(self, enemies: List) -> int:
+        """Apply the Trample effect to a number of enemies.
+
+        Args:
+            enemies (List): The list of enemies to trample.
+
+        Returns:
+            int: The number of enemies killed by the trample effect.
+        """
         alive_index = [i for i, e in enumerate(enemies) if not e.is_dead()]
         if not alive_index:
             return 0
@@ -588,6 +604,12 @@ class Ozzy(Hunter):
         self.total_trickster_evades: int = 0
 
     def __create__(self, config_path: str) -> None:
+        """Create an Ozzy instance from a build config file. Computes all final stats from stat growth formulae and
+        additional power sources.
+
+        Args:
+            config_path (str): The path to the build config file.
+        """
         self.load_build(config_path)
         # hp
         self.max_hp = (
@@ -724,7 +746,8 @@ class Ozzy(Hunter):
         Args:
             target (Enemy): The enemy to attack.
         """
-        if not self.attack_queue:
+        # method handles all attacks: normal and triggered
+        if not self.attack_queue: # normal attacks
             if random.random() < self.special_chance:
                 # Stat: Multi-Strike
                 self.attack_queue.append('(MS)')
@@ -740,7 +763,7 @@ class Ozzy(Hunter):
                 hpush(self.sim.queue, (0, 2, 'hunter_special'))
             damage = self.power
             atk_type = ''
-        else:
+        else: # triggered attacks
             atk_type = self.attack_queue.pop(0)
             match atk_type:
                 case '(MS)':
@@ -814,6 +837,8 @@ class Ozzy(Hunter):
 
     ### SPECIALS
     def on_kill(self) -> None:
+        """Actions to take when the hunter kills an enemy. Loot is handled by the parent class.
+        """
         super(Ozzy, self).on_kill()
         if random.random() < self.effect_chance and (ua := self.talents["unfair_advantage"]):
             # Talent: Unfair Advantage
