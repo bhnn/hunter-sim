@@ -25,6 +25,18 @@ class Enemy:
         self.on_create(hunter)
 
     def fetch_stats(self, hunter: Hunter, stage: int) -> dict:
+        """Fetches the stats of the enemy.
+
+        Args:
+            hunter (Hunter): The hunter that this enemy will be fighting, for enemy type selection.
+            stage (int): The stage of the enemy, for stat selection.
+
+        Raises:
+            ValueError: If the hunter is not a valid hunter.
+
+        Returns:
+            dict: The stats of the enemy.
+        """
         if isinstance(hunter, Borge):
             return {
                 'hp': (
@@ -79,6 +91,19 @@ class Enemy:
 
     def __create__(self, name: str, hp: float, power: float, regen: float, damage_reduction: float, evade_chance: float, 
                  special_chance: float, special_damage: float, speed: float) -> None:
+        """Creates an Enemy instance.
+
+        Args:
+            name (str): Name of the enemy. Usually `E{stage}{number}`.
+            hp (float): Max HP value of the enemy.
+            power (float): Power value of the enemy.
+            regen (float): Regen value of the enemy.
+            damage_reduction (float): Damage reduction value of the enemy.
+            evade_chance (float): Evade chance value of the enemy.
+            special_chance (float): Special chance (for now crit-only) value of the enemy.
+            special_damage (float): Special damage value of the enemy.
+            speed (float): Speed value of the enemy.
+        """
         self.name: str = name
         self.hp: float = float(hp)
         self.max_hp: float = float(hp)
@@ -278,16 +303,6 @@ class Boss(Enemy):
         super(Boss, self).attack(hunter)
         self.enrage_stacks += 1
         logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tENRAGE\t{self.enrage_stacks:>6.2f} stacks")
-
-    # def receive_damage(self, damage: float) -> None:
-    #     """Receive damage from an attack. Accounts for damage reduction and evade chance.
-
-    #     Args:
-    #         damage (float): Damage to receive.
-    #     """
-    #     super(Boss, self).receive_damage(damage)
-    #     if self.is_dead():
-    #         self.on_death()
 
     def on_death(self) -> None:
         """Extends the Enemy::enrage() method to log enrage stacks on death.
