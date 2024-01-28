@@ -235,7 +235,6 @@ class Simulation():
     #     print(sorted_res)
 
 def main():
-    import timing
     num_sims = 100
     if num_sims == 1:
         logging.basicConfig(
