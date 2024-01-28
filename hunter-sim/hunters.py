@@ -195,10 +195,11 @@ class Hunter:
             float: The amount of loot gained.
         """
         stage_mult = (1.05 ** (self.current_stage+1)) * (self.current_stage // 100 * 5.0)
-        base_loot = 1.0 if self.current_stage != 100 else 1300.0
         if isinstance(self, Borge):
+            base_loot = 1.0 if self.current_stage != 100 else (700 + 500 + 60 + 50)
             timeless_mastery = 1 + self.attributes["timeless_mastery"] * 0.14
         elif isinstance(self, Ozzy):
+            base_loot = 1.0 if self.current_stage != 100 else (400 + 300 + 60 + 50)
             timeless_mastery = 1 + (self.attributes["timeless_mastery"] * 0.16)
         return base_loot * stage_mult + timeless_mastery
 
