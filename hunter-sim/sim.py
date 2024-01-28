@@ -26,6 +26,8 @@ class SimulationManager():
         self.results: List = []
 
     def __sim_worker(self) -> None:
+        """Worker thread for running simulations in parallel.
+        """
         while True:
             sim = self.task_queue.get()
             self.results.append(sim.run())
@@ -33,16 +35,41 @@ class SimulationManager():
             self.pbar.update(1)
 
     def run(self, repetitions: int, threaded: int = -1) -> None:
+        """Run simulations and print results.
+
+        Args:
+            repetitions (int): Number of simulations to run.
+            threaded (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
+        """
         res = self.__run_sims(repetitions, threaded)
         self.pprint_res(res)
 
     def compare_against(self, compare_path: str, repetitions: int, threaded: int = -1) -> None:
+        """Run simulations for 2 builds, compare results and print.
+
+        Args:
+            compare_path (str): Path to valid build config file to compare against the current hunter build.
+            repetitions (int): Number of simulations to run.
+            threaded (int, optional): threaded (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
+        """
         res = self.__run_sims(repetitions, threaded)
         self.hunter_config_path = compare_path
         res_c = self.__run_sims(repetitions, threaded)
         self.pprint_compare(res, res_c, 'Build Comparison')
 
-    def __run_sims(self, repetitions: int, threaded: int = -1) -> None:
+    def __run_sims(self, repetitions: int, threaded: int = -1) -> dict:
+        """Run simulations and return results.
+
+        Args:
+            repetitions (int): Number of simulations to run.
+            threaded (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
+
+        Raises:
+            ValueError: Unknown hunter type found in config
+
+        Returns:
+            dict: Results of simulations.
+        """
         # prepare sim instances to run
         with open(self.hunter_config_path, 'r') as f:
             cfg = yaml.safe_load(f)
@@ -80,6 +107,14 @@ class SimulationManager():
 
     @classmethod
     def make_printable(cls, res_dict: dict) -> [dict, dict]:
+        """Converts the results dict into a printable format and computes averages and standard deviations.
+
+        Args:
+            res_dict (dict): Results dict.
+
+        Returns:
+            [dict, dict]: Average and standard deviation dicts.
+        """
         res_dict["enrage_log"] = list(chain.from_iterable(res_dict["enrage_log"]))
         res_dict["first_revive"] = [r[0] for r in res_dict["revive_log"] if r]
         res_dict["second_revive"] = [r[1] for r in res_dict["revive_log"] if r and len(r) > 1]
@@ -97,6 +132,13 @@ class SimulationManager():
 
     @classmethod
     def pprint_res(cls, res_dict: dict, custom_message: str = None, coloured: bool = False) -> None:
+        """Pretty print results dict.
+
+        Args:
+            res_dict (dict): Results dict.
+            custom_message (str, optional): A custom title for the headline of the printout. Defaults to None.
+            coloured (bool, optional): Whether to colour the output or not. Defaults to False.
+        """
         hunter_class = res_dict.pop('hunter')
         avg, std = cls.make_printable(res_dict)
         res_dict["lph"] = [(res_dict["total_loot"][i] / (res_dict["elapsed_time"][i] / (60 * 60))) for i in range(len(res_dict["total_loot"]))]
@@ -169,6 +211,14 @@ class SimulationManager():
 
     @classmethod
     def pprint_compare(cls, res1: dict, res2: dict, custom_message: str = None, coloured: bool = False) -> None:
+        """Pretty print comparison of 2 results dicts.
+
+        Args:
+            res1 (dict): Result dict of the first build
+            res2 (dict): Result dict of the second build
+            custom_message (str, optional): A custom title for the headline of the printout. Defaults to None.
+            coloured (bool, optional): Whether to colour the output or not. Defaults to False.
+        """
         hunter_class = res1.pop('hunter')
         res2.pop('hunter')
         avg1, std1 = cls.make_printable(res1)
@@ -311,11 +361,6 @@ class SimulationManager():
         out.append(f'Final stage reached by BUILD 1:  MAX({max(res1["final_stage"])}), MED({floor(statistics.median(res1["final_stage"]))}), AVG({floor(statistics.mean(res1["final_stage"]))}), MIN({min(res1["final_stage"])})')
         out.append(f'Final stage reached by BUILD 2:  MAX({max(res2["final_stage"])}), MED({floor(statistics.median(res2["final_stage"]))}), AVG({floor(statistics.mean(res2["final_stage"]))}), MIN({min(res2["final_stage"])})')
         out.append('')
-        # stage_out = []
-        # final_stage_pct = {i:j/len(res_dict["final_stage"]) for i,j in Counter(res_dict["final_stage"]).items()}
-        # for i, k in enumerate(sorted([*final_stage_pct])):
-        #     stage_out.append(f'{k:>3d}: {final_stage_pct[k]:>6.2%}   ' + ("\n" if (i + 1) % 5 == 0 and i > 0 else ""))
-        # out.append(''.join(stage_out))
         out.append('')
         print('\n'.join(out))
 
@@ -330,20 +375,41 @@ class Simulation():
         self.elapsed_time: int = 0
 
     def complete_stage(self) -> None:
+        """Increment stage counter for simulation and hunter.
+        """
         self.current_stage += 1
         self.hunter.current_stage += 1
 
     def spawn_enemies(self, hunter) -> None:
+        """Spawn enemies for the current stage.
+
+        Args:
+            hunter (Hunter): Hunter instance.
+        """
         if self.current_stage % 100 == 0 and self.current_stage > 0:
             self.enemies = [Boss(f'B{self.current_stage:>3}{1:>3}', hunter, self.current_stage, self)]
         else:
             self.enemies = [Enemy(f'E{self.current_stage:>3}{i+1:>3}', hunter, self.current_stage, self) for i in range(10)]
 
     def run(self) -> defaultdict:
+        """Run a single simulation.
+
+        Returns:
+            defaultdict: Results of the simulation.
+        """
         self.simulate_combat(self.hunter)
         return self.hunter.get_results() | {'elapsed_time': self.elapsed_time}
 
     def simulate_combat(self, hunter: Hunter) -> None:
+        """Simulate combat behaviour for a hunter.
+
+        Args:
+            hunter (Hunter): Hunter instance.
+
+        Raises:
+            ValueError: Raised when encountering unknown actions.
+            ValueError: Raised when the hunter dies and no return is triggered.
+        """
         self.current_stage = 0
         self.elapsed_time = 0
         self.queue = []
