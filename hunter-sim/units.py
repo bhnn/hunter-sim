@@ -7,6 +7,8 @@ from hunters import Borge, Hunter, Ozzy
 
 unit_name_spacing: int = 7
 
+# TODO: at 200 enrage stacks, bosses get x3 attack damage and 100% crit chance
+
 class Enemy:
     ### CREATION
     def __init__(self, name: str, hunter: Hunter, stage: int, sim) -> None:
