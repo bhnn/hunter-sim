@@ -12,6 +12,7 @@ hunter_name_spacing: int = 7
 # TODO: Ozzy: move @property code to on_death() to speed things up?
 # TODO: Borge: move @property code as well?
 # TODO: are ECHO-MS dependent on ECHO damage?
+# TODO: BfB, Atlas
 
 """ Assumptions:
 - order of attacks: main -> ms -> echo -> echo ms
@@ -75,6 +76,7 @@ class Hunter:
             'total_evades': self.total_evades,
             'total_mitigated': self.total_mitigated,
             'total_effect_procs': self.total_effect_procs,
+            'total_loot': self.total_loot,
         }
 
     @staticmethod
