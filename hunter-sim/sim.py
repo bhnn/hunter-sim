@@ -186,9 +186,9 @@ class SimulationManager():
         # TODO: change all of this to .append(max()-min()) and then out[-1] += f'>> BUILD 1' or 2
         if 'enrage_log' in avg1 and 'enrage_log' in avg2:
             if avg1["enrage_log"] > avg2["enrage_log"] and avg2["enrage_log"] > 0:
-                out.append(f'{c_on}Avg Enrage stacks: {avg1["enrage_log"]-avg2["enrage_log"]:>20.2f} stacks less{c_off}{">> BUILD 2":>20}')
+                out.append(f'{c_on}Avg Enrage stacks: {avg1["enrage_log"]-avg2["enrage_log"]:>20.2f} stacks less{c_off}{">> BUILD 2":>13}')
             elif avg2["enrage_log"] > avg1["enrage_log"] and avg1["enrage_log"] > 0:
-                out.append(f'{c_on}Avg Enrage stacks: {avg2["enrage_log"]-avg1["enrage_log"]:>20.2f} stacks less{c_off}{">> BUILD 1":>20}')
+                out.append(f'{c_on}Avg Enrage stacks: {avg2["enrage_log"]-avg1["enrage_log"]:>20.2f} stacks less{c_off}{">> BUILD 1":>13}')
         if 'first_revive' in avg1 and 'first_revive' in avg2:
             if avg1["first_revive"] > avg2["first_revive"]:
                 out.append(f'{c_on}Revive stage 1st: {avg1["first_revive"]-avg2["first_revive"]:>21.2f} stages later{c_off}{">> BUILD 1":>12}')
