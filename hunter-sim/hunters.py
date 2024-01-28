@@ -4,6 +4,7 @@ from heapq import heappush as hpush
 from typing import List
 
 import yaml
+from util.exceptions import BuildConfigError
 
 hunter_name_spacing: int = 7
 
@@ -102,8 +103,8 @@ class Hunter:
         """
         with open(config_path, 'r') as f:
             cfg = yaml.safe_load(f)
-        if not self.validate_config(cfg):
-            raise ValueError("Invalid config file")
+        if not (invalid_keys := self.validate_config(cfg)) == set():
+            raise BuildConfigError(invalid_keys)
         self.base_stats = cfg["stats"]
         self.talents = cfg["talents"]
         self.attributes = cfg["attributes"]
@@ -120,7 +121,7 @@ class Hunter:
         Returns:
             bool: Whether the configs contain identical keys.
         """
-        return cfg.keys() == self.load_dummy().keys() and all(cfg[k].keys() == self.load_dummy()[k].keys() for k in cfg.keys())
+        return (set(cfg.keys()) ^ set(self.load_dummy().keys())) | set().union(*cfg.values()) ^ set().union(*self.load_dummy().values())
 
     def attack(self, target, damage: float) -> None:
         """Attack the enemy unit.
@@ -570,7 +571,6 @@ class Ozzy(Hunter):
     def __init__(self, config_path: str):
         super(Ozzy, self).__init__(name='Ozzy')
         self.__create__(config_path)
-        self.can_stun: bool = False
         self.trickster_charges: int = 0
         self.crippling_on_target: int = 0
         self.empowered_regen: int = 0
@@ -725,12 +725,15 @@ class Ozzy(Hunter):
             target (Enemy): The enemy to attack.
         """
         if not self.attack_queue:
-            self.can_stun = True
             if random.random() < self.special_chance:
                 # Stat: Multi-Strike
                 self.attack_queue.append('(MS)')
                 self.total_multistrikes += 1
                 hpush(self.sim.queue, (0, 1, 'hunter_special'))
+            if random.random() < self.effect_chance and self.talents["thousand_needles"]:
+                # Talent: Thousand Needles, will call Hunter.apply_stun(). Only Ozzy's main attack can stun.
+                hpush(self.sim.queue, (0, 0, 'stun'))
+                self.total_effect_procs += 1
             if random.random() < (self.effect_chance / 2) and self.talents["echo_bullets"]:
                 # Talent: Echo Bullets
                 self.attack_queue.append('(ECHO)')
@@ -751,7 +754,7 @@ class Ozzy(Hunter):
                         hpush(self.sim.queue, (0, 3, 'hunter_special'))
                     damage = self.power * (self.talents["echo_bullets"] * 0.05)
                 case '(ECHO-MS)':
-                    damage = self.power * (self.talents["echo_bullets"] * 0.05) * self.special_damage
+                    damage = self.power * self.special_damage
                     self.total_ms_extra_damage += damage
                 case _:
                     raise ValueError(f'Unknown attack type: {atk_type}')
@@ -771,11 +774,6 @@ class Ozzy(Hunter):
         if random.random() < self.effect_chance and self.talents["tricksters_boon"]:
             # Talent: Trickster's Boon
             self.trickster_charges += 1
-            self.total_effect_procs += 1
-        if random.random() < self.effect_chance and self.talents["thousand_needles"]:
-            # Talent: Thousand Needles, will call Hunter.apply_stun()
-            self.can_stun = False
-            hpush(self.sim.queue, (0, 0, 'stun'))
             self.total_effect_procs += 1
         if random.random() < self.effect_chance and (cs := self.talents["crippling_shots"]):
             # Talent: Crippling Shots
