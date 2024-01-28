@@ -183,129 +183,130 @@ class SimulationManager():
         c_on = '\033[38;2;93;101;173m' if coloured else ''
         out.append(f'{c_on}Main stats:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
+        # TODO: change all of this to .append(max()-min()) and then out[-1] += f'>> BUILD 1' or 2
         if 'enrage_log' in avg1 and 'enrage_log' in avg2:
-            if avg1["enrage_log"] > avg2["enrage_log"]:
-                out.append(f'{c_on}Avg Enrage stacks: {avg1["enrage_log"]-avg2["enrage_log"]:>20.2f}\t(+/- {std1["enrage_log"]-std2["enrage_log"]:>10.2f}){c_off}{">> BUILD 2":>15}')
-            else:
-                out.append(f'{c_on}Avg Enrage stacks: {avg2["enrage_log"]-avg1["enrage_log"]:>20.2f}\t(+/- {std2["enrage_log"]-std1["enrage_log"]:>10.2f}){c_off}{">> BUILD 1":>15}')
+            if avg1["enrage_log"] > avg2["enrage_log"] and avg2["enrage_log"] > 0:
+                out.append(f'{c_on}Avg Enrage stacks: {avg1["enrage_log"]-avg2["enrage_log"]:>20.2f} stacks less{c_off}{">> BUILD 2":>20}')
+            elif avg2["enrage_log"] > avg1["enrage_log"] and avg1["enrage_log"] > 0:
+                out.append(f'{c_on}Avg Enrage stacks: {avg2["enrage_log"]-avg1["enrage_log"]:>20.2f} stacks less{c_off}{">> BUILD 1":>20}')
         if 'first_revive' in avg1 and 'first_revive' in avg2:
             if avg1["first_revive"] > avg2["first_revive"]:
-                out.append(f'{c_on}Revive stage 1st: {avg1["first_revive"]-avg2["first_revive"]:>21.2f}\t(+/- {std1["first_revive"]-std2["first_revive"]:>10.2f}){c_off}{">> BUILD 1":>15}')
+                out.append(f'{c_on}Revive stage 1st: {avg1["first_revive"]-avg2["first_revive"]:>21.2f} stages later{c_off}{">> BUILD 1":>12}')
             else:
-                out.append(f'{c_on}Revive stage 1st: {avg2["first_revive"]-avg1["first_revive"]:>21.2f}\t(+/- {std2["first_revive"]-std1["first_revive"]:>10.2f}){c_off}{">> BUILD 2":>15}')
+                out.append(f'{c_on}Revive stage 1st: {avg2["first_revive"]-avg1["first_revive"]:>21.2f} stages later{c_off}{">> BUILD 2":>12}')
         if 'second_revive' in avg1 and 'second_revive' in avg2:
             if avg1["second_revive"] > avg2["second_revive"]:
-                out.append(f'{c_on}Revive stage 2nd: {avg1["second_revive"]-avg2["second_revive"]:>21.2f}\t(+/- {std1["second_revive"]-std2["second_revive"]:>10.2f}){c_off}{">> BUILD 1":>15}')
+                out.append(f'{c_on}Revive stage 2nd: {avg1["second_revive"]-avg2["second_revive"]:>21.2f} stages later{c_off}{">> BUILD 1":>12}')
             else:
-                out.append(f'{c_on}Revive stage 2nd: {avg2["second_revive"]-avg1["second_revive"]:>21.2f}\t(+/- {std2["second_revive"]-std1["second_revive"]:>10.2f}){c_off}{">> BUILD 2":>15}')
+                out.append(f'{c_on}Revive stage 2nd: {avg2["second_revive"]-avg1["second_revive"]:>21.2f} stages later{c_off}{">> BUILD 2":>12}')
         if avg1["total_kills"] > avg2["total_kills"]:
-            out.append(f'{c_on}Avg total kills: {avg1["total_kills"]-avg2["total_kills"]:>22,.2f}\t(+/- {std1["total_kills"]-std2["total_kills"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Avg total kills: {avg1["total_kills"]-avg2["total_kills"]:>22,.2f} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Avg total kills: {avg2["total_kills"]-avg1["total_kills"]:>22,.2f}\t(+/- {std2["total_kills"]-std1["total_kills"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Avg total kills: {avg2["total_kills"]-avg1["total_kills"]:>22,.2f} more{c_off}{">> BUILD 2":>20}')
         if avg1["elapsed_time"] > avg2["elapsed_time"]:
-            out.append(f'{c_on}Elapsed time: {str(timedelta(seconds=round(avg1["elapsed_time"], 0))-timedelta(seconds=round(avg2["elapsed_time"], 0))):>25}\t(+/- {str(timedelta(seconds=round(std1["elapsed_time"], 0)) - timedelta(seconds=round(std2["elapsed_time"], 0))):>10}){c_off} {">> BUILD 2":>15}')
+            out.append(f'{c_on}Elapsed time: {str(timedelta(seconds=round(avg1["elapsed_time"], 0))-timedelta(seconds=round(avg2["elapsed_time"], 0))):>25} faster{c_off}{">> BUILD 2":>18}')
         else:
-            out.append(f'{c_on}Elapsed time: {str(timedelta(seconds=round(avg2["elapsed_time"], 0))-timedelta(seconds=round(avg1["elapsed_time"], 0))):>25}\t(+/- {str(timedelta(seconds=round(std2["elapsed_time"], 0)) - timedelta(seconds=round(std1["elapsed_time"], 0))):>10}){c_off} {">> BUILD 1":>15}')
+            out.append(f'{c_on}Elapsed time: {str(timedelta(seconds=round(avg2["elapsed_time"], 0))-timedelta(seconds=round(avg1["elapsed_time"], 0))):>25} faster{c_off}{">> BUILD 1":>18}')
         c_on = '\033[38;2;195;61;3m' if coloured else ''
         out.append(f'{c_on}Offence:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         if avg1["total_attacks"] > avg2["total_attacks"]:
-            out.append(f'{c_on}Avg total attacks: {avg1["total_attacks"]-avg2["total_attacks"]:>20,.2f}\t(+/- {std1["total_attacks"]-std2["total_attacks"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Avg total attacks: {avg1["total_attacks"]-avg2["total_attacks"]:>20,.2f} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Avg total attacks: {avg2["total_attacks"]-avg1["total_attacks"]:>20,.2f}\t(+/- {std2["total_attacks"]-std1["total_attacks"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Avg total attacks: {avg2["total_attacks"]-avg1["total_attacks"]:>20,.2f} more{c_off}{">> BUILD 2":>20}')
         if avg1["total_damage"] > avg2["total_damage"]:
-            out.append(f'{c_on}Avg total damage: {avg1["total_damage"]-avg2["total_damage"]:>21,.2f}\t(+/- {std1["total_damage"]-std2["total_damage"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Avg total damage: {avg1["total_damage"]-avg2["total_damage"]:>21,.2f} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Avg total damage: {avg2["total_damage"]-avg1["total_damage"]:>21,.2f}\t(+/- {std2["total_damage"]-std1["total_damage"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Avg total damage: {avg2["total_damage"]-avg1["total_damage"]:>21,.2f} more{c_off}{">> BUILD 2":>20}')
         if hunter_class == Borge:
             if avg1["total_crits"] > avg2["total_crits"]:
-                out.append(f'{c_on}Avg total crits: {avg1["total_crits"]-avg2["total_crits"]:>22,.2f}\t(+/- {std1["total_crits"]-std2["total_crits"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+                out.append(f'{c_on}Avg total crits: {avg1["total_crits"]-avg2["total_crits"]:>22,.2f} more{c_off}{">> BUILD 1":>20}')
             else:
-                out.append(f'{c_on}Avg total crits: {avg2["total_crits"]-avg1["total_crits"]:>22,.2f}\t(+/- {std2["total_crits"]-std1["total_crits"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+                out.append(f'{c_on}Avg total crits: {avg2["total_crits"]-avg1["total_crits"]:>22,.2f}) more{c_off}{">> BUILD 2":>20}')
             if avg1["total_extra_from_crits"] > avg2["total_extra_from_crits"]:
-                out.append(f'{c_on}Avg total extra from crits: {avg1["total_extra_from_crits"]-avg2["total_extra_from_crits"]:>11,.2f}\t(+/- {std1["total_extra_from_crits"]-std2["total_extra_from_crits"]:>10.2f}){c_off}{">> BUILD 1":>15}')
+                out.append(f'{c_on}Avg total extra from crits: {avg1["total_extra_from_crits"]-avg2["total_extra_from_crits"]:>11,.2f} more{c_off}{">> BUILD 1":>20}')
             else:
-                out.append(f'{c_on}Avg total extra from crits: {avg2["total_extra_from_crits"]-avg1["total_extra_from_crits"]:>11,.2f}\t(+/- {std2["total_extra_from_crits"]-std1["total_extra_from_crits"]:>10.2f}){c_off}{">> BUILD 2":>15}')
+                out.append(f'{c_on}Avg total extra from crits: {avg2["total_extra_from_crits"]-avg1["total_extra_from_crits"]:>11,.2f} more{c_off}{">> BUILD 2":>20}')
         elif hunter_class == Ozzy:
             if avg1["total_multistrikes"] > avg2["total_multistrikes"]:
-                out.append(f'{c_on}Avg total multistrikes: {avg1["total_multistrikes"]-avg2["total_multistrikes"]:>15.2f}\t(+/- {std1["total_multistrikes"]-std2["total_multistrikes"]:>10.2f}){c_off}{">> BUILD 1":>15}')
+                out.append(f'{c_on}Avg total multistrikes: {avg1["total_multistrikes"]-avg2["total_multistrikes"]:>15.2f} more{c_off}{">> BUILD 1":>20}')
             else:
-                out.append(f'{c_on}Avg total multistrikes: {avg2["total_multistrikes"]-avg1["total_multistrikes"]:>15.2f}\t(+/- {std2["total_multistrikes"]-std1["total_multistrikes"]:>10.2f}){c_off}{">> BUILD 2":>15}')
+                out.append(f'{c_on}Avg total multistrikes: {avg2["total_multistrikes"]-avg1["total_multistrikes"]:>15.2f} more{c_off}{">> BUILD 2":>20}')
             if avg1["total_ms_extra_damage"] > avg2["total_ms_extra_damage"]:
-                out.append(f'{c_on}Avg total extra from ms: {avg1["total_ms_extra_damage"]-avg2["total_ms_extra_damage"]:>14.2f}\t(+/- {std1["total_ms_extra_damage"]-std2["total_ms_extra_damage"]:>10.2f}){c_off}{">> BUILD 1":>15}')
+                out.append(f'{c_on}Avg total extra from ms: {avg1["total_ms_extra_damage"]-avg2["total_ms_extra_damage"]:>14.2f} more{c_off}{">> BUILD 1":>20}')
             else:
-                out.append(f'{c_on}Avg total extra from ms: {avg2["total_ms_extra_damage"]-avg1["total_ms_extra_damage"]:>14.2f}\t(+/- {std2["total_ms_extra_damage"]-std1["total_ms_extra_damage"]:>10.2f}){c_off}{">> BUILD 2":>15}')
+                out.append(f'{c_on}Avg total extra from ms: {avg2["total_ms_extra_damage"]-avg1["total_ms_extra_damage"]:>14.2f} more{c_off}{">> BUILD 2":>20}')
         c_on = '\033[38;2;1;163;87m' if coloured else ''
         out.append(f'{c_on}Sustain:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         if avg1["total_taken"] > avg2["total_taken"]:
-            out.append(f'{c_on}Avg total taken: {avg1["total_taken"]-avg2["total_taken"]:>22,.2f}\t(+/- {std1["total_taken"]-std2["total_taken"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Avg total taken: {avg1["total_taken"]-avg2["total_taken"]:>22,.2f} less{c_off}{">> BUILD 2":>20}')
         else:
-            out.append(f'{c_on}Avg total taken: {avg2["total_taken"]-avg1["total_taken"]:>22,.2f}\t(+/- {std2["total_taken"]-std1["total_taken"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Avg total taken: {avg2["total_taken"]-avg1["total_taken"]:>22,.2f} less{c_off}{">> BUILD 1":>20}')
         if avg1["total_regen"] > avg2["total_regen"]:
-            out.append(f'{c_on}Avg total regen: {avg1["total_regen"]-avg2["total_regen"]:>22,.2f}\t(+/- {std1["total_regen"]-std2["total_regen"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Avg total regen: {avg1["total_regen"]-avg2["total_regen"]:>22,.2f} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Avg total regen: {avg2["total_regen"]-avg1["total_regen"]:>22,.2f}\t(+/- {std2["total_regen"]-std1["total_regen"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Avg total regen: {avg2["total_regen"]-avg1["total_regen"]:>22,.2f} more{c_off}{">> BUILD 2":>20}')
         if avg1["total_attacks_suffered"] > avg2["total_attacks_suffered"]:
-            out.append(f'{c_on}Avg total attacks taken: {avg1["total_attacks_suffered"]-avg2["total_attacks_suffered"]:>14,.2f}\t(+/- {std1["total_attacks_suffered"]-std2["total_attacks_suffered"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Avg total attacks taken: {avg1["total_attacks_suffered"]-avg2["total_attacks_suffered"]:>14,.2f} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Avg total attacks taken: {avg2["total_attacks_suffered"]-avg1["total_attacks_suffered"]:>14,.2f}\t(+/- {std2["total_attacks_suffered"]-std1["total_attacks_suffered"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Avg total attacks taken: {avg2["total_attacks_suffered"]-avg1["total_attacks_suffered"]:>14,.2f} more{c_off}{">> BUILD 2":>20}')
         if avg1["total_lifesteal"] > avg2["total_lifesteal"]:
-            out.append(f'{c_on}Avg total lifesteal: {avg1["total_lifesteal"]-avg2["total_lifesteal"]:>18,.2f}\t(+/- {std1["total_lifesteal"]-std2["total_lifesteal"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Avg total lifesteal: {avg1["total_lifesteal"]-avg2["total_lifesteal"]:>18,.2f} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Avg total lifesteal: {avg2["total_lifesteal"]-avg1["total_lifesteal"]:>18,.2f}\t(+/- {std2["total_lifesteal"]-std1["total_lifesteal"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Avg total lifesteal: {avg2["total_lifesteal"]-avg1["total_lifesteal"]:>18,.2f} more{c_off}{">> BUILD 2":>20}')
         c_on = '\033[38;2;234;186;1m' if coloured else ''
         out.append(f'{c_on}Defence:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         if avg1["total_evades"] > avg2["total_evades"]:
-            out.append(f'{c_on}Avg total evades: {avg1["total_evades"]-avg2["total_evades"]:>21,.2f}\t(+/- {std1["total_evades"]-std2["total_evades"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Avg total evades: {avg1["total_evades"]-avg2["total_evades"]:>21,.2f} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Avg total evades: {avg2["total_evades"]-avg1["total_evades"]:>21,.2f}\t(+/- {std2["total_evades"]-std1["total_evades"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Avg total evades: {avg2["total_evades"]-avg1["total_evades"]:>21,.2f} more{c_off}{">> BUILD 2":>20}')
         if hunter_class == Ozzy:
             if avg1["total_trickster_evades"] > avg2["total_trickster_evades"]:
-                out.append(f'{c_on}Avg trickster evades: {avg1["total_trickster_evades"]-avg2["total_trickster_evades"]:>17,.2f}\t(+/- {std1["total_trickster_evades"]-std2["total_trickster_evades"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+                out.append(f'{c_on}Avg trickster evades: {avg1["total_trickster_evades"]-avg2["total_trickster_evades"]:>17,.2f} more{c_off}{">> BUILD 1":>20}')
             else:
-                out.append(f'{c_on}Avg trickster evades: {avg2["total_trickster_evades"]-avg1["total_trickster_evades"]:>17,.2f}\t(+/- {std2["total_trickster_evades"]-std1["total_trickster_evades"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+                out.append(f'{c_on}Avg trickster evades: {avg2["total_trickster_evades"]-avg1["total_trickster_evades"]:>17,.2f} more{c_off}{">> BUILD 2":>20}')
         if avg1["total_mitigated"] > avg2["total_mitigated"]:
-            out.append(f'{c_on}Avg total mitigated: {avg1["total_mitigated"]-avg2["total_mitigated"]:>18,.2f}\t(+/- {std1["total_mitigated"]-std2["total_mitigated"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Avg total mitigated: {avg1["total_mitigated"]-avg2["total_mitigated"]:>18,.2f} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Avg total mitigated: {avg2["total_mitigated"]-avg1["total_mitigated"]:>18,.2f}\t(+/- {std2["total_mitigated"]-std1["total_mitigated"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Avg total mitigated: {avg2["total_mitigated"]-avg1["total_mitigated"]:>18,.2f} more{c_off}{">> BUILD 2":>20}')
         c_on = '\033[38;2;14;156;228m' if coloured else ''
         out.append(f'{c_on}Effects:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         if avg1["total_effect_procs"] > avg2["total_effect_procs"]:
-            out.append(f'{c_on}Avg total effect procs: {avg1["total_effect_procs"]-avg2["total_effect_procs"]:>15,.2f}\t(+/- {std1["total_effect_procs"]-std2["total_effect_procs"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Avg total effect procs: {avg1["total_effect_procs"]-avg2["total_effect_procs"]:>15,.2f} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Avg total effect procs: {avg2["total_effect_procs"]-avg1["total_effect_procs"]:>15,.2f}\t(+/- {std2["total_effect_procs"]-std1["total_effect_procs"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Avg total effect procs: {avg2["total_effect_procs"]-avg1["total_effect_procs"]:>15,.2f} more{c_off}{">> BUILD 2":>20}')
         if hunter_class == Borge:
             if avg1["total_helltouch"] > avg2["total_helltouch"]:
-                out.append(f'{c_on}Avg total helltouch: {avg1["total_helltouch"]-avg2["total_helltouch"]:>18,.2f}\t(+/- {std1["total_helltouch"]-std2["total_helltouch"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+                out.append(f'{c_on}Avg total helltouch: {avg1["total_helltouch"]-avg2["total_helltouch"]:>18,.2f} more{c_off}{">> BUILD 1":>20}')
             else:
-                out.append(f'{c_on}Avg total helltouch: {avg2["total_helltouch"]-avg1["total_helltouch"]:>18,.2f}\t(+/- {std2["total_helltouch"]-std1["total_helltouch"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+                out.append(f'{c_on}Avg total helltouch: {avg2["total_helltouch"]-avg1["total_helltouch"]:>18,.2f} more{c_off}{">> BUILD 2":>20}')
             if avg1["total_loth"] > avg2["total_loth"]:
-                out.append(f'{c_on}Avg total loth: {avg1["total_loth"]-avg2["total_loth"]:>23,.2f}\t(+/- {std1["total_loth"]-std2["total_loth"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+                out.append(f'{c_on}Avg total loth: {avg1["total_loth"]-avg2["total_loth"]:>23,.2f} more{c_off}{">> BUILD 1":>20}')
             else:
-                out.append(f'{c_on}Avg total loth: {avg2["total_loth"]-avg1["total_loth"]:>23,.2f}\t(+/- {std2["total_loth"]-std1["total_loth"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+                out.append(f'{c_on}Avg total loth: {avg2["total_loth"]-avg1["total_loth"]:>23,.2f} more{c_off}{">> BUILD 2":>20}')
         if avg1["total_potion"] > avg2["total_potion"]:
-            out.append(f'{c_on}Avg total potion: {avg1["total_potion"]-avg2["total_potion"]:>21,.2f}\t(+/- {std1["total_potion"]-std2["total_potion"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Avg total potion: {avg1["total_potion"]-avg2["total_potion"]:>21,.2f} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Avg total potion: {avg2["total_potion"]-avg1["total_potion"]:>21,.2f}\t(+/- {std2["total_potion"]-std1["total_potion"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Avg total potion: {avg2["total_potion"]-avg1["total_potion"]:>21,.2f} more{c_off}{">> BUILD 2":>20}')
         out.append(f'{c_on}{divider}{c_off}')
         c_on = '\033[38;2;98;65;169m' if coloured else ''
         out.append(f'{c_on}Loot:{c_off} (arbitrary values, for comparison only)')
         out.append(f'{c_on}{divider}{c_off}')
         if avg1["lph"] > avg2["lph"]:
-            out.append(f'{c_on}Avg LPH: {avg1["lph"]-avg2["lph"]:>30,.2f}\t(+/- {std1["lph"]-std2["lph"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Avg LPH: {avg1["lph"]-avg2["lph"]:>30,.2f} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Avg LPH: {avg2["lph"]-avg1["lph"]:>30,.2f}\t(+/- {std2["lph"]-std1["lph"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Avg LPH: {avg2["lph"]-avg1["lph"]:>30,.2f} more{c_off}{">> BUILD 2":>20}')
         if max(res1["lph"]) > max(res2["lph"]):
-            out.append(f'{c_on}Best LPH: {max(res1["lph"])-max(res2["lph"]):>29.3}\t{c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Best LPH: {max(res1["lph"])-max(res2["lph"]):>29.3} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Best LPH: {max(res2["lph"])-max(res1["lph"]):>29.3}\t{c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Best LPH: {max(res2["lph"])-max(res1["lph"]):>29.3} more{c_off}{">> BUILD 2":>20}')
         if min(res1["lph"]) > min(res2["lph"]):
-            out.append(f'{c_on}Worst LPH: {min(res1["lph"])-min(res2["lph"]):>28.3}\t{c_off}{">> BUILD 1":>15}')
+            out.append(f'{c_on}Worst LPH: {min(res1["lph"])-min(res2["lph"]):>28.3} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Worst LPH: {min(res2["lph"])-min(res1["lph"]):>28.3}\t{c_off}{">> BUILD 2":>15}')
+            out.append(f'{c_on}Worst LPH: {min(res2["lph"])-min(res1["lph"]):>28.3} more{c_off}{">> BUILD 2":>20}')
         out.append(f'{c_on}{divider}{c_off}')
         out.append(f'Final stage reached by BUILD 1:  MAX({max(res1["final_stage"])}), MED({floor(statistics.median(res1["final_stage"]))}), AVG({floor(statistics.mean(res1["final_stage"]))}), MIN({min(res1["final_stage"])})')
         out.append(f'Final stage reached by BUILD 2:  MAX({max(res2["final_stage"])}), MED({floor(statistics.median(res2["final_stage"]))}), AVG({floor(statistics.mean(res2["final_stage"]))}), MIN({min(res2["final_stage"])})')
