@@ -32,7 +32,17 @@ class SimulationManager():
             self.task_queue.task_done()
             self.pbar.update(1)
 
-    def run_sims(self, repetitions: int, threaded: int = -1) -> None:
+    def run(self, repetitions: int, threaded: int = -1) -> None:
+        res = self.__run_sims(repetitions, threaded)
+        self.pprint_res(res)
+
+    def compare_against(self, compare_path: str, repetitions: int, threaded: int = -1) -> None:
+        res = self.__run_sims(repetitions, threaded)
+        self.hunter_config_path = compare_path
+        res_c = self.__run_sims(repetitions, threaded)
+        self.pprint_compare(res, res_c, 'Build Comparison')
+
+    def __run_sims(self, repetitions: int, threaded: int = -1) -> None:
         # prepare sim instances to run
         with open(self.hunter_config_path, 'r') as f:
             cfg = yaml.safe_load(f)
@@ -68,72 +78,84 @@ class SimulationManager():
                 res.setdefault(k, []).append(v)
         return res
 
-    @staticmethod
-    def pprint_res(res_dict: dict, custom_message: str = None, coloured: bool = False) -> None:
-        hunter_class = res_dict.pop('hunter')
+    @classmethod
+    def make_printable(cls, res_dict: dict) -> [dict, dict]:
         res_dict["enrage_log"] = list(chain.from_iterable(res_dict["enrage_log"]))
         res_dict["first_revive"] = [r[0] for r in res_dict["revive_log"] if r]
         res_dict["second_revive"] = [r[1] for r in res_dict["revive_log"] if r and len(r) > 1]
+        res_dict["lph"] = [(res_dict["total_loot"][i] / (res_dict["elapsed_time"][i] / (60 * 60))) for i in range(len(res_dict["total_loot"]))]
         if len(res_dict["final_stage"]) > 1:
             avg = {k: statistics.fmean(v) for k, v in res_dict.items() if v and type(v[0]) != list}
             std = {k: statistics.stdev(v) for k, v in res_dict.items() if v and type(v[0]) != list}
         else:
-            avg = res_dict
+            avg = dict()
+            for k, v in res_dict.items():
+                if type(v) == list and len(v) == 1:
+                    avg[k] = v[0]
             std = {k: 0 for k in res_dict}
+        return avg, std
+
+    @classmethod
+    def pprint_res(cls, res_dict: dict, custom_message: str = None, coloured: bool = False) -> None:
+        hunter_class = res_dict.pop('hunter')
+        avg, std = cls.make_printable(res_dict)
+        res_dict["lph"] = [(res_dict["total_loot"][i] / (res_dict["elapsed_time"][i] / (60 * 60))) for i in range(len(res_dict["total_loot"]))]
         out = []
         divider = "-" * 10
         c_off = '\033[0m'
-        out.append(f'Average over {len(res_dict["total_kills"])} runs:\t\t> {custom_message} <')
+        out.append(f'Average over {len(res_dict["total_kills"])} runs:\t\t {"> " + custom_message + " <" if custom_message else ""}')
         out.append("#" * 56)
         c_on = '\033[38;2;93;101;173m' if coloured else ''
         out.append(f'{c_on}Main stats:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
-        if res_dict["enrage_log"]:
-            out.append(f'{c_on}Enrage log: {avg["enrage_log"]:>25.2f}\t(+/- {std["enrage_log"]:>10.2f}){c_off}')
-        if res_dict["first_revive"]:
-            out.append(f'{c_on}Revive stage 1st: {avg["first_revive"]:>19.2f}\t(+/- {std["first_revive"]:>10.2f}){c_off}')
-        if res_dict["second_revive"]:
-            out.append(f'{c_on}Revive stage 2nd: {avg["second_revive"]:>19.2f}\t(+/- {std["second_revive"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Avg total kills: {avg["total_kills"]:>20.2f}\t(+/- {std["total_kills"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Elapsed time: {str(timedelta(seconds=round(avg["elapsed_time"], 0))):>23}\t(+/- {str(timedelta(seconds=round(std["elapsed_time"], 0))):>10}){c_off}')
+        if 'enrage_log' in avg:
+            out.append(f'{c_on}Avg Enrage stacks: {avg["enrage_log"]:>20.2f}\t(+/- {std["enrage_log"]:>10.2f}){c_off}')
+        if 'first_revive' in avg:
+            out.append(f'{c_on}Revive stage 1st: {avg["first_revive"]:>21.2f}\t(+/- {std["first_revive"]:>10.2f}){c_off}')
+        if 'second_revive' in avg:
+            out.append(f'{c_on}Revive stage 2nd: {avg["second_revive"]:>21.2f}\t(+/- {std["second_revive"]:>10.2f}){c_off}')
+        out.append(f'{c_on}Avg total kills: {avg["total_kills"]:>22,.2f}\t(+/- {std["total_kills"]:>10,.2f}){c_off}')
+        out.append(f'{c_on}Elapsed time: {str(timedelta(seconds=round(avg["elapsed_time"], 0))):>25}\t(+/- {str(timedelta(seconds=round(std["elapsed_time"], 0))):>10}){c_off}')
         c_on = '\033[38;2;195;61;3m' if coloured else ''
         out.append(f'{c_on}Offence:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg total attacks: {avg["total_attacks"]:>18.2f}\t(+/- {std["total_attacks"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Avg total damage: {avg["total_damage"]:>19.2f}\t(+/- {std["total_damage"]:>10.2f}){c_off}')
+        out.append(f'{c_on}Avg total attacks: {avg["total_attacks"]:>20,.2f}\t(+/- {std["total_attacks"]:>10,.2f}){c_off}')
+        out.append(f'{c_on}Avg total damage: {avg["total_damage"]:>21,.2f}\t(+/- {std["total_damage"]:>10,.2f}){c_off}')
         if hunter_class == Borge:
-            out.append(f'{c_on}Avg total crits: {avg["total_crits"]:>20.2f}\t(+/- {std["total_crits"]:>10.2f}){c_off}')
-            out.append(f'{c_on}Avg total extra from crits: {avg["total_extra_from_crits"]:>9.2f}\t(+/- {std["total_extra_from_crits"]:>10.2f}){c_off}')
+            out.append(f'{c_on}Avg total crits: {avg["total_crits"]:>22,.2f}\t(+/- {std["total_crits"]:>10,.2f}){c_off}')
+            out.append(f'{c_on}Avg total extra from crits: {avg["total_extra_from_crits"]:>11,.2f}\t(+/- {std["total_extra_from_crits"]:>10.2f}){c_off}')
         elif hunter_class == Ozzy:
-            out.append(f'{c_on}Avg total multistrikes: {avg["total_multistrikes"]:>13.2f}\t(+/- {std["total_multistrikes"]:>10.2f}){c_off}')
-            out.append(f'{c_on}Avg total extra from ms: {avg["total_ms_extra_damage"]:>9.2f}\t(+/- {std["total_ms_extra_damage"]:>10.2f}){c_off}')
+            out.append(f'{c_on}Avg total multistrikes: {avg["total_multistrikes"]:>15.2f}\t(+/- {std["total_multistrikes"]:>10.2f}){c_off}')
+            out.append(f'{c_on}Avg total extra from ms: {avg["total_ms_extra_damage"]:>14.2f}\t(+/- {std["total_ms_extra_damage"]:>10.2f}){c_off}')
         c_on = '\033[38;2;1;163;87m' if coloured else ''
         out.append(f'{c_on}Sustain:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg total taken: {avg["total_taken"]:>20.2f}\t(+/- {std["total_taken"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Avg total regen: {avg["total_regen"]:>20.2f}\t(+/- {std["total_regen"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Avg total attacks suffered: {avg["total_attacks_suffered"]:>9.2f}\t(+/- {std["total_attacks_suffered"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Avg total lifesteal: {avg["total_lifesteal"]:>16.2f}\t(+/- {std["total_lifesteal"]:>10.2f}){c_off}')
+        out.append(f'{c_on}Avg total taken: {avg["total_taken"]:>22,.2f}\t(+/- {std["total_taken"]:>10,.2f}){c_off}')
+        out.append(f'{c_on}Avg total regen: {avg["total_regen"]:>22,.2f}\t(+/- {std["total_regen"]:>10,.2f}){c_off}')
+        out.append(f'{c_on}Avg total attacks taken: {avg["total_attacks_suffered"]:>14,.2f}\t(+/- {std["total_attacks_suffered"]:>10,.2f}){c_off}')
+        out.append(f'{c_on}Avg total lifesteal: {avg["total_lifesteal"]:>18,.2f}\t(+/- {std["total_lifesteal"]:>10,.2f}){c_off}')
         c_on = '\033[38;2;234;186;1m' if coloured else ''
         out.append(f'{c_on}Defence:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg total evades: {avg["total_evades"]:>19.2f}\t(+/- {std["total_evades"]:>10.2f}){c_off}')
+        out.append(f'{c_on}Avg total evades: {avg["total_evades"]:>21,.2f}\t(+/- {std["total_evades"]:>10,.2f}){c_off}')
         if hunter_class == Ozzy:
-            out.append(f'{c_on}Avg trickster evades: {avg["total_trickster_evades"]:>15.2f}\t(+/- {std["total_trickster_evades"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Avg total mitigated: {avg["total_mitigated"]:>16.2f}\t(+/- {std["total_mitigated"]:>10.2f}){c_off}')
+            out.append(f'{c_on}Avg trickster evades: {avg["total_trickster_evades"]:>17,.2f}\t(+/- {std["total_trickster_evades"]:>10,.2f}){c_off}')
+        out.append(f'{c_on}Avg total mitigated: {avg["total_mitigated"]:>18,.2f}\t(+/- {std["total_mitigated"]:>10,.2f}){c_off}')
         c_on = '\033[38;2;14;156;228m' if coloured else ''
         out.append(f'{c_on}Effects:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg total effect procs: {avg["total_effect_procs"]:>13.2f}\t(+/- {std["total_effect_procs"]:>10.2f}){c_off}')
+        out.append(f'{c_on}Avg total effect procs: {avg["total_effect_procs"]:>15,.2f}\t(+/- {std["total_effect_procs"]:>10,.2f}){c_off}')
         if hunter_class == Borge:
-            out.append(f'{c_on}Avg total helltouch: {avg["total_helltouch"]:>16.2f}\t(+/- {std["total_helltouch"]:>10.2f}){c_off}')
-            out.append(f'{c_on}Avg total loth: {avg["total_loth"]:>21.2f}\t(+/- {std["total_loth"]:>10.2f}){c_off}')
-        out.append(f'{c_on}Avg total potion: {avg["total_potion"]:>19.2f}\t(+/- {std["total_potion"]:>10.2f}){c_off}')
+            out.append(f'{c_on}Avg total helltouch: {avg["total_helltouch"]:>18,.2f}\t(+/- {std["total_helltouch"]:>10,.2f}){c_off}')
+            out.append(f'{c_on}Avg total loth: {avg["total_loth"]:>23,.2f}\t(+/- {std["total_loth"]:>10,.2f}){c_off}')
+        out.append(f'{c_on}Avg total potion: {avg["total_potion"]:>21,.2f}\t(+/- {std["total_potion"]:>10,.2f}){c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         c_on = '\033[38;2;98;65;169m' if coloured else ''
-        out.append(f'{c_on}Loot:{c_off}')
+        out.append(f'{c_on}Loot:{c_off} (arbitrary values, for comparison only)')
         out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg LPM: {avg["total_loot"]/(avg["elapsed_time"]/60):>28.2f}\t(+/- {std["total_loot"]/(std["elapsed_time"]/60):>10.2f}){c_off}')
+        out.append(f'{c_on}Avg LPH: {avg["lph"]:>30,.2f}\t(+/- {std["lph"]:>10,.2f}){c_off}')
+        out.append(f'{c_on}Best LPH: {max(res_dict["lph"]):>29.3}\t{c_off}')
+        out.append(f'{c_on}Worst LPH: {min(res_dict["lph"]):>28.3}\t{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         out.append(f'Final stage reached:  MAX({max(res_dict["final_stage"])}), MED({floor(statistics.median(res_dict["final_stage"]))}), AVG({floor(statistics.mean(res_dict["final_stage"]))}), MIN({min(res_dict["final_stage"])})')
         out.append('')
@@ -142,6 +164,157 @@ class SimulationManager():
         for i, k in enumerate(sorted([*final_stage_pct])):
             stage_out.append(f'{k:>3d}: {final_stage_pct[k]:>6.2%}   ' + ("\n" if (i + 1) % 5 == 0 and i > 0 else ""))
         out.append(''.join(stage_out))
+        out.append('')
+        print('\n'.join(out))
+
+    @classmethod
+    def pprint_compare(cls, res1: dict, res2: dict, custom_message: str = None, coloured: bool = False) -> None:
+        hunter_class = res1.pop('hunter')
+        res2.pop('hunter')
+        avg1, std1 = cls.make_printable(res1)
+        avg2, std2 = cls.make_printable(res2)
+        res1["lph"] = [(res1["total_loot"][i] / (res1["elapsed_time"][i] / (60 * 60))) for i in range(len(res1["total_loot"]))]
+        res2["lph"] = [(res2["total_loot"][i] / (res2["elapsed_time"][i] / (60 * 60))) for i in range(len(res2["total_loot"]))]
+        out = []
+        divider = "-" * 10
+        c_off = '\033[0m'
+        out.append(f'Average over {len(res1["total_kills"])} runs:\t\t {"> " + custom_message + " <" if custom_message else ""}')
+        out.append("#" * 56)
+        c_on = '\033[38;2;93;101;173m' if coloured else ''
+        out.append(f'{c_on}Main stats:{c_off}')
+        out.append(f'{c_on}{divider}{c_off}')
+        if 'enrage_log' in avg1 and 'enrage_log' in avg2:
+            if avg1["enrage_log"] > avg2["enrage_log"]:
+                out.append(f'{c_on}Avg Enrage stacks: {avg1["enrage_log"]-avg2["enrage_log"]:>20.2f}\t(+/- {std1["enrage_log"]-std2["enrage_log"]:>10.2f}){c_off}{">> BUILD 2":>15}')
+            else:
+                out.append(f'{c_on}Avg Enrage stacks: {avg2["enrage_log"]-avg1["enrage_log"]:>20.2f}\t(+/- {std2["enrage_log"]-std1["enrage_log"]:>10.2f}){c_off}{">> BUILD 1":>15}')
+        if 'first_revive' in avg1 and 'first_revive' in avg2:
+            if avg1["first_revive"] > avg2["first_revive"]:
+                out.append(f'{c_on}Revive stage 1st: {avg1["first_revive"]-avg2["first_revive"]:>21.2f}\t(+/- {std1["first_revive"]-std2["first_revive"]:>10.2f}){c_off}{">> BUILD 1":>15}')
+            else:
+                out.append(f'{c_on}Revive stage 1st: {avg2["first_revive"]-avg1["first_revive"]:>21.2f}\t(+/- {std2["first_revive"]-std1["first_revive"]:>10.2f}){c_off}{">> BUILD 2":>15}')
+        if 'second_revive' in avg1 and 'second_revive' in avg2:
+            if avg1["second_revive"] > avg2["second_revive"]:
+                out.append(f'{c_on}Revive stage 2nd: {avg1["second_revive"]-avg2["second_revive"]:>21.2f}\t(+/- {std1["second_revive"]-std2["second_revive"]:>10.2f}){c_off}{">> BUILD 1":>15}')
+            else:
+                out.append(f'{c_on}Revive stage 2nd: {avg2["second_revive"]-avg1["second_revive"]:>21.2f}\t(+/- {std2["second_revive"]-std1["second_revive"]:>10.2f}){c_off}{">> BUILD 2":>15}')
+        if avg1["total_kills"] > avg2["total_kills"]:
+            out.append(f'{c_on}Avg total kills: {avg1["total_kills"]-avg2["total_kills"]:>22,.2f}\t(+/- {std1["total_kills"]-std2["total_kills"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+        else:
+            out.append(f'{c_on}Avg total kills: {avg2["total_kills"]-avg1["total_kills"]:>22,.2f}\t(+/- {std2["total_kills"]-std1["total_kills"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        if avg1["elapsed_time"] > avg2["elapsed_time"]:
+            out.append(f'{c_on}Elapsed time: {str(timedelta(seconds=round(avg1["elapsed_time"], 0))-timedelta(seconds=round(avg2["elapsed_time"], 0))):>25}\t(+/- {str(timedelta(seconds=round(std1["elapsed_time"], 0)) - timedelta(seconds=round(std2["elapsed_time"], 0))):>10}){c_off} {">> BUILD 2":>15}')
+        else:
+            out.append(f'{c_on}Elapsed time: {str(timedelta(seconds=round(avg2["elapsed_time"], 0))-timedelta(seconds=round(avg1["elapsed_time"], 0))):>25}\t(+/- {str(timedelta(seconds=round(std2["elapsed_time"], 0)) - timedelta(seconds=round(std1["elapsed_time"], 0))):>10}){c_off} {">> BUILD 1":>15}')
+        c_on = '\033[38;2;195;61;3m' if coloured else ''
+        out.append(f'{c_on}Offence:{c_off}')
+        out.append(f'{c_on}{divider}{c_off}')
+        if avg1["total_attacks"] > avg2["total_attacks"]:
+            out.append(f'{c_on}Avg total attacks: {avg1["total_attacks"]-avg2["total_attacks"]:>20,.2f}\t(+/- {std1["total_attacks"]-std2["total_attacks"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+        else:
+            out.append(f'{c_on}Avg total attacks: {avg2["total_attacks"]-avg1["total_attacks"]:>20,.2f}\t(+/- {std2["total_attacks"]-std1["total_attacks"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        if avg1["total_damage"] > avg2["total_damage"]:
+            out.append(f'{c_on}Avg total damage: {avg1["total_damage"]-avg2["total_damage"]:>21,.2f}\t(+/- {std1["total_damage"]-std2["total_damage"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+        else:
+            out.append(f'{c_on}Avg total damage: {avg2["total_damage"]-avg1["total_damage"]:>21,.2f}\t(+/- {std2["total_damage"]-std1["total_damage"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        if hunter_class == Borge:
+            if avg1["total_crits"] > avg2["total_crits"]:
+                out.append(f'{c_on}Avg total crits: {avg1["total_crits"]-avg2["total_crits"]:>22,.2f}\t(+/- {std1["total_crits"]-std2["total_crits"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            else:
+                out.append(f'{c_on}Avg total crits: {avg2["total_crits"]-avg1["total_crits"]:>22,.2f}\t(+/- {std2["total_crits"]-std1["total_crits"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            if avg1["total_extra_from_crits"] > avg2["total_extra_from_crits"]:
+                out.append(f'{c_on}Avg total extra from crits: {avg1["total_extra_from_crits"]-avg2["total_extra_from_crits"]:>11,.2f}\t(+/- {std1["total_extra_from_crits"]-std2["total_extra_from_crits"]:>10.2f}){c_off}{">> BUILD 1":>15}')
+            else:
+                out.append(f'{c_on}Avg total extra from crits: {avg2["total_extra_from_crits"]-avg1["total_extra_from_crits"]:>11,.2f}\t(+/- {std2["total_extra_from_crits"]-std1["total_extra_from_crits"]:>10.2f}){c_off}{">> BUILD 2":>15}')
+        elif hunter_class == Ozzy:
+            if avg1["total_multistrikes"] > avg2["total_multistrikes"]:
+                out.append(f'{c_on}Avg total multistrikes: {avg1["total_multistrikes"]-avg2["total_multistrikes"]:>15.2f}\t(+/- {std1["total_multistrikes"]-std2["total_multistrikes"]:>10.2f}){c_off}{">> BUILD 1":>15}')
+            else:
+                out.append(f'{c_on}Avg total multistrikes: {avg2["total_multistrikes"]-avg1["total_multistrikes"]:>15.2f}\t(+/- {std2["total_multistrikes"]-std1["total_multistrikes"]:>10.2f}){c_off}{">> BUILD 2":>15}')
+            if avg1["total_ms_extra_damage"] > avg2["total_ms_extra_damage"]:
+                out.append(f'{c_on}Avg total extra from ms: {avg1["total_ms_extra_damage"]-avg2["total_ms_extra_damage"]:>14.2f}\t(+/- {std1["total_ms_extra_damage"]-std2["total_ms_extra_damage"]:>10.2f}){c_off}{">> BUILD 1":>15}')
+            else:
+                out.append(f'{c_on}Avg total extra from ms: {avg2["total_ms_extra_damage"]-avg1["total_ms_extra_damage"]:>14.2f}\t(+/- {std2["total_ms_extra_damage"]-std1["total_ms_extra_damage"]:>10.2f}){c_off}{">> BUILD 2":>15}')
+        c_on = '\033[38;2;1;163;87m' if coloured else ''
+        out.append(f'{c_on}Sustain:{c_off}')
+        out.append(f'{c_on}{divider}{c_off}')
+        if avg1["total_taken"] > avg2["total_taken"]:
+            out.append(f'{c_on}Avg total taken: {avg1["total_taken"]-avg2["total_taken"]:>22,.2f}\t(+/- {std1["total_taken"]-std2["total_taken"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        else:
+            out.append(f'{c_on}Avg total taken: {avg2["total_taken"]-avg1["total_taken"]:>22,.2f}\t(+/- {std2["total_taken"]-std1["total_taken"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+        if avg1["total_regen"] > avg2["total_regen"]:
+            out.append(f'{c_on}Avg total regen: {avg1["total_regen"]-avg2["total_regen"]:>22,.2f}\t(+/- {std1["total_regen"]-std2["total_regen"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+        else:
+            out.append(f'{c_on}Avg total regen: {avg2["total_regen"]-avg1["total_regen"]:>22,.2f}\t(+/- {std2["total_regen"]-std1["total_regen"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        if avg1["total_attacks_suffered"] > avg2["total_attacks_suffered"]:
+            out.append(f'{c_on}Avg total attacks taken: {avg1["total_attacks_suffered"]-avg2["total_attacks_suffered"]:>14,.2f}\t(+/- {std1["total_attacks_suffered"]-std2["total_attacks_suffered"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+        else:
+            out.append(f'{c_on}Avg total attacks taken: {avg2["total_attacks_suffered"]-avg1["total_attacks_suffered"]:>14,.2f}\t(+/- {std2["total_attacks_suffered"]-std1["total_attacks_suffered"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        if avg1["total_lifesteal"] > avg2["total_lifesteal"]:
+            out.append(f'{c_on}Avg total lifesteal: {avg1["total_lifesteal"]-avg2["total_lifesteal"]:>18,.2f}\t(+/- {std1["total_lifesteal"]-std2["total_lifesteal"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+        else:
+            out.append(f'{c_on}Avg total lifesteal: {avg2["total_lifesteal"]-avg1["total_lifesteal"]:>18,.2f}\t(+/- {std2["total_lifesteal"]-std1["total_lifesteal"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        c_on = '\033[38;2;234;186;1m' if coloured else ''
+        out.append(f'{c_on}Defence:{c_off}')
+        out.append(f'{c_on}{divider}{c_off}')
+        if avg1["total_evades"] > avg2["total_evades"]:
+            out.append(f'{c_on}Avg total evades: {avg1["total_evades"]-avg2["total_evades"]:>21,.2f}\t(+/- {std1["total_evades"]-std2["total_evades"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+        else:
+            out.append(f'{c_on}Avg total evades: {avg2["total_evades"]-avg1["total_evades"]:>21,.2f}\t(+/- {std2["total_evades"]-std1["total_evades"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        if hunter_class == Ozzy:
+            if avg1["total_trickster_evades"] > avg2["total_trickster_evades"]:
+                out.append(f'{c_on}Avg trickster evades: {avg1["total_trickster_evades"]-avg2["total_trickster_evades"]:>17,.2f}\t(+/- {std1["total_trickster_evades"]-std2["total_trickster_evades"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            else:
+                out.append(f'{c_on}Avg trickster evades: {avg2["total_trickster_evades"]-avg1["total_trickster_evades"]:>17,.2f}\t(+/- {std2["total_trickster_evades"]-std1["total_trickster_evades"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        if avg1["total_mitigated"] > avg2["total_mitigated"]:
+            out.append(f'{c_on}Avg total mitigated: {avg1["total_mitigated"]-avg2["total_mitigated"]:>18,.2f}\t(+/- {std1["total_mitigated"]-std2["total_mitigated"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+        else:
+            out.append(f'{c_on}Avg total mitigated: {avg2["total_mitigated"]-avg1["total_mitigated"]:>18,.2f}\t(+/- {std2["total_mitigated"]-std1["total_mitigated"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        c_on = '\033[38;2;14;156;228m' if coloured else ''
+        out.append(f'{c_on}Effects:{c_off}')
+        out.append(f'{c_on}{divider}{c_off}')
+        if avg1["total_effect_procs"] > avg2["total_effect_procs"]:
+            out.append(f'{c_on}Avg total effect procs: {avg1["total_effect_procs"]-avg2["total_effect_procs"]:>15,.2f}\t(+/- {std1["total_effect_procs"]-std2["total_effect_procs"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+        else:
+            out.append(f'{c_on}Avg total effect procs: {avg2["total_effect_procs"]-avg1["total_effect_procs"]:>15,.2f}\t(+/- {std2["total_effect_procs"]-std1["total_effect_procs"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        if hunter_class == Borge:
+            if avg1["total_helltouch"] > avg2["total_helltouch"]:
+                out.append(f'{c_on}Avg total helltouch: {avg1["total_helltouch"]-avg2["total_helltouch"]:>18,.2f}\t(+/- {std1["total_helltouch"]-std2["total_helltouch"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            else:
+                out.append(f'{c_on}Avg total helltouch: {avg2["total_helltouch"]-avg1["total_helltouch"]:>18,.2f}\t(+/- {std2["total_helltouch"]-std1["total_helltouch"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+            if avg1["total_loth"] > avg2["total_loth"]:
+                out.append(f'{c_on}Avg total loth: {avg1["total_loth"]-avg2["total_loth"]:>23,.2f}\t(+/- {std1["total_loth"]-std2["total_loth"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+            else:
+                out.append(f'{c_on}Avg total loth: {avg2["total_loth"]-avg1["total_loth"]:>23,.2f}\t(+/- {std2["total_loth"]-std1["total_loth"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        if avg1["total_potion"] > avg2["total_potion"]:
+            out.append(f'{c_on}Avg total potion: {avg1["total_potion"]-avg2["total_potion"]:>21,.2f}\t(+/- {std1["total_potion"]-std2["total_potion"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+        else:
+            out.append(f'{c_on}Avg total potion: {avg2["total_potion"]-avg1["total_potion"]:>21,.2f}\t(+/- {std2["total_potion"]-std1["total_potion"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        out.append(f'{c_on}{divider}{c_off}')
+        c_on = '\033[38;2;98;65;169m' if coloured else ''
+        out.append(f'{c_on}Loot:{c_off} (arbitrary values, for comparison only)')
+        out.append(f'{c_on}{divider}{c_off}')
+        if avg1["lph"] > avg2["lph"]:
+            out.append(f'{c_on}Avg LPH: {avg1["lph"]-avg2["lph"]:>30,.2f}\t(+/- {std1["lph"]-std2["lph"]:>10,.2f}){c_off}{">> BUILD 1":>15}')
+        else:
+            out.append(f'{c_on}Avg LPH: {avg2["lph"]-avg1["lph"]:>30,.2f}\t(+/- {std2["lph"]-std1["lph"]:>10,.2f}){c_off}{">> BUILD 2":>15}')
+        if max(res1["lph"]) > max(res2["lph"]):
+            out.append(f'{c_on}Best LPH: {max(res1["lph"])-max(res2["lph"]):>29.3}\t{c_off}{">> BUILD 1":>15}')
+        else:
+            out.append(f'{c_on}Best LPH: {max(res2["lph"])-max(res1["lph"]):>29.3}\t{c_off}{">> BUILD 2":>15}')
+        if min(res1["lph"]) > min(res2["lph"]):
+            out.append(f'{c_on}Worst LPH: {min(res1["lph"])-min(res2["lph"]):>28.3}\t{c_off}{">> BUILD 1":>15}')
+        else:
+            out.append(f'{c_on}Worst LPH: {min(res2["lph"])-min(res1["lph"]):>28.3}\t{c_off}{">> BUILD 2":>15}')
+        out.append(f'{c_on}{divider}{c_off}')
+        out.append(f'Final stage reached by BUILD 1:  MAX({max(res1["final_stage"])}), MED({floor(statistics.median(res1["final_stage"]))}), AVG({floor(statistics.mean(res1["final_stage"]))}), MIN({min(res1["final_stage"])})')
+        out.append(f'Final stage reached by BUILD 2:  MAX({max(res2["final_stage"])}), MED({floor(statistics.median(res2["final_stage"]))}), AVG({floor(statistics.mean(res2["final_stage"]))}), MIN({min(res2["final_stage"])})')
+        out.append('')
+        # stage_out = []
+        # final_stage_pct = {i:j/len(res_dict["final_stage"]) for i,j in Counter(res_dict["final_stage"]).items()}
+        # for i, k in enumerate(sorted([*final_stage_pct])):
+        #     stage_out.append(f'{k:>3d}: {final_stage_pct[k]:>6.2%}   ' + ("\n" if (i + 1) % 5 == 0 and i > 0 else ""))
+        # out.append(''.join(stage_out))
         out.append('')
         print('\n'.join(out))
 
