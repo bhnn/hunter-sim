@@ -12,7 +12,6 @@ hunter_name_spacing: int = 7
 # TODO: validate vectid elixir
 # TODO: Ozzy: move @property code to on_death() to speed things up?
 # TODO: Borge: move @property code as well?
-# TODO: BfB, Atlas
 
 """ Assumptions:
 - order of attacks: main -> ms -> echo -> echo ms
@@ -231,7 +230,7 @@ class Hunter:
 
     @property
     def missing_hp_pct(self) -> float:
-        return self.hp / self.max_hp
+        return round((1 - self.hp / self.max_hp) * 100, 0)
 
     def __str__(self) -> str:
         """Prints the stats of this Hunter's instance.
@@ -548,11 +547,50 @@ class Borge(Hunter):
         """
         # 100 * (1 + 0.5 (1 + 1 * 0.001))
         # return self._power * ((1 + self.get_missing_pct) * (1 + self.attributes["born_for_battle"] * 0.001))
-        return self._power
+        return self._power * (1 + (self.missing_hp_pct * self.attributes["born_for_battle"] * 0.001))
 
     @power.setter
     def power(self, value: float) -> None:
         self._power = value
+
+    @property
+    def damage_reduction(self) -> float:
+        """Getter for the damage_reduction attribute. Accounts for the Atlas Protocol attribute.
+
+        Returns:
+            float: The damage reduction of the hunter.
+        """
+        return (self._damage_reduction + self.attributes["atlas_protocol"] * 0.007) if (self.current_stage % 100 == 0 and self.current_stage > 0) else self._damage_reduction
+
+    @damage_reduction.setter
+    def damage_reduction(self, value: float) -> None:
+        self._damage_reduction = value
+
+    @property
+    def effect_chance(self) -> float:
+        """Getter for the effect_chance attribute. Accounts for the Atlas Protocol attribute.
+
+        Returns:
+            float: The effect chance of the hunter.
+        """
+        return (self._effect_chance + self.attributes["atlas_protocol"] * 0.014) if (self.current_stage % 100 == 0 and self.current_stage > 0) else self._effect_chance
+
+    @effect_chance.setter
+    def effect_chance(self, value: float) -> None:
+        self._effect_chance = value
+
+    @property
+    def special_chance(self) -> float:
+        """Getter for the special_chance attribute. Accounts for the Atlas Protocol attribute.
+
+        Returns:
+            float: The special chance of the hunter.
+        """
+        return (self._special_chance + self.attributes["atlas_protocol"] * 0.025) if (self.current_stage % 100 == 0 and self.current_stage > 0) else self._special_chance
+
+    @special_chance.setter
+    def special_chance(self, value: float) -> None:
+        self._special_chance = value
 
     @property
     def speed(self) -> float:
@@ -561,7 +599,8 @@ class Borge(Hunter):
         Returns:
             float: The speed of the hunter.
         """
-        current_speed = self._speed - self.fires_of_war
+        current_speed = (self._speed * (1 - self.attributes["atlas_protocol"] * 0.04)) if (self.current_stage % 100 == 0 and self.current_stage > 0) else self._speed
+        current_speed -= self.fires_of_war
         self.fires_of_war = 0
         return current_speed
 
@@ -944,7 +983,8 @@ class Ozzy(Hunter):
 
 
 if __name__ == "__main__":
-    o = Ozzy('./builds/current_ozzy.yaml')
-    print(o)
-    o.times_revived = 2
-    print(o)
+    b = Borge('./builds/sanity_bfb_atlas.yaml')
+    print(b)
+    b.hp = 577
+    print(b)
+    print(b.missing_hp_pct)
