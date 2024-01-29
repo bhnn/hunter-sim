@@ -196,8 +196,8 @@ class SimulationManager():
         out.append(f'{c_on}Loot:{c_off} (arbitrary values, for comparison only)')
         out.append(f'{c_on}{divider}{c_off}')
         out.append(f'{c_on}Avg LPH: {avg["lph"]:>30,.2f}\t(+/- {std["lph"]:>10,.2f}){c_off}')
-        out.append(f'{c_on}Best LPH: {max(res_dict["lph"]):>29.3}\t{c_off}')
-        out.append(f'{c_on}Worst LPH: {min(res_dict["lph"]):>28.3}\t{c_off}')
+        out.append(f'{c_on}Best LPH: {max(res_dict["lph"]):>29,.3f}\t{c_off}')
+        out.append(f'{c_on}Worst LPH: {min(res_dict["lph"]):>28,.3f}\t{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         out.append(f'Final stage reached:  MAX({max(res_dict["final_stage"])}), MED({floor(statistics.median(res_dict["final_stage"]))}), AVG({floor(statistics.mean(res_dict["final_stage"]))}), MIN({min(res_dict["final_stage"])})')
         out.append('')
@@ -350,13 +350,13 @@ class SimulationManager():
         else:
             out.append(f'{c_on}Avg LPH: {avg2["lph"]-avg1["lph"]:>30,.2f} more{c_off}{">> BUILD 2":>20}')
         if max(res1["lph"]) > max(res2["lph"]):
-            out.append(f'{c_on}Best LPH: {max(res1["lph"])-max(res2["lph"]):>29.3} more{c_off}{">> BUILD 1":>20}')
+            out.append(f'{c_on}Best LPH: {max(res1["lph"])-max(res2["lph"]):>29,.3f} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Best LPH: {max(res2["lph"])-max(res1["lph"]):>29.3} more{c_off}{">> BUILD 2":>20}')
+            out.append(f'{c_on}Best LPH: {max(res2["lph"])-max(res1["lph"]):>29,.3f} more{c_off}{">> BUILD 2":>20}')
         if min(res1["lph"]) > min(res2["lph"]):
-            out.append(f'{c_on}Worst LPH: {min(res1["lph"])-min(res2["lph"]):>28.3} more{c_off}{">> BUILD 1":>20}')
+            out.append(f'{c_on}Worst LPH: {min(res1["lph"])-min(res2["lph"]):>28,.3f} more{c_off}{">> BUILD 1":>20}')
         else:
-            out.append(f'{c_on}Worst LPH: {min(res2["lph"])-min(res1["lph"]):>28.3} more{c_off}{">> BUILD 2":>20}')
+            out.append(f'{c_on}Worst LPH: {min(res2["lph"])-min(res1["lph"]):>28,.3f} more{c_off}{">> BUILD 2":>20}')
         out.append(f'{c_on}{divider}{c_off}')
         out.append(f'Final stage reached by BUILD 1:  MAX({max(res1["final_stage"])}), MED({floor(statistics.median(res1["final_stage"]))}), AVG({floor(statistics.mean(res1["final_stage"]))}), MIN({min(res1["final_stage"])})')
         out.append(f'Final stage reached by BUILD 2:  MAX({max(res2["final_stage"])}), MED({floor(statistics.median(res2["final_stage"]))}), AVG({floor(statistics.mean(res2["final_stage"]))}), MIN({min(res2["final_stage"])})')
