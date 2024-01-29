@@ -36,12 +36,14 @@ Working features:
     - your levels in any inscryptions and relics listed in the file
     - *Adding, removing or renaming any fixed names in the build config file causes the code to reject it*
 
-4. Open a Powershell window to verify the correct Python version is being accessed by running `python -V` (<ins>capital</ins> V). Then install the project's dependencies into your python installation from (1) using `pip install -r requirements.txt`.
+4. Open a Powershell window to verify the correct Python version is being accessed by running `python -V` (<ins>capital</ins> V).
 
-5. In the Powershell window, navigate to the `hunter-sim` folder using the `cd` command.
+5. Then navigate to the `hunter-sim` folder using the `cd` command.
     - eg.: if you downloaded and unpacked the code to `D:\Downloads`, then run `cd D:\Downloads\hunter-sim-v0.1.0`
 
-6. You're now set to run simulations. See [Usage](#usage) for an explanation and examples.
+6. Then install the project's dependencies into your python installation from (1) using `pip install -r requirements.txt`.
+
+7. You're now set to run simulations. See [Usage](#usage) for an explanation and examples.
 
 ## Usage
 
