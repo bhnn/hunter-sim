@@ -182,8 +182,8 @@ class Hunter:
         """Actions to take when the hunter kills an enemy. The Hunter() implementation only handles loot.
         """
         loot = self.compute_loot()
-        if random.random() < self.effect_chance and (LL := self.talents["call_me_lucky_loot"]):
-            # Talent: Call Me Lucky Loot
+        if self.current_stage % 100 != 0 and random.random() < self.effect_chance and (LL := self.talents["call_me_lucky_loot"]):
+            # Talent: Call Me Lucky Loot, cannot proc on bosses
             loot *= 1 + (self.talents["call_me_lucky_loot"] * 0.2)
             self.total_effect_procs += 1
         self.total_loot += loot
