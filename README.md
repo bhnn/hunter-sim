@@ -17,15 +17,31 @@ Working features:
 
 - [Hunter-Sim](#hunter-sim)
   - [Installation](#installation)
+    - [Windows](#windows)
   - [Usage](#usage)
   - [Contributing](#contributing)
   - [Acknowledgements](#acknowledgements)
 
 ## Installation
 
-1) Install at least Python v3.10 or create a virtual environment of at least Python v3.10 using the tool of your choice (pyenv, Anaconda, etc).
+### Windows
 
-2) [Download the latest version](https://github.com/bhnn/hunter-sim/releases) or clone the project onto your drive, then install its dependencies into your python environment from (1) using `pip install -r requirements.txt`.
+1. Install at least Python v3.10. If you already have Python installed.
+
+2. [Download the latest version](https://github.com/bhnn/hunter-sim/releases) or clone the project onto your drive.
+
+3. Inside the `hunter-sim` folder, open the `builds/` directory and edit either `empty_borge.yaml` or `empty_ozzy.yaml`, depending on which hunter you want to simulate. The file can be renamed to anything you desire for organisational purposes. Input:
+    - the upgrade levels of all your main stats (e.g. `hp: 200`, not `hp: 910.33`)
+    - your point spent on the talents and attributes screens
+    - your levels in any inscryptions and relics listed in the file
+    - *Adding, removing or renaming any fixed names in the build config file causes the code to reject it*
+
+4. Open a Powershell window to verify the correct Python version is being accessed by running `python -V` (<ins>capital</ins> V). Then install the project's dependencies into your python installation from (1) using `pip install -r requirements.txt`.
+
+5. In the Powershell window, navigate to the `hunter-sim` folder using the `cd` command.
+    - eg.: if you downloaded and unpacked the code to `D:\Downloads`, then run `cd D:\Downloads\hunter-sim-v0.1.0`
+
+6. You're now set to run simulations. See [Usage](#usage) for an explanation and examples.
 
 ## Usage
 
