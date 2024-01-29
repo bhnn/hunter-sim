@@ -23,6 +23,8 @@ def main(path: str, compare_path: str, num_sims: int, dump_config: str, threads:
         verbose (bool): Whether to print verbose output to stdout
         log (bool): Whether to write log of simulation to specified path. Currently only works with `-i 1`. Defaults to ./logs/
     """
+    if threads == 0:
+        threads = -1
     if num_sims > 1 and verbose:
         print("hunter_sim.py: error: verbose output is not supported for multiple simulations. Run with `-i 1` to enable verbose output.")
         sys.exit(1)
@@ -41,6 +43,14 @@ def main(path: str, compare_path: str, num_sims: int, dump_config: str, threads:
     if num_sims == 1 and verbose:
         logging.getLogger().setLevel(logging.DEBUG)
     try:
+        if path and compare_path:
+            with open(path, 'r') as f:
+                hunter1 = yaml.safe_load(f)["meta"]["hunter"]
+            with open(compare_path, 'r') as f:
+                hunter2 = yaml.safe_load(f)["meta"]["hunter"]
+            if hunter1 != hunter2:
+                print("hunter_sim.py: error: cannot compare builds of different hunters")
+                sys.exit(1)
         if num_sims == 1 and log:
             with open(path, 'r') as f:
                 cfg = yaml.safe_load(f)
@@ -75,7 +85,7 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--num-sims", type=int, help="Number of simulations to run", default=100)
     parser.add_argument("-d", "--dump-config", action="store_true", help="Save an empty config file to ./builds/ directory and exits.")
     parser.add_argument("-t", "--threaded", type=int, help="Number of threads to use for parallelisation. -1 for sequential processing.", default=-1, dest="threads")
-    parser.add_argument("-v", "--verbose", action="store_true", help="Print verbose output to stdout")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Print simulation progress to stdout")
     parser.add_argument("-l", "--log", action="store_true", help="Write log of simulation to specified path. Currently only works with `-i 1`. Defaults to ./logs/")
     args = parser.parse_args()
 
