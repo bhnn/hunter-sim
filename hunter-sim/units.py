@@ -68,14 +68,17 @@ class Enemy:
                 'hp': (
                     (11 + (stage * 6))
                     * (2.9 if stage > 100 else 1)
+                    * (1 + ((stage // 150) * (stage-149) * (0.006 + 0.006 * (stage-150) // 50)) if stage >= 150 else 1)
                 ),
                 'power': (
                     (1.35 + (stage * 0.75))
                     * (2.7 if stage > 100 else 1)
+                    * (1 + ((stage-149) * (0.006 + 0.006 * (stage-150) // 50)) if stage >= 150 else 1)
                 ),
                 'regen': (
                     (0.02 + ((stage-1) * 0.1) if stage > 0 else 0)
                     * (1.25 if stage > 100 else 1)
+                    * (1 + ((stage-149) * (0.006 + 0.006 * (stage-150) // 50)) if stage >= 150 else 1)
                 ),
                 'special_chance': 0.0994 + (stage * 0.0006),
                 'special_damage': 1.03 + (stage * 0.008),
