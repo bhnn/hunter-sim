@@ -199,12 +199,13 @@ class SimulationManager():
         out.append(f'{c_on}Best LPH: {max(res_dict["lph"]):>29,.2f}\t{c_off}')
         out.append(f'{c_on}Worst LPH: {min(res_dict["lph"]):>28,.2f}\t{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'Final stage reached:  MAX({max(res_dict["final_stage"])}), MED({floor(statistics.median(res_dict["final_stage"]))}), AVG({floor(statistics.mean(res_dict["final_stage"]))}), MIN({min(res_dict["final_stage"])})')
+        c_on = '\033[38;2;128;128;128m'
+        out.append(f'Final stage reached:  MAX:{c_on}{max(res_dict["final_stage"]):>4}{c_off}, MED:{c_on}{floor(statistics.median(res_dict["final_stage"])):>4}{c_off}, AVG:{c_on}{floor(statistics.mean(res_dict["final_stage"])):>4}{c_off}, MIN:{c_on}{min(res_dict["final_stage"]):>4}{c_off}')
         out.append('')
         stage_out = []
         final_stage_pct = {i:j/len(res_dict["final_stage"]) for i,j in Counter(res_dict["final_stage"]).items()}
         for i, k in enumerate(sorted([*final_stage_pct])):
-            stage_out.append(f'{k:>3d}: {final_stage_pct[k]:>6.2%}   ' + ("\n" if (i + 1) % 5 == 0 and i > 0 else ""))
+            stage_out.append(f'{k:>3d}: {c_on}{final_stage_pct[k]:>6.2%}{c_off}   ' + ("\n" if (i + 1) % 5 == 0 and i > 0 else ""))
         out.append(''.join(stage_out))
         out.append('')
         print('\n'.join(out))
@@ -358,8 +359,9 @@ class SimulationManager():
         else:
             out.append(f'{c_on}Worst LPH: {min(res2["lph"])-min(res1["lph"]):>28,.2f} more{c_off}{">> BUILD 2":>20}')
         out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'Final stage reached by BUILD 1:  MAX({max(res1["final_stage"])}), MED({floor(statistics.median(res1["final_stage"]))}), AVG({floor(statistics.mean(res1["final_stage"]))}), MIN({min(res1["final_stage"])})')
-        out.append(f'Final stage reached by BUILD 2:  MAX({max(res2["final_stage"])}), MED({floor(statistics.median(res2["final_stage"]))}), AVG({floor(statistics.mean(res2["final_stage"]))}), MIN({min(res2["final_stage"])})')
+        c_on = '\033[38;2;128;128;128m'
+        out.append(f'Final stage reached by BUILD 1:  MAX:{c_on}{max(res1["final_stage"]):>4}{c_off}, MED:{c_on}{floor(statistics.median(res1["final_stage"])):>4}{c_off}, AVG:{c_on}{floor(statistics.mean(res1["final_stage"])):>4}{c_off}, MIN:{c_on}{min(res1["final_stage"]):>4}{c_off}')
+        out.append(f'Final stage reached by BUILD 1:  MAX:{c_on}{max(res2["final_stage"]):>4}{c_off}, MED:{c_on}{floor(statistics.median(res2["final_stage"])):>4}{c_off}, AVG:{c_on}{floor(statistics.mean(res2["final_stage"])):>4}{c_off}, MIN:{c_on}{min(res2["final_stage"]):>4}{c_off}')
         out.append('')
         out.append('')
         print('\n'.join(out))
