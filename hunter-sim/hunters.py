@@ -10,6 +10,7 @@ hunter_name_spacing: int = 7
 
 # TODO: maybe find a better way to trample()
 # TODO: validate vectid elixir
+# TODO: verify which hits can proc Trickster
 # TODO: Ozzy: move @property code to on_death() to speed things up?
 # TODO: Borge: move @property code as well?
 # TODO: DwD power is a little off: 200 ATK, 2 exo, 3 DwD, 1 revive should be 110.59 power but is 110.71. I think DwD might be 0.0196 power instead of 0.02
@@ -789,6 +790,11 @@ class Ozzy(Hunter):
         """
         # method handles all attacks: normal and triggered
         if not self.attack_queue: # normal attacks
+            if random.random() < (self.effect_chance / 2) and self.talents["tricksters_boon"]:
+                # Talent: Trickster's Boon
+                self.trickster_charges += 1
+                self.total_effect_procs += 1
+                logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tTRICKSTER")
             if random.random() < self.special_chance:
                 # Stat: Multi-Strike
                 self.attack_queue.append('(MS)')
@@ -835,10 +841,6 @@ class Ozzy(Hunter):
         # on_attack() effects
         # crippling shots and omen of decay inflict _extra damage_ that does not count towards lifesteal
         self.heal_hp(damage * self.lifesteal, 'steal')
-        if random.random() < self.effect_chance and self.talents["tricksters_boon"]:
-            # Talent: Trickster's Boon
-            self.trickster_charges += 1
-            self.total_effect_procs += 1
         if random.random() < self.effect_chance and (cs := self.talents["crippling_shots"]):
             # Talent: Crippling Shots
             self.crippling_on_target += cs
