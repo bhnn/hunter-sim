@@ -249,6 +249,7 @@ class Boss(Enemy):
         """
         super(Boss, self).__init__(name, hunter, stage, sim)
         self.enrage_stacks: int = 0
+        self.max_enrage: bool = False
         if isinstance(hunter, Borge):
             self.enrage_effect = 0.0475
         elif isinstance(hunter, Ozzy):
@@ -303,6 +304,11 @@ class Boss(Enemy):
         super(Boss, self).attack(hunter)
         self.enrage_stacks += 1
         logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tENRAGE\t{self.enrage_stacks:>6.2f} stacks")
+        if self.enrage_stacks >= 200 and not self.max_enrage:
+            self.max_enrage = True
+            self.power *= 3
+            self.special_chance = 1
+            logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tMAX ENRAGE (x3 damage, 100% crit chance)")
 
     def on_death(self) -> None:
         """Extends the Enemy::enrage() method to log enrage stacks on death.
