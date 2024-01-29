@@ -52,12 +52,10 @@ def main(path: str, compare_path: str, num_sims: int, dump_config: str, threads:
                 print("hunter_sim.py: error: cannot compare builds of different hunters")
                 sys.exit(1)
         if num_sims == 1 and log:
-            with open(path, 'r') as f:
-                cfg = yaml.safe_load(f)
             log_dir = os.path.join(os.getcwd(), 'logs')
             Path(log_dir).mkdir(parents=True, exist_ok=True)
             logging.basicConfig(
-                filename=os.path.join(log_dir, datetime.now().strftime("%Y%m%d-%H%M%S") + f'_{cfg["meta"]["hunter"].lower()}.log'),
+                filename=os.path.join(log_dir, datetime.now().strftime("%Y%m%d-%H%M%S") + f'_{Path(path).stem}.log'),
                 filemode='w',
                 force=True,
                 level=logging.DEBUG,
@@ -65,10 +63,10 @@ def main(path: str, compare_path: str, num_sims: int, dump_config: str, threads:
         smgr = SimulationManager(path)
         if compare_path:
             import timing
-            res = smgr.compare_against(compare_path, num_sims, threaded=threads)
+            smgr.compare_against(compare_path, num_sims, threaded=threads)
         else:
             import timing
-            res = smgr.run(num_sims, threaded=threads)
+            smgr.run(num_sims, threaded=threads)
     except FileNotFoundError:
         print("hunter_sim.py: error: build config file not found. Please specify the correct name or run with the -d flag to generate an empty build config file.")
         sys.exit(1)
