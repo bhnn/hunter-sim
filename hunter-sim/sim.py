@@ -360,7 +360,7 @@ class SimulationManager():
         out.append(f'{c_on}{divider}{c_off}')
         c_on = '\033[38;2;128;128;128m'
         out.append(f'Final stage reached by BUILD 1:  MAX:{c_on}{max(res1["final_stage"]):>4}{c_off}, MED:{c_on}{floor(statistics.median(res1["final_stage"])):>4}{c_off}, AVG:{c_on}{floor(statistics.mean(res1["final_stage"])):>4}{c_off}, MIN:{c_on}{min(res1["final_stage"]):>4}{c_off}')
-        out.append(f'Final stage reached by BUILD 1:  MAX:{c_on}{max(res2["final_stage"]):>4}{c_off}, MED:{c_on}{floor(statistics.median(res2["final_stage"])):>4}{c_off}, AVG:{c_on}{floor(statistics.mean(res2["final_stage"])):>4}{c_off}, MIN:{c_on}{min(res2["final_stage"]):>4}{c_off}')
+        out.append(f'Final stage reached by BUILD 2:  MAX:{c_on}{max(res2["final_stage"]):>4}{c_off}, MED:{c_on}{floor(statistics.median(res2["final_stage"])):>4}{c_off}, AVG:{c_on}{floor(statistics.mean(res2["final_stage"])):>4}{c_off}, MIN:{c_on}{min(res2["final_stage"]):>4}{c_off}')
         out.append('')
         out.append('')
         print('\n'.join(out))
