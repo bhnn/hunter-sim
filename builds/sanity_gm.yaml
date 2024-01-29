@@ -1,0 +1,56 @@
+# max 100, avg 100, time 03:20:47, avg kills 1000
+# max loot 5.02m, 4.03m, 3.00m, 112.1m; avg loot 4.00m, 3.20m, 2.67m, 96.4m
+
+meta:
+  hunter: Ozzy
+  build_only: False
+  level: 29
+
+stats:
+  hp: 140
+  power: 140
+  regen: 111
+  damage_reduction: 39
+  evade_chance: 34
+  effect_chance: 28
+  special_chance: 25
+  special_damage: 17
+  speed: 20
+
+talents:
+  death_is_my_companion: 0
+  tricksters_boon: 1
+  unfair_advantage: 0
+  thousand_needles: 7
+  omen_of_decay: 10
+  call_me_lucky_loot: 10
+  crippling_shots: 0
+  echo_bullets: 1
+
+attributes:
+  living_off_the_land: 27
+  exo_piercers: 25
+  wings_of_ibu: 5
+  timeless_mastery: 5
+  shimmering_scorpion: 0
+  extermination_protocol: 5
+  dance_of_dashes: 0
+  gift_of_medusa: 0
+  vectid_elixir: 0
+  soul_of_snek: 0
+  cycle_of_death: 0
+  deal_with_death: 0
+
+inscryptions:
+  i31: 10
+  i32: 5
+  i33: 4
+  i36: 5
+  i37: 7
+  i40: 6
+
+mods: {
+}
+
+relics:
+  disk_of_dawn: 0
