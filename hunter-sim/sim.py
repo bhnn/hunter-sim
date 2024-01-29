@@ -423,7 +423,7 @@ class Simulation():
             while self.enemies:
                 logging.debug('')
                 logging.debug(hunter)
-                if 'trample' in hunter.mods and not isinstance(self.enemies[0], Boss):
+                if 'trample' in hunter.mods and hunter.mods['trample'] and not isinstance(self.enemies[0], Boss):
                     trample_kills = hunter.apply_trample(self.enemies)
                     if trample_kills > 0:
                         logging.debug(f'[{hunter.name:>7}]:\tTRAMPLE {trample_kills} enemies')
