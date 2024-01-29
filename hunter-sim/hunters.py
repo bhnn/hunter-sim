@@ -194,14 +194,14 @@ class Hunter:
         Returns:
             float: The amount of loot gained.
         """
-        stage_mult = (1.05 ** (self.current_stage+1)) * (self.current_stage // 100 * 5.0)
+        stage_mult = (1.05 ** (self.current_stage+1)) * (5 if self.current_stage >= 101 else 1)
         if isinstance(self, Borge):
             base_loot = 1.0 if self.current_stage != 100 else (700 + 500 + 60 + 50)
             timeless_mastery = 1 + self.attributes["timeless_mastery"] * 0.14
         elif isinstance(self, Ozzy):
             base_loot = 1.0 if self.current_stage != 100 else (400 + 300 + 60 + 50)
             timeless_mastery = 1 + (self.attributes["timeless_mastery"] * 0.16)
-        return base_loot * 0.01 * stage_mult + timeless_mastery
+        return base_loot * 0.01 * stage_mult * timeless_mastery
 
     def is_dead(self) -> bool:
         """Check if the hunter is dead.
