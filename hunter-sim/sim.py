@@ -15,7 +15,6 @@ from hunters import Borge, Hunter, Ozzy
 from tqdm import tqdm
 from units import Boss, Enemy
 
-# TODO: with cli, save empty copy of uptodate config file to disk so people know what they need to work with
 # TODO: maybe yield the sims to the handler to speed it up? not sure if it's works like that
 
 class SimulationManager():
