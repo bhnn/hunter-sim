@@ -25,7 +25,7 @@ Working features:
 
 1) Install at least Python v3.10 or create a virtual environment of at least Python v3.10 using the tool of your choice (pyenv, Anaconda, etc).
 
-2) Download or clone project onto your harddrive, then install its dependencies into your python environment from (1) using `pip install -r requirements.txt`.
+2) [Download the latest version](https://github.com/bhnn/hunter-sim/releases) or clone the project onto your drive, then install its dependencies into your python environment from (1) using `pip install -r requirements.txt`.
 
 ## Usage
 
