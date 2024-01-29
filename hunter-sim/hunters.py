@@ -12,6 +12,7 @@ hunter_name_spacing: int = 7
 # TODO: validate vectid elixir
 # TODO: Ozzy: move @property code to on_death() to speed things up?
 # TODO: Borge: move @property code as well?
+# TODO: DwD power is a little off: 200 ATK, 2 exo, 3 DwD, 1 revive should be 110.59 power but is 110.71. I think DwD might be 0.0196 power instead of 0.02
 
 """ Assumptions:
 - order of attacks: main -> ms -> echo -> echo ms
@@ -200,7 +201,7 @@ class Hunter:
         elif isinstance(self, Ozzy):
             base_loot = 1.0 if self.current_stage != 100 else (400 + 300 + 60 + 50)
             timeless_mastery = 1 + (self.attributes["timeless_mastery"] * 0.16)
-        return base_loot * stage_mult + timeless_mastery
+        return base_loot * 0.001 * stage_mult + timeless_mastery
 
     def is_dead(self) -> bool:
         """Check if the hunter is dead.
@@ -349,7 +350,7 @@ class Borge(Hunter):
         """
         return {
             "meta": {
-                "hunter": "_",
+                "hunter": "Borge",
                 "build_only": False,
                 "level": 0
             },
@@ -726,7 +727,7 @@ class Ozzy(Hunter):
         """
         return {
             "meta": {
-                "hunter": "_",
+                "hunter": "Ozzy",
                 "build_only": False,
                 "level": 0
             },
@@ -824,15 +825,15 @@ class Ozzy(Hunter):
         # omen of decay
         omen_effect = 0.1 if self.current_stage % 100 == 0 and self.current_stage > 0 else 1
         omen_damage = target.hp * (self.talents["omen_of_decay"] * 0.008) * omen_effect
-        damage += omen_damage
+        omen_final = damage + omen_damage
         # crippling shots
-        cripple_damage = damage * (1 + (self.crippling_on_target * 0.03))
+        cripple_damage = omen_final * (1 + (self.crippling_on_target * 0.03))
         self.crippling_on_target = 0
         logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{cripple_damage:>6.2f} {atk_type} OMEN: {omen_damage:>6.2f}")
         super(Ozzy, self).attack(target, cripple_damage)
 
         # on_attack() effects
-        # crippling shots inflicts _extra damage_ that does not count towards lifesteal
+        # crippling shots and omen of decay inflict _extra damage_ that does not count towards lifesteal
         self.heal_hp(damage * self.lifesteal, 'steal')
         if random.random() < self.effect_chance and self.talents["tricksters_boon"]:
             # Talent: Trickster's Boon
@@ -936,7 +937,7 @@ class Ozzy(Hunter):
         Returns:
             float: The damage_reduction of the hunter.
         """
-        return self._damage_reduction * (1 + (self.attributes["deal_with_death"] * 0.016 * self.times_revived))
+        return self._damage_reduction + (self.attributes["deal_with_death"] * 0.016 * self.times_revived)
 
     @damage_reduction.setter
     def damage_reduction(self, value: float) -> None:
@@ -983,8 +984,7 @@ class Ozzy(Hunter):
 
 
 if __name__ == "__main__":
-    b = Borge('./builds/sanity_bfb_atlas.yaml')
-    print(b)
-    b.hp = 577
-    print(b)
-    print(b.missing_hp_pct)
+    o = Ozzy('./builds/ozzy_boss_threshold.yaml')
+    print(o)
+    o.times_revived = 2
+    print(o)
