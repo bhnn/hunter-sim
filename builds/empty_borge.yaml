@@ -1,0 +1,56 @@
+meta:
+  hunter: _
+  build_only: false
+  level: 0
+
+stats:
+  hp: 0
+  power: 0
+  regen: 0
+  damage_reduction: 0
+  evade_chance: 0
+  effect_chance: 0
+  special_chance: 0
+  special_damage: 0
+  speed: 0
+
+talents:
+  death_is_my_companion: 0
+  life_of_the_hunt: 0
+  unfair_advantage: 0
+  impeccable_impacts: 0
+  omen_of_defeat: 0
+  call_me_lucky_loot: 0
+  presence_of_god: 0
+  fires_of_war: 0
+
+attributes:
+  soul_of_ares: 0
+  essence_of_ylith: 0
+  helltouch_barrier: 0
+  book_of_baal: 0
+  spartan_lineage: 0
+  explosive_punches: 0
+  lifedrain_inhalers: 0
+  superior_sensors: 0
+  born_for_battle: 0
+  timeless_mastery: 0
+  weakspot_analysis: 0
+  atlas_protocol: 0
+
+inscryptions:
+  i3: 0
+  i4: 0
+  i11: 0
+  i13: 0
+  i14: 0
+  i23: 0
+  i24: 0
+  i27: 0
+  i44: 0
+
+mods:
+  trample: false
+
+relics:
+  disk_of_dawn: 0

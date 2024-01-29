@@ -1,3 +1,11 @@
+# Logs and most builds
+logs/
+builds/*
+!builds/
+!builds/empty_borge.yaml
+!builds/empty_ozzy.yaml
+!builds/sanity_*.yaml
+
 # Local
 .python-version
 

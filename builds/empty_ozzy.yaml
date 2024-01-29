@@ -1,0 +1,53 @@
+meta:
+  hunter: _
+  build_only: false
+  level: 0
+
+stats:
+  hp: 0
+  power: 0
+  regen: 0
+  damage_reduction: 0
+  evade_chance: 0
+  effect_chance: 0
+  special_chance: 0
+  special_damage: 0
+  speed: 0
+
+talents:
+  death_is_my_companion: 0
+  tricksters_boon: 0
+  unfair_advantage: 0
+  thousand_needles: 0
+  omen_of_decay: 0
+  call_me_lucky_loot: 0
+  crippling_shots: 0
+  echo_bullets: 0
+
+attributes:
+  living_off_the_land: 0
+  exo_piercers: 0
+  wings_of_ibu: 0
+  timeless_mastery: 0
+  shimmering_scorpion: 0
+  extermination_protocol: 0
+  dance_of_dashes: 0
+  gift_of_medusa: 0
+  vectid_elixir: 0
+  soul_of_snek: 0
+  cycle_of_death: 0
+  deal_with_death: 0
+
+inscryptions:
+  i31: 0
+  i32: 0
+  i33: 0
+  i36: 0
+  i37: 0
+  i40: 0
+
+mods: {
+}
+
+relics:
+  disk_of_dawn: 0
