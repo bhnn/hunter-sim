@@ -9,6 +9,7 @@ Working features:
   - 🟩 talents and attributes
   - 🟨 DwD talent has a numerical bug that I don't know the correct numbers to currently. It's close but not accurate at the moment
 - 🟩 Build comparison: run sims of 2 different builds and see which performed better on each statistic
+- 🟩 Sim as many repetitions as desired to get robust predictions
 - 🟥 Easily compare and explore best upgrade paths
 - 🟥 Log analysis tool: to visualise logs into a graph of hunter HP, showing damage and healing and events to help visually parse the progression of combat
 - 🟥 Snappy name
@@ -19,6 +20,7 @@ Working features:
   - [Installation](#installation)
     - [Windows](#windows)
   - [Usage](#usage)
+  - [Frequently Asked Questions and Frequently Encountered Problems](#frequently-asked-questions-and-frequently-encountered-problems)
   - [Contributing](#contributing)
   - [Acknowledgements](#acknowledgements)
 
@@ -26,9 +28,9 @@ Working features:
 
 ### Windows
 
-1. Install at least Python v3.10. If you already have Python installed.
+1. Install <ins>at least</ins> Python v3.10.
 
-2. [Download the latest version](https://github.com/bhnn/hunter-sim/releases) or clone the project onto your drive.
+2. Download the [latest version of the sim](https://github.com/bhnn/hunter-sim/releases) or clone the project onto your drive.
 
 3. Inside the `hunter-sim` folder, open the `builds/` directory and edit either `empty_borge.yaml` or `empty_ozzy.yaml`, depending on which hunter you want to simulate. The file can be renamed to anything you desire for organisational purposes. Input:
     - the upgrade levels of all your main stats (e.g. `hp: 200`, not `hp: 910.33`)
@@ -36,14 +38,14 @@ Working features:
     - your levels in any inscryptions and relics listed in the file
     - *Adding, removing or renaming any fixed names in the build config file causes the code to reject it*
 
-4. Open a Powershell window to verify the correct Python version is being accessed by running `python -V` (<ins>capital</ins> V).
+4. Open a Powershell window to verify the correct Python version is being accessed by running `python --version`.
 
 5. Then navigate to the `hunter-sim` folder using the `cd` command.
     - eg.: if you downloaded and unpacked the code to `D:\Downloads`, then run `cd D:\Downloads\hunter-sim-v0.1.0`
 
-6. Then install the project's dependencies into your python installation from (1) using `pip install -r requirements.txt`.
+6. Then install the project's dependencies (read: required modules) into your python installation from (1) using `python -m pip install -r requirements.txt`.
 
-7. You're now set to run simulations. See [Usage](#usage) for an explanation and examples.
+7. You're now set to run simulations. See [Usage](#usage) for an explanation and examples, or [FAQ](#faq) in case you're experiencing issues.
 
 ## Usage
 
@@ -74,6 +76,23 @@ Optional:
 - `-l`: Produces a log file of the simulation and save it to `logs/` in your current directory. Can be used for runs of any length.
 
 `-v` and `-l` can currently only be used for single simulations
+
+## Frequently Asked Questions and Frequently Encountered Problems
+
+> Which Python version do I need?
+
+The sim needs <ins>at least Python v3.10</ins> to function.
+
+> ModuleNotFoundError: No module named `xyz`
+
+[Installation](#installation) step 6 deals with installing all the required modules to run the code. If you're still seeing this error after running the command, then you might have multiple Python versions installed and the modules were installed into the wrong one. Try installing the missing modules using `python -m pip install xyz`.
+
+> Terminal window shows:
+
+    Python 3.10 ...
+    Type "help", "copyright", "credits", or "license" for more information.
+    >>>
+This means you're inside a Python interactive shell (like Powershell or Command Prompt, but for Python). Usually this happens when you open Python from the Windows Search or type `python` into a terminal window. Simply exit the shell by running `exit()` and repeat [Installation](#installation) step 4.
 
 ## Contributing
 
