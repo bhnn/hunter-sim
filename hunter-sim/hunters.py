@@ -233,6 +233,20 @@ class Hunter:
     def missing_hp_pct(self) -> float:
         return round((1 - self.hp / self.max_hp) * 100, 0)
 
+    def show_build(self, in_colour: bool = False) -> None:
+        """Prints the build of this Hunter's instance.
+        """
+        c_off = '\033[0m'
+        c_on = '\033[38;2;128;128;128m'
+        if not in_colour:
+            c_on = c_off
+        print(self)
+        print('Stats:\t\t{} {} {}   {} {} {}   {} {} {}'.format(*self.base_stats.values()))
+        print('Tals:\t\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.talents.items()))
+        print('Attr:\t\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.attributes.items()))
+        print('\n'.join(['-'*120]))
+        # print('Tals:\t' + ' '.join(['{:>10}'.format(t) for t in [f'[{"".join(l[0].upper() for l in k.split("_"))}: {v}]' for k, v in self.talents.items()]]))
+
     def __str__(self) -> str:
         """Prints the stats of this Hunter's instance.
 

@@ -51,8 +51,10 @@ class SimulationManager():
             repetitions (int): Number of simulations to run.
             threaded (int, optional): threaded (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
         """
+        print('BUILD 1:')
         res = self.__run_sims(repetitions, threaded)
         self.hunter_config_path = compare_path
+        print('BUILD 2:')
         res_c = self.__run_sims(repetitions, threaded)
         self.pprint_compare(res, res_c, 'Build Comparison')
 
@@ -79,6 +81,7 @@ class SimulationManager():
                 hunter_class = Ozzy
             case _:
                 raise ValueError(f'Unknown hunter type found in config {f}')
+        hunter_class(self.hunter_config_path).show_build()
         if threaded > -1:
             self.pbar = tqdm(total=repetitions)
             for _ in range(repetitions):
@@ -144,7 +147,7 @@ class SimulationManager():
         out = []
         divider = "-" * 10
         c_off = '\033[0m'
-        out.append(f'Average over {len(res_dict["total_kills"])} runs:\t\t {"> " + custom_message + " <" if custom_message else ""}')
+        out.append(f'Average over {len(res_dict["total_kills"])} run{"s" if len(res_dict["total_kills"]) > 1 else ""}:\t\t {"> " + custom_message + " <" if custom_message else ""}')
         out.append("#" * 56)
         c_on = '\033[38;2;93;101;173m' if coloured else ''
         out.append(f'{c_on}Main stats:{c_off}')
@@ -228,7 +231,7 @@ class SimulationManager():
         out = []
         divider = "-" * 10
         c_off = '\033[0m'
-        out.append(f'Average over {len(res1["total_kills"])} runs:\t\t {"> " + custom_message + " <" if custom_message else ""}')
+        out.append(f'Average over {len(res1["total_kills"])} run{"s" if len(res1["total_kills"]) > 1 else ""}:\t\t {"> " + custom_message + " <" if custom_message else ""}')
         out.append("#" * 56)
         c_on = '\033[38;2;93;101;173m' if coloured else ''
         out.append(f'{c_on}Main stats:{c_off}')
