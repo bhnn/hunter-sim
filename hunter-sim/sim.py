@@ -1,13 +1,12 @@
 import logging
-import queue
 import statistics
 from collections import Counter, defaultdict
+from concurrent.futures import ProcessPoolExecutor
 from datetime import timedelta
 from heapq import heappop as hpop
 from heapq import heappush as hpush
 from itertools import chain
 from math import floor
-from threading import Thread
 from typing import List
 
 import yaml
@@ -15,35 +14,28 @@ from hunters import Borge, Hunter, Ozzy
 from tqdm import tqdm
 from units import Boss, Enemy
 
-# TODO: maybe yield the sims to the handler to speed it up? not sure if it's works like that
+
+def sim_worker(hunter_class: Hunter, config_path: str) -> None:
+    """Worker process for running simulations in parallel.
+    """
+    return Simulation(hunter_class(config_path)).run()
 
 class SimulationManager():
     def __init__(self, hunter_config_path: str) -> None:
         self.hunter_config_path = hunter_config_path
-        self.task_queue = queue.Queue()
-        self.pbar = None
         self.results: List = []
 
-    def __sim_worker(self) -> None:
-        """Worker thread for running simulations in parallel.
-        """
-        while True:
-            sim = self.task_queue.get()
-            self.results.append(sim.run())
-            self.task_queue.task_done()
-            self.pbar.update(1)
-
-    def run(self, repetitions: int, threaded: int = -1) -> None:
+    def run(self, repetitions: int, num_processes: int = -1) -> None:
         """Run simulations and print results.
 
         Args:
             repetitions (int): Number of simulations to run.
-            threaded (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
+            num_processes (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
         """
-        res = self.__run_sims(repetitions, threaded)
+        res = self.__run_sims(repetitions, num_processes)
         self.pprint_res(res)
 
-    def compare_against(self, compare_path: str, repetitions: int, threaded: int = -1) -> None:
+    def compare_against(self, compare_path: str, repetitions: int, num_processes: int = -1) -> None:
         """Run simulations for 2 builds, compare results and print.
 
         Args:
@@ -52,18 +44,18 @@ class SimulationManager():
             threaded (int, optional): threaded (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
         """
         print('BUILD 1:')
-        res = self.__run_sims(repetitions, threaded)
+        res = self.__run_sims(repetitions, num_processes)
         self.hunter_config_path = compare_path
         print('BUILD 2:')
-        res_c = self.__run_sims(repetitions, threaded)
+        res_c = self.__run_sims(repetitions, num_processes)
         self.pprint_compare(res, res_c, 'Build Comparison')
 
-    def __run_sims(self, repetitions: int, threaded: int = -1) -> dict:
+    def __run_sims(self, repetitions: int, num_processes: int = -1) -> dict:
         """Run simulations and return results.
 
         Args:
             repetitions (int): Number of simulations to run.
-            threaded (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
+            threaded (int, optional): Number of processes to use for parallelisation. Defaults to -1, which processes runs sequentially.
 
         Raises:
             ValueError: Unknown hunter type found in config
@@ -82,20 +74,9 @@ class SimulationManager():
             case _:
                 raise ValueError(f'Unknown hunter type found in config {f}')
         hunter_class(self.hunter_config_path).show_build()
-        if threaded > -1:
-            self.pbar = tqdm(total=repetitions)
-            for _ in range(repetitions):
-                self.task_queue.put_nowait(Simulation(hunter_class(self.hunter_config_path)))
-            
-            # start sim workers
-            max_cores = threaded
-            for _ in range(max_cores):
-                t = Thread(target=self.__sim_worker)
-                t.daemon = True
-                t.start()
-
-            with self.pbar:
-                self.task_queue.join()
+        if num_processes > 0:
+            with ProcessPoolExecutor(max_workers=num_processes) as e:
+                self.results = list(tqdm(e.map(sim_worker, [hunter_class] * repetitions, [self.hunter_config_path] * repetitions), total=repetitions, leave=True))
         else:
             for _ in tqdm(range(repetitions), leave=False):
                 self.results.append(Simulation(hunter_class(self.hunter_config_path)).run())
@@ -213,6 +194,24 @@ class SimulationManager():
         print('\n'.join(out))
 
     @classmethod
+    def eval_perf(cls, b1: float, b2: float) -> str:
+        """Evaluate performance of 2 builds by comparing the passed values.
+
+        Args:
+            b1 (float): Performance of build 1.
+            b2 (float): Performance of build 2.
+
+        Returns:
+            str: Performance evaluation: "BUILD 1/2 (+ diff%)".
+        """
+        if b1 > b2:
+            return f'>> BUILD 1 (+{(b1/b2)-1:>7.2%})'
+        elif b2 > b1:
+            return f'>> BUILD 2 (+{(b2/b1)-1:>7.2%})'
+        else:
+            return ''
+
+    @classmethod
     def pprint_compare(cls, res1: dict, res2: dict, custom_message: str = None, coloured: bool = False) -> None:
         """Pretty print comparison of 2 results dicts.
 
@@ -224,8 +223,8 @@ class SimulationManager():
         """
         hunter_class = res1.pop('hunter')
         res2.pop('hunter')
-        avg1, std1 = cls.make_printable(res1)
-        avg2, std2 = cls.make_printable(res2)
+        avg1, _ = cls.make_printable(res1)
+        avg2, _ = cls.make_printable(res2)
         res1["lph"] = [(res1["total_loot"][i] / (res1["elapsed_time"][i] / (60 * 60))) for i in range(len(res1["total_loot"]))]
         res2["lph"] = [(res2["total_loot"][i] / (res2["elapsed_time"][i] / (60 * 60))) for i in range(len(res2["total_loot"]))]
         out = []
@@ -236,130 +235,54 @@ class SimulationManager():
         c_on = '\033[38;2;93;101;173m' if coloured else ''
         out.append(f'{c_on}Main stats:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
-        # TODO: change all of this to .append(max()-min()) and then out[-1] += f'>> BUILD 1' or 2
         if 'enrage_log' in avg1 and 'enrage_log' in avg2:
-            if avg1["enrage_log"] > avg2["enrage_log"] and avg2["enrage_log"] > 0:
-                out.append(f'{c_on}Avg Enrage stacks: {avg1["enrage_log"]-avg2["enrage_log"]:>20.2f} stacks less{c_off}{">> BUILD 2":>13}')
-            elif avg2["enrage_log"] > avg1["enrage_log"] and avg1["enrage_log"] > 0:
-                out.append(f'{c_on}Avg Enrage stacks: {avg2["enrage_log"]-avg1["enrage_log"]:>20.2f} stacks less{c_off}{">> BUILD 1":>13}')
+            out.append(f'{c_on}Avg Enrage stacks: {max(avg1["enrage_log"], avg2["enrage_log"])-min(avg1["enrage_log"], avg2["enrage_log"]):>20.2f} stacks less{c_off}{SimulationManager.eval_perf(avg1["enrage_log"], avg2["enrage_log"]):>24}')
         if 'first_revive' in avg1 and 'first_revive' in avg2:
-            if avg1["first_revive"] > avg2["first_revive"]:
-                out.append(f'{c_on}Revive stage 1st: {avg1["first_revive"]-avg2["first_revive"]:>21.2f} stages later{c_off}{">> BUILD 1":>12}')
-            else:
-                out.append(f'{c_on}Revive stage 1st: {avg2["first_revive"]-avg1["first_revive"]:>21.2f} stages later{c_off}{">> BUILD 2":>12}')
+            out.append(f'{c_on}Revive stage 1st: {max(avg1["first_revive"], avg2["first_revive"])-min(avg1["first_revive"], avg2["first_revive"]):>21.2f} stages later{c_off}{SimulationManager.eval_perf(avg1["first_revive"], avg2["first_revive"]):>23}')
         if 'second_revive' in avg1 and 'second_revive' in avg2:
-            if avg1["second_revive"] > avg2["second_revive"]:
-                out.append(f'{c_on}Revive stage 2nd: {avg1["second_revive"]-avg2["second_revive"]:>21.2f} stages later{c_off}{">> BUILD 1":>12}')
-            else:
-                out.append(f'{c_on}Revive stage 2nd: {avg2["second_revive"]-avg1["second_revive"]:>21.2f} stages later{c_off}{">> BUILD 2":>12}')
-        if avg1["total_kills"] > avg2["total_kills"]:
-            out.append(f'{c_on}Avg total kills: {avg1["total_kills"]-avg2["total_kills"]:>22,.2f} more{c_off}{">> BUILD 1":>20}')
-        else:
-            out.append(f'{c_on}Avg total kills: {avg2["total_kills"]-avg1["total_kills"]:>22,.2f} more{c_off}{">> BUILD 2":>20}')
-        if avg1["elapsed_time"] > avg2["elapsed_time"]:
-            out.append(f'{c_on}Elapsed time: {str(timedelta(seconds=round(avg1["elapsed_time"], 0))-timedelta(seconds=round(avg2["elapsed_time"], 0))):>25} faster{c_off}{">> BUILD 2":>18}')
-        else:
-            out.append(f'{c_on}Elapsed time: {str(timedelta(seconds=round(avg2["elapsed_time"], 0))-timedelta(seconds=round(avg1["elapsed_time"], 0))):>25} faster{c_off}{">> BUILD 1":>18}')
+            out.append(f'{c_on}Revive stage 1st: {max(avg1["second_revive"], avg2["second_revive"])-min(avg1["second_revive"], avg2["second_revive"]):>21.2f} stages later{c_off}{SimulationManager.eval_perf(avg1["second_revive"], avg2["second_revive"]):>23}')
+        out.append(f'{c_on}Avg total kills: {max(avg1["total_kills"], avg2["total_kills"])-min(avg1["total_kills"], avg2["total_kills"]):>22,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_kills"], avg2["total_kills"]):>31}')
+        out.append(f'{c_on}Elapsed time: {str(max(timedelta(seconds=round(avg1["elapsed_time"], 0)), timedelta(seconds=round(avg2["elapsed_time"], 0)))-min(timedelta(seconds=round(avg1["elapsed_time"], 0)), timedelta(seconds=round(avg2["elapsed_time"], 0)))):>25} faster{c_off}{SimulationManager.eval_perf(timedelta(seconds=round(avg1["elapsed_time"], 0)), timedelta(seconds=round(avg2["elapsed_time"], 0))):>29}')
         c_on = '\033[38;2;195;61;3m' if coloured else ''
         out.append(f'{c_on}Offence:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
-        if avg1["total_attacks"] > avg2["total_attacks"]:
-            out.append(f'{c_on}Avg total attacks: {avg1["total_attacks"]-avg2["total_attacks"]:>20,.2f} more{c_off}{">> BUILD 1":>20}')
-        else:
-            out.append(f'{c_on}Avg total attacks: {avg2["total_attacks"]-avg1["total_attacks"]:>20,.2f} more{c_off}{">> BUILD 2":>20}')
-        if avg1["total_damage"] > avg2["total_damage"]:
-            out.append(f'{c_on}Avg total damage: {avg1["total_damage"]-avg2["total_damage"]:>21,.2f} more{c_off}{">> BUILD 1":>20}')
-        else:
-            out.append(f'{c_on}Avg total damage: {avg2["total_damage"]-avg1["total_damage"]:>21,.2f} more{c_off}{">> BUILD 2":>20}')
+        out.append(f'{c_on}Avg total attacks: {max(avg1["total_attacks"], avg2["total_attacks"])-min(avg1["total_attacks"], avg2["total_attacks"]):>20,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_attacks"], avg2["total_attacks"]):>31}')
+        out.append(f'{c_on}Avg total damage: {max(avg1["total_damage"], avg2["total_damage"])-min(avg1["total_damage"], avg2["total_damage"]):>21,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_damage"], avg2["total_damage"]):>31}')
         if hunter_class == Borge:
-            if avg1["total_crits"] > avg2["total_crits"]:
-                out.append(f'{c_on}Avg total crits: {avg1["total_crits"]-avg2["total_crits"]:>22,.2f} more{c_off}{">> BUILD 1":>20}')
-            else:
-                out.append(f'{c_on}Avg total crits: {avg2["total_crits"]-avg1["total_crits"]:>22,.2f}) more{c_off}{">> BUILD 2":>20}')
-            if avg1["total_extra_from_crits"] > avg2["total_extra_from_crits"]:
-                out.append(f'{c_on}Avg total extra from crits: {avg1["total_extra_from_crits"]-avg2["total_extra_from_crits"]:>11,.2f} more{c_off}{">> BUILD 1":>20}')
-            else:
-                out.append(f'{c_on}Avg total extra from crits: {avg2["total_extra_from_crits"]-avg1["total_extra_from_crits"]:>11,.2f} more{c_off}{">> BUILD 2":>20}')
+            out.append(f'{c_on}Avg total crits: {max(avg1["total_crits"], avg2["total_crits"])-min(avg1["total_crits"], avg2["total_crits"]):>22,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_crits"], avg2["total_crits"]):>31}')
+            out.append(f'{c_on}Avg total extra from crits: {max(avg1["total_extra_from_crits"], avg2["total_extra_from_crits"])-min(avg1["total_extra_from_crits"], avg2["total_extra_from_crits"]):>11,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_extra_from_crits"], avg2["total_extra_from_crits"]):>31}')
         elif hunter_class == Ozzy:
-            if avg1["total_multistrikes"] > avg2["total_multistrikes"]:
-                out.append(f'{c_on}Avg total multistrikes: {avg1["total_multistrikes"]-avg2["total_multistrikes"]:>15.2f} more{c_off}{">> BUILD 1":>20}')
-            else:
-                out.append(f'{c_on}Avg total multistrikes: {avg2["total_multistrikes"]-avg1["total_multistrikes"]:>15.2f} more{c_off}{">> BUILD 2":>20}')
-            if avg1["total_ms_extra_damage"] > avg2["total_ms_extra_damage"]:
-                out.append(f'{c_on}Avg total extra from ms: {avg1["total_ms_extra_damage"]-avg2["total_ms_extra_damage"]:>14.2f} more{c_off}{">> BUILD 1":>20}')
-            else:
-                out.append(f'{c_on}Avg total extra from ms: {avg2["total_ms_extra_damage"]-avg1["total_ms_extra_damage"]:>14.2f} more{c_off}{">> BUILD 2":>20}')
+            out.append(f'{c_on}Avg total multistrikes: {max(avg1["total_multistrikes"], avg2["total_multistrikes"])-min(avg1["total_multistrikes"], avg2["total_multistrikes"]):>15.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_multistrikes"], avg2["total_multistrikes"]):>31}')
+            out.append(f'{c_on}Avg total extra from ms: {max(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"])-min(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"]):>14.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"]):>31}')
         c_on = '\033[38;2;1;163;87m' if coloured else ''
         out.append(f'{c_on}Sustain:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
-        if avg1["total_taken"] > avg2["total_taken"]:
-            out.append(f'{c_on}Avg total taken: {avg1["total_taken"]-avg2["total_taken"]:>22,.2f} less{c_off}{">> BUILD 2":>20}')
-        else:
-            out.append(f'{c_on}Avg total taken: {avg2["total_taken"]-avg1["total_taken"]:>22,.2f} less{c_off}{">> BUILD 1":>20}')
-        if avg1["total_regen"] > avg2["total_regen"]:
-            out.append(f'{c_on}Avg total regen: {avg1["total_regen"]-avg2["total_regen"]:>22,.2f} more{c_off}{">> BUILD 1":>20}')
-        else:
-            out.append(f'{c_on}Avg total regen: {avg2["total_regen"]-avg1["total_regen"]:>22,.2f} more{c_off}{">> BUILD 2":>20}')
-        if avg1["total_attacks_suffered"] > avg2["total_attacks_suffered"]:
-            out.append(f'{c_on}Avg total attacks taken: {avg1["total_attacks_suffered"]-avg2["total_attacks_suffered"]:>14,.2f} more{c_off}{">> BUILD 1":>20}')
-        else:
-            out.append(f'{c_on}Avg total attacks taken: {avg2["total_attacks_suffered"]-avg1["total_attacks_suffered"]:>14,.2f} more{c_off}{">> BUILD 2":>20}')
-        if avg1["total_lifesteal"] > avg2["total_lifesteal"]:
-            out.append(f'{c_on}Avg total lifesteal: {avg1["total_lifesteal"]-avg2["total_lifesteal"]:>18,.2f} more{c_off}{">> BUILD 1":>20}')
-        else:
-            out.append(f'{c_on}Avg total lifesteal: {avg2["total_lifesteal"]-avg1["total_lifesteal"]:>18,.2f} more{c_off}{">> BUILD 2":>20}')
+        out.append(f'{c_on}Avg total taken: {max(avg1["total_taken"], avg2["total_taken"])-min(avg1["total_taken"], avg2["total_taken"]):>22,.2f} less{c_off}{SimulationManager.eval_perf(avg1["total_taken"], avg2["total_taken"]):>31}')
+        out.append(f'{c_on}Avg total regen: {max(avg1["total_regen"], avg2["total_regen"])-min(avg1["total_regen"], avg2["total_regen"]):>22,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_regen"], avg2["total_regen"]):>31}')
+        out.append(f'{c_on}Avg total attacks taken: {max(avg1["total_attacks_suffered"], avg2["total_attacks_suffered"])-min(avg1["total_attacks_suffered"], avg2["total_attacks_suffered"]):>14,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_attacks_suffered"], avg2["total_attacks_suffered"]):>31}')
+        out.append(f'{c_on}Avg total lifesteal: {max(avg1["total_lifesteal"], avg2["total_lifesteal"])-min(avg1["total_lifesteal"], avg2["total_lifesteal"]):>18,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_lifesteal"], avg2["total_lifesteal"]):>31}')
         c_on = '\033[38;2;234;186;1m' if coloured else ''
         out.append(f'{c_on}Defence:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
-        if avg1["total_evades"] > avg2["total_evades"]:
-            out.append(f'{c_on}Avg total evades: {avg1["total_evades"]-avg2["total_evades"]:>21,.2f} more{c_off}{">> BUILD 1":>20}')
-        else:
-            out.append(f'{c_on}Avg total evades: {avg2["total_evades"]-avg1["total_evades"]:>21,.2f} more{c_off}{">> BUILD 2":>20}')
+        out.append(f'{c_on}Avg total evades: {max(avg1["total_evades"], avg2["total_evades"])-min(avg1["total_evades"], avg2["total_evades"]):>21,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_evades"], avg2["total_evades"]):>31}')
         if hunter_class == Ozzy:
-            if avg1["total_trickster_evades"] > avg2["total_trickster_evades"]:
-                out.append(f'{c_on}Avg trickster evades: {avg1["total_trickster_evades"]-avg2["total_trickster_evades"]:>17,.2f} more{c_off}{">> BUILD 1":>20}')
-            else:
-                out.append(f'{c_on}Avg trickster evades: {avg2["total_trickster_evades"]-avg1["total_trickster_evades"]:>17,.2f} more{c_off}{">> BUILD 2":>20}')
-        if avg1["total_mitigated"] > avg2["total_mitigated"]:
-            out.append(f'{c_on}Avg total mitigated: {avg1["total_mitigated"]-avg2["total_mitigated"]:>18,.2f} more{c_off}{">> BUILD 1":>20}')
-        else:
-            out.append(f'{c_on}Avg total mitigated: {avg2["total_mitigated"]-avg1["total_mitigated"]:>18,.2f} more{c_off}{">> BUILD 2":>20}')
+            out.append(f'{c_on}Avg trickster evades: {max(avg1["total_trickster_evades"], avg2["total_trickster_evades"])-min(avg1["total_trickster_evades"], avg2["total_trickster_evades"]):>17,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_trickster_evades"], avg2["total_trickster_evades"]):>31}')
+        out.append(f'{c_on}Avg total mitigated: {max(avg1["total_mitigated"], avg2["total_mitigated"])-min(avg1["total_mitigated"], avg2["total_mitigated"]):>18,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_mitigated"], avg2["total_mitigated"]):>31}')
         c_on = '\033[38;2;14;156;228m' if coloured else ''
         out.append(f'{c_on}Effects:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
-        if avg1["total_effect_procs"] > avg2["total_effect_procs"]:
-            out.append(f'{c_on}Avg total effect procs: {avg1["total_effect_procs"]-avg2["total_effect_procs"]:>15,.2f} more{c_off}{">> BUILD 1":>20}')
-        else:
-            out.append(f'{c_on}Avg total effect procs: {avg2["total_effect_procs"]-avg1["total_effect_procs"]:>15,.2f} more{c_off}{">> BUILD 2":>20}')
+        out.append(f'{c_on}Avg total effect procs: {max(avg1["total_effect_procs"], avg2["total_effect_procs"])-min(avg1["total_effect_procs"], avg2["total_effect_procs"]):>15,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_effect_procs"], avg2["total_effect_procs"]):>31}')
         if hunter_class == Borge:
-            if avg1["total_helltouch"] > avg2["total_helltouch"]:
-                out.append(f'{c_on}Avg total helltouch: {avg1["total_helltouch"]-avg2["total_helltouch"]:>18,.2f} more{c_off}{">> BUILD 1":>20}')
-            else:
-                out.append(f'{c_on}Avg total helltouch: {avg2["total_helltouch"]-avg1["total_helltouch"]:>18,.2f} more{c_off}{">> BUILD 2":>20}')
-            if avg1["total_loth"] > avg2["total_loth"]:
-                out.append(f'{c_on}Avg total loth: {avg1["total_loth"]-avg2["total_loth"]:>23,.2f} more{c_off}{">> BUILD 1":>20}')
-            else:
-                out.append(f'{c_on}Avg total loth: {avg2["total_loth"]-avg1["total_loth"]:>23,.2f} more{c_off}{">> BUILD 2":>20}')
-        if avg1["total_potion"] > avg2["total_potion"]:
-            out.append(f'{c_on}Avg total potion: {avg1["total_potion"]-avg2["total_potion"]:>21,.2f} more{c_off}{">> BUILD 1":>20}')
-        else:
-            out.append(f'{c_on}Avg total potion: {avg2["total_potion"]-avg1["total_potion"]:>21,.2f} more{c_off}{">> BUILD 2":>20}')
+            out.append(f'{c_on}Avg total helltouch: {max(avg1["total_helltouch"], avg2["total_helltouch"])-min(avg1["total_helltouch"], avg2["total_helltouch"]):>18,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_helltouch"], avg2["total_helltouch"]):>31}')
+            out.append(f'{c_on}Avg total loth: {max(avg1["total_loth"], avg2["total_loth"])-min(avg1["total_loth"], avg2["total_loth"]):>23,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_loth"], avg2["total_loth"]):>31}')
+        out.append(f'{c_on}Avg total potion: {max(avg1["total_potion"], avg2["total_potion"])-min(avg1["total_potion"], avg2["total_potion"]):>21,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_potion"], avg2["total_potion"]):>31}')
         out.append(f'{c_on}{divider}{c_off}')
         c_on = '\033[38;2;98;65;169m' if coloured else ''
         out.append(f'{c_on}Loot:{c_off} (arbitrary values, for comparison only)')
         out.append(f'{c_on}{divider}{c_off}')
-        if avg1["lph"] > avg2["lph"]:
-            out.append(f'{c_on}Avg LPH: {avg1["lph"]-avg2["lph"]:>30,.2f} more{c_off}{">> BUILD 1":>20}')
-        else:
-            out.append(f'{c_on}Avg LPH: {avg2["lph"]-avg1["lph"]:>30,.2f} more{c_off}{">> BUILD 2":>20}')
-        if max(res1["lph"]) > max(res2["lph"]):
-            out.append(f'{c_on}Best LPH: {max(res1["lph"])-max(res2["lph"]):>29,.2f} more{c_off}{">> BUILD 1":>20}')
-        else:
-            out.append(f'{c_on}Best LPH: {max(res2["lph"])-max(res1["lph"]):>29,.2f} more{c_off}{">> BUILD 2":>20}')
-        if min(res1["lph"]) > min(res2["lph"]):
-            out.append(f'{c_on}Worst LPH: {min(res1["lph"])-min(res2["lph"]):>28,.2f} more{c_off}{">> BUILD 1":>20}')
-        else:
-            out.append(f'{c_on}Worst LPH: {min(res2["lph"])-min(res1["lph"]):>28,.2f} more{c_off}{">> BUILD 2":>20}')
+        out.append(f'{c_on}Avg LPH: {max(avg1["lph"], avg2["lph"])-min(avg1["lph"], avg2["lph"]):>30,.2f} more{c_off}{SimulationManager.eval_perf(avg1["lph"], avg2["lph"]):>31}')
+        out.append(f'{c_on}Best LPH: {max(max(res1["lph"]), max(res2["lph"]))-min(max(res1["lph"]), max(res2["lph"])):>29,.2f} more{c_off}{SimulationManager.eval_perf(max(res1["lph"]), max(res2["lph"])):>31}')
+        out.append(f'{c_on}Worst LPH: {max(min(res1["lph"]), min(res2["lph"]))-min(min(res1["lph"]), min(res2["lph"])):>28,.2f} more{c_off}{SimulationManager.eval_perf(min(res1["lph"]), min(res2["lph"])):>31}')
         out.append(f'{c_on}{divider}{c_off}')
         c_on = '\033[38;2;128;128;128m'
         out.append(f'Final stage reached by BUILD 1:  MAX:{c_on}{max(res1["final_stage"]):>4}{c_off}, MED:{c_on}{floor(statistics.median(res1["final_stage"])):>4}{c_off}, AVG:{c_on}{floor(statistics.mean(res1["final_stage"])):>4}{c_off}, MIN:{c_on}{min(res1["final_stage"]):>4}{c_off}')
@@ -479,7 +402,7 @@ class Simulation():
     #     print(sorted_res)
 
 def main():
-    num_sims = 100
+    num_sims = 25
     if num_sims == 1:
         logging.basicConfig(
             filename='./logs/ozzy_test.txt',
@@ -489,8 +412,7 @@ def main():
         )
         logging.getLogger().setLevel(logging.DEBUG)
     smgr = SimulationManager('./builds/current_borge.yaml')
-    res = smgr.run_sims(num_sims, threaded=-1)
-    smgr.pprint_res(res, 'Test')
+    smgr.run(num_sims, threaded=4)
 
 
 if __name__ == "__main__":
