@@ -1,13 +1,12 @@
 import logging
-import queue
 import statistics
 from collections import Counter, defaultdict
+from concurrent.futures import ProcessPoolExecutor
 from datetime import timedelta
 from heapq import heappop as hpop
 from heapq import heappush as hpush
 from itertools import chain
 from math import floor
-from threading import Thread
 from typing import List
 
 import yaml
@@ -15,35 +14,28 @@ from hunters import Borge, Hunter, Ozzy
 from tqdm import tqdm
 from units import Boss, Enemy
 
-# TODO: maybe yield the sims to the handler to speed it up? not sure if it's works like that
+
+def sim_worker(hunter_class: Hunter, config_path: str) -> None:
+    """Worker process for running simulations in parallel.
+    """
+    return Simulation(hunter_class(config_path)).run()
 
 class SimulationManager():
     def __init__(self, hunter_config_path: str) -> None:
         self.hunter_config_path = hunter_config_path
-        self.task_queue = queue.Queue()
-        self.pbar = None
         self.results: List = []
 
-    def __sim_worker(self) -> None:
-        """Worker thread for running simulations in parallel.
-        """
-        while True:
-            sim = self.task_queue.get()
-            self.results.append(sim.run())
-            self.task_queue.task_done()
-            self.pbar.update(1)
-
-    def run(self, repetitions: int, threaded: int = -1) -> None:
+    def run(self, repetitions: int, num_processes: int = -1) -> None:
         """Run simulations and print results.
 
         Args:
             repetitions (int): Number of simulations to run.
-            threaded (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
+            num_processes (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
         """
-        res = self.__run_sims(repetitions, threaded)
+        res = self.__run_sims(repetitions, num_processes)
         self.pprint_res(res)
 
-    def compare_against(self, compare_path: str, repetitions: int, threaded: int = -1) -> None:
+    def compare_against(self, compare_path: str, repetitions: int, num_processes: int = -1) -> None:
         """Run simulations for 2 builds, compare results and print.
 
         Args:
@@ -52,18 +44,18 @@ class SimulationManager():
             threaded (int, optional): threaded (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
         """
         print('BUILD 1:')
-        res = self.__run_sims(repetitions, threaded)
+        res = self.__run_sims(repetitions, num_processes)
         self.hunter_config_path = compare_path
         print('BUILD 2:')
-        res_c = self.__run_sims(repetitions, threaded)
+        res_c = self.__run_sims(repetitions, num_processes)
         self.pprint_compare(res, res_c, 'Build Comparison')
 
-    def __run_sims(self, repetitions: int, threaded: int = -1) -> dict:
+    def __run_sims(self, repetitions: int, num_processes: int = -1) -> dict:
         """Run simulations and return results.
 
         Args:
             repetitions (int): Number of simulations to run.
-            threaded (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
+            threaded (int, optional): Number of processes to use for parallelisation. Defaults to -1, which processes runs sequentially.
 
         Raises:
             ValueError: Unknown hunter type found in config
@@ -82,20 +74,9 @@ class SimulationManager():
             case _:
                 raise ValueError(f'Unknown hunter type found in config {f}')
         hunter_class(self.hunter_config_path).show_build()
-        if threaded > -1:
-            self.pbar = tqdm(total=repetitions)
-            for _ in range(repetitions):
-                self.task_queue.put_nowait(Simulation(hunter_class(self.hunter_config_path)))
-            
-            # start sim workers
-            max_cores = threaded
-            for _ in range(max_cores):
-                t = Thread(target=self.__sim_worker)
-                t.daemon = True
-                t.start()
-
-            with self.pbar:
-                self.task_queue.join()
+        if num_processes > 0:
+            with ProcessPoolExecutor(max_workers=num_processes) as e:
+                self.results = list(tqdm(e.map(sim_worker, [hunter_class] * repetitions, [self.hunter_config_path] * repetitions), total=repetitions, leave=True))
         else:
             for _ in tqdm(range(repetitions), leave=False):
                 self.results.append(Simulation(hunter_class(self.hunter_config_path)).run())
@@ -479,7 +460,7 @@ class Simulation():
     #     print(sorted_res)
 
 def main():
-    num_sims = 100
+    num_sims = 25
     if num_sims == 1:
         logging.basicConfig(
             filename='./logs/ozzy_test.txt',
@@ -489,8 +470,7 @@ def main():
         )
         logging.getLogger().setLevel(logging.DEBUG)
     smgr = SimulationManager('./builds/current_borge.yaml')
-    res = smgr.run_sims(num_sims, threaded=-1)
-    smgr.pprint_res(res, 'Test')
+    smgr.run(num_sims, threaded=4)
 
 
 if __name__ == "__main__":
