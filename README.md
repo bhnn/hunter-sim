@@ -55,12 +55,15 @@ Navigate into the root directory of the project, then run the following command 
 
 - `-f /path/to/file`: Path to a hunter build config file
 - `-i num_sims`: How many simulated runs to perform
-- `-t threads`: How many threads to use for parallelisation. `-1` for sequential processing.
+- `-t processes`: How many processes to use for parallelisation. `-1` for sequential processing.
 
 Examples:
 
     python ./hunter-sim/hunter_sim.py -f ./builds/borge_lvl37.yaml -i 50 -t -1
 Runs 50 simulations of the build `borge_lvl37.yaml` sequentially.
+
+    python ./hunter-sim/hunter_sim.py -f ./builds/borge_lvl40.yaml -i 50 -t 4
+Runs 50 simulations of the build `borge_lvl40.yaml` in 4 parallel processes.
 
     python ./hunter-sim/hunter_sim.py -f ./builds/borge_no_bfb.yaml -c ./builds/borge_3bfb.yaml -i 100
 Runs 100 simulations for each build `borge_no_bfb.yaml` and `borge_3bfb.yaml` and compares their performance.
