@@ -11,7 +11,7 @@ from sim import SimulationManager
 from util.exceptions import BuildConfigError
 
 
-def main(path: str, compare_path: str, num_sims: int, dump_config: str, threads: int, verbose: bool, log: bool):
+def main(path: str, compare_path: str, num_sims: int, dump_config: str, processes: int, verbose: bool, log: bool):
     """Main entry point for the simulation tool.
 
     Args:
@@ -23,8 +23,9 @@ def main(path: str, compare_path: str, num_sims: int, dump_config: str, threads:
         verbose (bool): Whether to print verbose output to stdout
         log (bool): Whether to write log of simulation to specified path. Currently only works with `-i 1`. Defaults to ./logs/
     """
-    if threads == 0:
-        threads = -1
+    if processes == 0 or processes > 61:
+        print("hunter_sim.py: error: number of parallel processes cannot be 0 or larger than 61.")
+        sys.exit(1)
     if num_sims > 1 and verbose:
         print("hunter_sim.py: error: verbose output is not supported for multiple simulations. Run with `-i 1` to enable verbose output.")
         sys.exit(1)
@@ -63,10 +64,10 @@ def main(path: str, compare_path: str, num_sims: int, dump_config: str, threads:
         smgr = SimulationManager(path)
         if compare_path:
             import timing
-            smgr.compare_against(compare_path, num_sims, threaded=threads)
+            smgr.compare_against(compare_path, num_sims, processes=processes)
         else:
             import timing
-            smgr.run(num_sims, threaded=threads)
+            smgr.run(num_sims, num_processes=processes)
     except FileNotFoundError:
         print("hunter_sim.py: error: build config file not found. Please specify the correct name or run with the -d flag to generate an empty build config file.")
         sys.exit(1)
@@ -82,7 +83,7 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--compare_builds", type=str, help="Path to a second valid build config .yaml file to compare against the first", dest="compare_path")
     parser.add_argument("-i", "--num-sims", type=int, help="Number of simulations to run", default=100)
     parser.add_argument("-d", "--dump-config", action="store_true", help="Save an empty config file to ./builds/ directory and exits.")
-    parser.add_argument("-t", "--threaded", type=int, help="Number of threads to use for parallelisation. -1 for sequential processing.", default=-1, dest="threads")
+    parser.add_argument("-t", "--processes", type=int, help="Number of processes to use for parallelisation. -1 for sequential processing.", default=-1, dest="processes")
     parser.add_argument("-v", "--verbose", action="store_true", help="Print simulation progress to stdout")
     parser.add_argument("-l", "--log", action="store_true", help="Write log of simulation to specified path. Currently only works with `-i 1`. Defaults to ./logs/")
     args = parser.parse_args()
