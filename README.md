@@ -94,6 +94,10 @@ The sim needs <ins>at least Python v3.10</ins> to function.
     >>>
 This means you're inside a Python interactive shell (like Powershell or Command Prompt, but for Python). Usually this happens when you open Python from the Windows Search or type `python` into a terminal window. Simply exit the shell by running `exit()` and repeat [Installation](#installation) step 4.
 
+> How does multiprocessing/parallelisation work?
+
+Since the simulations are independent of each other, you can optionally run them in parallel to speed up running all of your repetitions. For this, use the parameter `-t <n>` with any number between `1 <= n < 62`. The most optimal amount of processes seems to be the amount of CPU cores you have installed in your computer. More than 61 processes are not permitted by OS scheduling.
+
 ## Contributing
 
 I will work out some contribution guidelines in the future. In the meantime, submitting issues outlining bugs or requests and style-matching pull requests are more than welcome :)
