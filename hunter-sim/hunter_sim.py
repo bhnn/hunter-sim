@@ -64,7 +64,7 @@ def main(path: str, compare_path: str, num_sims: int, dump_config: str, processe
         smgr = SimulationManager(path)
         if compare_path:
             import timing
-            smgr.compare_against(compare_path, num_sims, processes=processes)
+            smgr.compare_against(compare_path, num_sims, num_processes=processes)
         else:
             import timing
             smgr.run(num_sims, num_processes=processes)
