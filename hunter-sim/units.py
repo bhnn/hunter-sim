@@ -184,6 +184,9 @@ class Enemy:
         """
         regen_value = self.regen
         self.heal_hp(regen_value, 'regen')
+        # handle death from Ozzy's Gift of Medusa
+        if self.is_dead():
+            self.on_death()
 
     def stun(self, duration: float) -> None:
         """Apply a stun to the unit.
