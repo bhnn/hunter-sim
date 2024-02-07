@@ -210,9 +210,13 @@ class SimulationManager():
             str: Performance evaluation: "BUILD 1/2 (+ diff%)".
         """
         if b1 > b2:
-            return f'>> BUILD 1 (+{(b1/b2)-1:>7.2%})'
+            if b2 == 0:
+                return f'>> BUILD 1 (+{b1:,.2f})'
+            return f'>> BUILD 1 (+{(b1/b2)-1:>7,.2%})'
         elif b2 > b1:
-            return f'>> BUILD 2 (+{(b2/b1)-1:>7.2%})'
+            if b1 == 0:
+                return f'>> BUILD 2 (+{b2:,.2f})'
+            return f'>> BUILD 2 (+{(b2/b1)-1:>7,.2%})'
         else:
             return ''
 
