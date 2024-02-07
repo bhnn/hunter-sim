@@ -13,6 +13,7 @@ hunter_name_spacing: int = 7
 # TODO: Ozzy: move @property code to on_death() to speed things up?
 # TODO: Borge: move @property code as well?
 # TODO: DwD power is a little off: 200 ATK, 2 exo, 3 DwD, 1 revive should be 110.59 power but is 110.71. I think DwD might be 0.0196 power instead of 0.02
+# TODO: move total_attacks and total_damage into hunters and split off multistrikes
 
 """ Assumptions:
 - order of attacks: main -> ms -> echo -> echo ms
@@ -198,10 +199,12 @@ class Hunter:
         if isinstance(self, Borge):
             base_loot = 1.0 if self.current_stage != 100 else (700 + 500 + 60 + 50)
             timeless_mastery = 1 + self.attributes["timeless_mastery"] * 0.14
+            additional_multipliers = 1 + (self.inscryptions["i60"] * 0.03)
         elif isinstance(self, Ozzy):
             base_loot = 1.0 if self.current_stage != 100 else (400 + 300 + 60 + 50)
             timeless_mastery = 1 + (self.attributes["timeless_mastery"] * 0.16)
-        return base_loot * 0.01 * stage_mult * timeless_mastery
+            additional_multipliers = 1
+        return base_loot * 0.01 * stage_mult * timeless_mastery * additional_multipliers
 
     def is_dead(self) -> bool:
         """Check if the hunter is dead.
@@ -253,7 +256,7 @@ class Hunter:
         Returns:
             str: The stats as a formatted string.
         """
-        return f'[{self.name:>{hunter_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>16}] [AP:{self.power:>7.2f}] [Regen:{self.regen:>6.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: {self.effect_chance:>6.4f}] [SpC: {self.special_chance:>6.4f}] [SpD: {self.special_damage:>5.2f}] [Speed:{self.speed:>5.2f}] [LS: {self.lifesteal:>4.3f}]'
+        return f'[{self.name:>{hunter_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>18}] [AP:{self.power:>7.2f}] [Regen:{self.regen:>6.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: {self.effect_chance:>6.4f}] [SpC: {self.special_chance:>6.4f}] [SpD: {self.special_damage:>5.2f}] [Speed:{self.speed:>5.2f}] [LS: {self.lifesteal:>4.3f}]'
 
 
 class Borge(Hunter):
@@ -290,6 +293,7 @@ class Borge(Hunter):
                 + (self.inscryptions["i27"] * 24)
             )
             * (1 + (self.attributes["soul_of_ares"] * 0.01))
+            * (1 + (self.inscryptions["i60"] * 0.03))
             * (1 + (self.relics["disk_of_dawn"] * 0.02))
         )
         self.hp = self.max_hp
@@ -302,6 +306,7 @@ class Borge(Hunter):
                 + (self.talents["impeccable_impacts"] * 2)
             )
             * (1 + (self.attributes["soul_of_ares"] * 0.002))
+            * (1 + (self.inscryptions["i60"] * 0.03))
         )
         # regen
         self.regen = (
@@ -413,6 +418,7 @@ class Borge(Hunter):
                 "i24": 0, # 0.004 borge dr
                 "i27": 0, # 24 borge hp
                 "i44": 0, # 1.08 borge loot
+                "i60": 0, # 0.03 borge hp, power, loot
             },
             "mods": {
                 "trample": False
@@ -999,7 +1005,5 @@ class Ozzy(Hunter):
 
 
 if __name__ == "__main__":
-    o = Ozzy('./builds/ozzy_boss_threshold.yaml')
-    print(o)
-    o.times_revived = 2
-    print(o)
+    b = Borge('builds/current_borge.yaml')
+    print(b)
