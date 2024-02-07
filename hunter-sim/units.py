@@ -346,6 +346,7 @@ class Boss(Enemy):
                 'damage_reduction': 0.05,
                 'evade_chance': 0.01,
                 'speed': 6.87,
+                'speed2': -1,
             }
         else:
             raise ValueError(f'Unknown hunter: {hunter}')
@@ -404,8 +405,7 @@ class Boss(Enemy):
 
 if __name__ == "__main__":
     b = Borge('./builds/current_borge.yaml')
-    b.current_stage = 200
-    print(b)
+    b.complete_stage(200)
     boss = Boss('E200', b, 200, None) 
     print(boss)
     boss.enrage_stacks = 11
