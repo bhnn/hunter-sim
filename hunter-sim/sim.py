@@ -360,7 +360,7 @@ class Simulation():
                         continue
                 enemy = self.enemies.pop(0)
                 logging.debug(enemy)
-                hpush(self.queue, (round(self.elapsed_time + enemy.speed, 3), 2, 'enemy'))
+                enemy.queue_initial_attack()
                 # combat loop
                 while not enemy.is_dead() and not hunter.is_dead():
                     logging.debug(f'[  QUEUE]:           {self.queue}')
@@ -377,6 +377,10 @@ class Simulation():
                             hunter.apply_stun(enemy, isinstance(enemy, Boss))
                         case 'hunter_special':
                             hunter.attack(enemy)
+                        case 'enemy_special':
+                            enemy.attack_special(hunter)
+                            if not enemy.is_dead():
+                                hpush(self.queue, (round(prev_time + enemy.speed2, 3), 2, 'enemy_special'))
                         case 'regen':
                             hunter.regen_hp()
                             enemy.regen_hp()
