@@ -326,6 +326,7 @@ class Borge(Hunter):
             * (1 + (self.inscryptions["i60"] * 0.03))
             * (1 + (0.01 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
             * (1 + (0.02 * self.gems["creation_node_#2"]))
+            * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # regen
         self.regen = (
@@ -363,6 +364,7 @@ class Borge(Hunter):
                 + (self.inscryptions["i11"] * 0.02)
             )
             * (1 + (0.02 * self.gems["creation_node_#2"]))
+            * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # special_chance
         self.special_chance = (
@@ -738,6 +740,7 @@ class Ozzy(Hunter):
                 + (self.base_stats["power"] * (0.3 + 0.01 * (self.base_stats["power"] // 10)))
             )
             * (1 + (self.attributes["exo_piercers"] * 0.012))
+            * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # regen
         self.regen = (
@@ -768,9 +771,12 @@ class Ozzy(Hunter):
         )
         # special_chance
         self.special_chance = (
-            0.05
-            + (self.base_stats["special_chance"] * 0.0038)
-            + (self.inscryptions["i40"] * 0.005)
+            (
+                0.05
+                + (self.base_stats["special_chance"] * 0.0038)
+                + (self.inscryptions["i40"] * 0.005)
+            )
+            * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # special_damage
         self.special_damage = (
