@@ -382,7 +382,6 @@ class Borge(Hunter):
         return {
             "meta": {
                 "hunter": "Borge",
-                "build_only": False,
                 "level": 0
             },
             "stats": {
@@ -772,7 +771,6 @@ class Ozzy(Hunter):
         return {
             "meta": {
                 "hunter": "Ozzy",
-                "build_only": False,
                 "level": 0
             },
             "stats": {
