@@ -1,6 +1,5 @@
 meta:
   hunter: Borge
-  build_only: false
   level: 0
 
 stats:
@@ -48,9 +47,19 @@ inscryptions:
   i24: 0
   i27: 0
   i44: 0
+  i60: 0
 
 mods:
   trample: false
 
 relics:
   disk_of_dawn: 0
+
+gems:
+  attraction_gem: 0
+  attraction_catch-up: 0
+  attraction_node_#3: 0
+  innovation_node_#3: 0
+  creation_node_#1: 0
+  creation_node_#2: 0
+  creation_node_#3: 0

@@ -61,6 +61,7 @@ class Enemy:
                     + (0.004 if stage > 100 else 0)
                 ),
                 'speed':(4.53 - (stage * 0.006)),
+                'speed2': -1,
             }
         elif isinstance(hunter, Ozzy):
             return {
@@ -87,12 +88,13 @@ class Enemy:
                     + (0.01 if stage > 100 else 0)
                 ),
                 'speed': 3.20 - (stage * 0.004),
+                'speed2': -1,
             }
         else:
             raise ValueError(f'Unknown hunter: {hunter}')
 
     def __create__(self, name: str, hp: float, power: float, regen: float, damage_reduction: float, evade_chance: float, 
-                 special_chance: float, special_damage: float, speed: float) -> None:
+                 special_chance: float, special_damage: float, speed: float, speed2: float) -> None:
         """Creates an Enemy instance.
 
         Args:
@@ -105,6 +107,7 @@ class Enemy:
             special_chance (float): Special chance (for now crit-only) value of the enemy.
             special_damage (float): Special damage value of the enemy.
             speed (float): Speed value of the enemy.
+            speed2 (float): Speed2 value of the enemy, used for secondary attacks.
         """
         self.name: str = name
         self.hp: float = float(hp)
@@ -117,6 +120,8 @@ class Enemy:
         self.special_chance: float = min(special_chance, 0.25)
         self.special_damage: float = min(special_damage, 2.5)
         self.speed: float = speed
+        self.speed2: float = speed2
+        self.has_special: bool = speed2 > 0
         self.stun_duration: float = 0
         self.missing_hp: float
 
@@ -136,6 +141,13 @@ class Enemy:
             hunter.apply_medusa(self)
 
     ### CONTENT
+    def queue_initial_attack(self) -> None:
+        """Queue the initial attacks of the enemy.
+        """
+        hpush(self.sim.queue, (round(self.sim.elapsed_time + self.speed, 3), 2, 'enemy'))
+        if self.has_special:
+            hpush(self.sim.queue, (round(self.sim.elapsed_time + self.speed2, 3), 2, 'enemy_special'))
+
     def attack(self, hunter: Hunter) -> None:
         """Attack the hunter.
 
@@ -150,6 +162,22 @@ class Enemy:
             damage = self.power
             is_crit = False
             logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f}")
+        hunter.receive_damage(self, damage, is_crit)
+
+    def attack_special(self, hunter: Hunter) -> None:
+        """Attack the hunter with a special attack.
+
+        Args:
+            hunter (Hunter): The hunter to attack.
+        """
+        if random.random() < self.special_chance:
+            damage = self.power * self.special_damage
+            is_crit = True
+            logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f} SPECIAL (crit)")
+        else:
+            damage = self.power
+            is_crit = False
+            logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f} SPECIAL")
         hunter.receive_damage(self, damage, is_crit)
 
     def receive_damage(self, damage: float, is_reflected: bool = False) -> None:
@@ -238,7 +266,7 @@ class Enemy:
         Returns:
             str: The stats as a formatted string.
         """
-        return f'[{self.name:>{unit_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>16}] [AP:{self.power:>7.2f}] [Regen:{self.regen:>6.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: ------] [CHC: {self.special_chance:>6.4f}] [CHD: {self.special_damage:>5.2f}] [Speed:{self.speed:>5.2f}]'
+        return f'[{self.name:>{unit_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>18}] [AP:{self.power:>7.2f}] [Regen:{self.regen:>6.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: ------] [CHC: {self.special_chance:>6.4f}] [CHD: {self.special_damage:>5.2f}] [Speed:{self.speed:>5.2f}]{(f" [Speed2:{self.speed2:>6.2f}]") if self.has_special else ""}'
 
 
 class Boss(Enemy):
@@ -256,9 +284,15 @@ class Boss(Enemy):
         self.enrage_stacks: int = 0
         self.max_enrage: bool = False
         if isinstance(hunter, Borge):
-            self.enrage_effect = 0.0475
+            if stage == 100:
+                self.enrage_effect = 0.0475
+                self.enrage_effect2 = 0
+            elif stage == 200:
+                self.enrage_effect = 0.04
+                self.enrage_effect2 = 0.0725
         elif isinstance(hunter, Ozzy):
             self.enrage_effect = 0.033658536585365856
+            self.enrage_effect2 = 0
         else:
             raise ValueError(f'Unknown hunter: {hunter}')
 
@@ -276,16 +310,32 @@ class Boss(Enemy):
             dict: The stats of the boss.
         """
         if isinstance(hunter, Borge):
-            return {
-                'hp': 36810,
-                'power': 263.18,
-                'regen': 15.21,
-                'special_chance': 0.1122,
-                'special_damage': 2.26,
-                'damage_reduction': 0.05,
-                'evade_chance': 0.004,
-                'speed': 9.50,
-            }
+            if stage == 100:
+                return {
+                    'hp': 36810,
+                    'power': 263.18,
+                    'regen': 15.21,
+                    'special_chance': 0.1122,
+                    'special_damage': 2.26,
+                    'damage_reduction': 0.05,
+                    'evade_chance': 0.004,
+                    'speed': 9.50,
+                    'speed2': -1,
+                }
+            elif stage == 200:
+                return {
+                    'hp': 272250,
+                    'power': 1930,
+                    'regen': 42.19,
+                    'special_chance': 0.1522,
+                    'special_damage': 2.50,
+                    'damage_reduction': 0.09,
+                    'evade_chance': 0.004,
+                    'speed': 8.05,
+                    'speed2': 14.49,
+                }
+            else:
+                raise ValueError(f'Invalid stage for boss creation: {stage}')
         elif isinstance(hunter, Ozzy):
             return {
                 'hp': 29328,
@@ -296,6 +346,7 @@ class Boss(Enemy):
                 'damage_reduction': 0.05,
                 'evade_chance': 0.01,
                 'speed': 6.87,
+                'speed2': -1,
             }
         else:
             raise ValueError(f'Unknown hunter: {hunter}')
@@ -336,9 +387,28 @@ class Boss(Enemy):
         """
         self._speed = value
 
+    @property
+    def speed2(self) -> float:
+        """Calculates the speed2 of the boss, taking enrage stacks into account.
+        """
+        return max((self._speed2 - self.enrage_effect2 * self.enrage_stacks), 0.5)
+
+    @speed2.setter
+    def speed2(self, value: float) -> None:
+        """Sets the speed2 of the boss.
+
+        Args:
+            value (float): The speed2 of the boss.
+        """
+        self._speed2 = value
+
 
 if __name__ == "__main__":
-    # h = Borge('./builds/current_borge.yaml')
-    o = Ozzy('./builds/medusa_test.yaml')
-    e = Enemy("Enemy", o, 114, None)
+    b = Borge('./builds/current_borge.yaml')
+    b.complete_stage(200)
+    boss = Boss('E200', b, 200, None) 
+    print(boss)
+    boss.enrage_stacks = 11
+    print(boss)
+    e = Enemy('E199', b, 199, None)
     print(e)

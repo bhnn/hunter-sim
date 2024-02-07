@@ -13,6 +13,7 @@ hunter_name_spacing: int = 7
 # TODO: Ozzy: move @property code to on_death() to speed things up?
 # TODO: Borge: move @property code as well?
 # TODO: DwD power is a little off: 200 ATK, 2 exo, 3 DwD, 1 revive should be 110.59 power but is 110.71. I think DwD might be 0.0196 power instead of 0.02
+# TODO: confirm how creation nodes 2+3 apply
 
 """ Assumptions:
 - order of attacks: main -> ms -> echo -> echo ms
@@ -27,6 +28,7 @@ class Hunter:
         self.missing_hp: float
         self.missing_hp_pct: float
         self.sim = None
+        self.catching_up: bool = True
 
         # statistics
         # main
@@ -53,6 +55,7 @@ class Hunter:
 
         # effects
         self.total_effect_procs: int = 0
+        self.total_stuntime_inflicted: float = 0
 
         # loot
         self.total_loot: float = 0
@@ -78,6 +81,7 @@ class Hunter:
             'total_mitigated': self.total_mitigated,
             'total_effect_procs': self.total_effect_procs,
             'total_loot': self.total_loot,
+            'total_stuntime_inflicted': self.total_stuntime_inflicted,
         }
 
     @staticmethod
@@ -105,12 +109,14 @@ class Hunter:
             cfg = yaml.safe_load(f)
         if not (invalid_keys := self.validate_config(cfg)) == set():
             raise BuildConfigError(invalid_keys)
+        self.meta = cfg["meta"]
         self.base_stats = cfg["stats"]
         self.talents = cfg["talents"]
         self.attributes = cfg["attributes"]
         self.mods = cfg["mods"]
         self.inscryptions = cfg["inscryptions"]
         self.relics = cfg["relics"]
+        self.gems = cfg["gems"]
 
     def validate_config(self, cfg: dict) -> bool:
         """Validate a build config dict against a perfect dummy build to see if they have identical keys in themselves and all value entries.
@@ -131,8 +137,6 @@ class Hunter:
             damage (float): The amount of damage to deal.
         """
         target.receive_damage(damage)
-        self.total_damage += damage
-        self.total_attacks += 1
 
     def receive_damage(self, damage: float) -> float:
         """Receive damage from an attack. Accounts for damage reduction, evade chance and reflected damage.
@@ -186,7 +190,18 @@ class Hunter:
             # Talent: Call Me Lucky Loot, cannot proc on bosses
             loot *= 1 + (self.talents["call_me_lucky_loot"] * 0.2)
             self.total_effect_procs += 1
+        loot *= (1 + 0.25 * self.gems["attraction_node_#3"])
         self.total_loot += loot
+
+    def complete_stage(self, stages: int = 1) -> None:
+        """Actions to take when the hunter completes a stage. The Hunter() implementation only handles stage progression.
+
+        Args:
+            stages (int, optional): The number of stages to complete. Defaults to 1.
+        """
+        self.current_stage += stages
+        if self.current_stage >= 100:
+            self.catching_up = False
 
     def compute_loot(self) -> float:
         """Compute the amount of loot gained from a kill. Affected by stage loot bonus, talents and attributes.
@@ -198,10 +213,12 @@ class Hunter:
         if isinstance(self, Borge):
             base_loot = 1.0 if self.current_stage != 100 else (700 + 500 + 60 + 50)
             timeless_mastery = 1 + self.attributes["timeless_mastery"] * 0.14
+            additional_multipliers = 1 + (self.inscryptions["i60"] * 0.03)
         elif isinstance(self, Ozzy):
             base_loot = 1.0 if self.current_stage != 100 else (400 + 300 + 60 + 50)
             timeless_mastery = 1 + (self.attributes["timeless_mastery"] * 0.16)
-        return base_loot * 0.01 * stage_mult * timeless_mastery
+            additional_multipliers = 1
+        return base_loot * 0.01 * stage_mult * timeless_mastery * additional_multipliers
 
     def is_dead(self) -> bool:
         """Check if the hunter is dead.
@@ -253,7 +270,7 @@ class Hunter:
         Returns:
             str: The stats as a formatted string.
         """
-        return f'[{self.name:>{hunter_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>16}] [AP:{self.power:>7.2f}] [Regen:{self.regen:>6.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: {self.effect_chance:>6.4f}] [SpC: {self.special_chance:>6.4f}] [SpD: {self.special_damage:>5.2f}] [Speed:{self.speed:>5.2f}] [LS: {self.lifesteal:>4.3f}]'
+        return f'[{self.name:>{hunter_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>18}] [AP:{self.power:>7.2f}] [Regen:{self.regen:>6.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: {self.effect_chance:>6.4f}] [SpC: {self.special_chance:>6.4f}] [SpD: {self.special_damage:>5.2f}] [Speed:{self.speed:>5.2f}] [LS: {self.lifesteal:>4.3f}]'
 
 
 class Borge(Hunter):
@@ -290,7 +307,11 @@ class Borge(Hunter):
                 + (self.inscryptions["i27"] * 24)
             )
             * (1 + (self.attributes["soul_of_ares"] * 0.01))
+            * (1 + (self.inscryptions["i60"] * 0.03))
             * (1 + (self.relics["disk_of_dawn"] * 0.02))
+            * (1 + (0.015 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
+            * (1 + (0.02 * self.gems["creation_node_#2"]))
+            * (1 + (0.2 * self.gems["creation_node_#1"]))
         )
         self.hp = self.max_hp
         # power
@@ -302,6 +323,10 @@ class Borge(Hunter):
                 + (self.talents["impeccable_impacts"] * 2)
             )
             * (1 + (self.attributes["soul_of_ares"] * 0.002))
+            * (1 + (self.inscryptions["i60"] * 0.03))
+            * (1 + (0.01 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
+            * (1 + (0.02 * self.gems["creation_node_#2"]))
+            * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # regen
         self.regen = (
@@ -311,13 +336,18 @@ class Borge(Hunter):
                 + (self.attributes["essence_of_ylith"] * 0.04)
             )
             * (1 + (self.attributes["essence_of_ylith"] * 0.009))
+            * (1 + (0.005 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
+            * (1 + (0.02 * self.gems["creation_node_#2"]))
         )
         # damage_reduction
         self.damage_reduction = (
-            0
-            + (self.base_stats["damage_reduction"] * 0.0144)
-            + (self.attributes["spartan_lineage"] * 0.015)
-            + (self.inscryptions["i24"] * 0.004)
+            (
+                0
+                + (self.base_stats["damage_reduction"] * 0.0144)
+                + (self.attributes["spartan_lineage"] * 0.015)
+                + (self.inscryptions["i24"] * 0.004)
+            )
+            * (1 + (0.02 * self.gems["creation_node_#2"]))
         )
         # evade_chance
         self.evade_chance = (
@@ -327,17 +357,24 @@ class Borge(Hunter):
         )
         # effect_chance
         self.effect_chance = (
-            0.04
-            + (self.base_stats["effect_chance"] * 0.005)
-            + (self.attributes["superior_sensors"] * 0.012)
-            + (self.inscryptions["i11"] * 0.02)
+            (
+                0.04
+                + (self.base_stats["effect_chance"] * 0.005)
+                + (self.attributes["superior_sensors"] * 0.012)
+                + (self.inscryptions["i11"] * 0.02)
+            )
+            * (1 + (0.02 * self.gems["creation_node_#2"]))
+            * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # special_chance
         self.special_chance = (
-            0.05
-            + (self.base_stats["special_chance"] * 0.0018)
-            + (self.attributes["explosive_punches"] * 0.044)
-            + (self.inscryptions["i4"] * 0.0065)
+            (
+                0.05
+                + (self.base_stats["special_chance"] * 0.0018)
+                + (self.attributes["explosive_punches"] * 0.044)
+                + (self.inscryptions["i4"] * 0.0065)
+            )
+            * (1 + (0.02 * self.gems["creation_node_#2"]))
         )
         # special_damage
         self.special_damage = (
@@ -365,7 +402,6 @@ class Borge(Hunter):
         return {
             "meta": {
                 "hunter": "Borge",
-                "build_only": False,
                 "level": 0
             },
             "stats": {
@@ -413,13 +449,23 @@ class Borge(Hunter):
                 "i24": 0, # 0.004 borge dr
                 "i27": 0, # 24 borge hp
                 "i44": 0, # 1.08 borge loot
+                "i60": 0, # 0.03 borge hp, power, loot
             },
             "mods": {
                 "trample": False
             },
             "relics": {
                 "disk_of_dawn": 0
-            }
+            },
+            "gems": {
+                "attraction_gem": 0,
+                "attraction_catch-up": 0,
+                "attraction_node_#3": 0,
+                "innovation_node_#3" : 0,
+                "creation_node_#1": 0,
+                "creation_node_#2": 0,
+                "creation_node_#3": 0,
+            },
         }
 
     def attack(self, target) -> None:
@@ -437,6 +483,8 @@ class Borge(Hunter):
             damage = self.power
             logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f}")
         super(Borge, self).attack(target, damage)
+        self.total_damage += damage
+        self.total_attacks += 1
 
         #  on_attack() effects
         self.heal_hp(damage * self.lifesteal, 'steal')
@@ -505,6 +553,7 @@ class Borge(Hunter):
         stun_effect = 0.5 if is_boss else 1
         stun_duration = self.talents['impeccable_impacts'] * 0.1 * stun_effect
         enemy.stun(stun_duration)
+        self.total_stuntime_inflicted += stun_duration
 
     def apply_pog(self, enemy) -> None:
         """Apply the Presence of a God effect to an enemy.
@@ -560,9 +609,11 @@ class Borge(Hunter):
         Returns:
             float: The power of the hunter.
         """
-        # 100 * (1 + 0.5 (1 + 1 * 0.001))
-        # return self._power * ((1 + self.get_missing_pct) * (1 + self.attributes["born_for_battle"] * 0.001))
-        return self._power * (1 + (self.missing_hp_pct * self.attributes["born_for_battle"] * 0.001))
+        return (
+            self._power
+            * (1 + (self.missing_hp_pct * self.attributes["born_for_battle"] * 0.001))
+            * ((1.08 ** self.gems["attraction_catch-up"]) ** (1 + (self.gems["attraction_gem"] * 0.1) - 0.1) if self.catching_up else 1)
+        )
 
     @power.setter
     def power(self, value: float) -> None:
@@ -615,6 +666,7 @@ class Borge(Hunter):
             float: The speed of the hunter.
         """
         current_speed = (self._speed * (1 - self.attributes["atlas_protocol"] * 0.04)) if (self.current_stage % 100 == 0 and self.current_stage > 0) else self._speed
+        current_speed /= (1.08 ** self.gems["attraction_catch-up"]) ** (1 + (self.gems["attraction_gem"] * 0.1) - 0.1) if self.catching_up else 1
         current_speed -= self.fires_of_war
         self.fires_of_war = 0
         return current_speed
@@ -651,12 +703,17 @@ class Ozzy(Hunter):
         # offence
         self.total_multistrikes: int = 0
         self.total_ms_extra_damage: float = 0
+        self.total_decay_damage: float = 0
+        self.total_cripple_extra_damage: float = 0
 
         # sustain
         self.total_potion: float = 0
 
         # defence
         self.total_trickster_evades: int = 0
+
+        # effects
+        self.total_echo: int = 0
 
     def __create__(self, config_path: str) -> None:
         """Create an Ozzy instance from a build config file. Computes all final stats from stat growth formulae and
@@ -683,6 +740,7 @@ class Ozzy(Hunter):
                 + (self.base_stats["power"] * (0.3 + 0.01 * (self.base_stats["power"] // 10)))
             )
             * (1 + (self.attributes["exo_piercers"] * 0.012))
+            * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # regen
         self.regen = (
@@ -713,9 +771,12 @@ class Ozzy(Hunter):
         )
         # special_chance
         self.special_chance = (
-            0.05
-            + (self.base_stats["special_chance"] * 0.0038)
-            + (self.inscryptions["i40"] * 0.005)
+            (
+                0.05
+                + (self.base_stats["special_chance"] * 0.0038)
+                + (self.inscryptions["i40"] * 0.005)
+            )
+            * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # special_damage
         self.special_damage = (
@@ -742,7 +803,6 @@ class Ozzy(Hunter):
         return {
             "meta": {
                 "hunter": "Ozzy",
-                "build_only": False,
                 "level": 0
             },
             "stats": {
@@ -792,7 +852,13 @@ class Ozzy(Hunter):
             },
             "relics": {
                 "disk_of_dawn": 0
-            }
+            },
+            "gems": {
+                "attraction_gem": 0,
+                "attraction_catch-up": 0,
+                "attraction_node_#3": 0,
+                "innovation_node_#3" : 0,
+            },
         }
 
     def attack(self, target) -> None:
@@ -811,7 +877,6 @@ class Ozzy(Hunter):
             if random.random() < self.special_chance:
                 # Stat: Multi-Strike
                 self.attack_queue.append('(MS)')
-                self.total_multistrikes += 1
                 hpush(self.sim.queue, (0, 1, 'hunter_special'))
             if random.random() < self.effect_chance and self.talents["thousand_needles"]:
                 # Talent: Thousand Needles, will call Hunter.apply_stun(). Only Ozzy's main attack can stun.
@@ -822,6 +887,7 @@ class Ozzy(Hunter):
                 self.attack_queue.append('(ECHO)')
                 hpush(self.sim.queue, (0, 2, 'hunter_special'))
             damage = self.power
+            self.total_attacks += 1
             atk_type = ''
         else: # triggered attacks
             atk_type = self.attack_queue.pop(0)
@@ -829,16 +895,18 @@ class Ozzy(Hunter):
                 case '(MS)':
                     damage = self.power * self.special_damage
                     self.total_ms_extra_damage += damage
+                    self.total_multistrikes += 1
                 case '(ECHO)':
                     if random.random() < self.special_chance:
                         # Stat: Multi-Strike
                         self.attack_queue.append('(ECHO-MS)')
-                        self.total_multistrikes += 1
                         hpush(self.sim.queue, (0, 3, 'hunter_special'))
                     damage = self.power * (self.talents["echo_bullets"] * 0.05)
+                    self.total_echo += 1
                 case '(ECHO-MS)':
                     damage = self.power * self.special_damage
                     self.total_ms_extra_damage += damage
+                    self.total_multistrikes += 1
                 case _:
                     raise ValueError(f'Unknown attack type: {atk_type}')
         # omen of decay
@@ -850,6 +918,10 @@ class Ozzy(Hunter):
         self.crippling_on_target = 0
         logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{cripple_damage:>6.2f} {atk_type} OMEN: {omen_damage:>6.2f}")
         super(Ozzy, self).attack(target, cripple_damage)
+        self.total_decay_damage += omen_damage
+        self.total_cripple_extra_damage += (cripple_damage - omen_final)
+        if atk_type == '':
+            self.total_damage += cripple_damage
 
         # on_attack() effects
         # crippling shots and omen of decay inflict _extra damage_ that does not count towards lifesteal
@@ -914,6 +986,7 @@ class Ozzy(Hunter):
         stun_effect = 0.5 if is_boss else 1
         stun_duration = self.talents['thousand_needles'] * 0.05 * stun_effect
         enemy.stun(stun_duration)
+        self.total_stuntime_inflicted += stun_duration
 
     def apply_snek(self, enemy) -> None:
         """Apply the Soul of Snek effect to an enemy.
@@ -939,7 +1012,11 @@ class Ozzy(Hunter):
         Returns:
             float: The power of the hunter.
         """
-        return self._power * (1 + (self.attributes["deal_with_death"] * 0.02 * self.times_revived))
+        return (
+            self._power
+            * (1 + (self.attributes["deal_with_death"] * 0.02 * self.times_revived))
+            * ((1.08 ** self.gems["attraction_catch-up"]) ** (1 + (self.gems["attraction_gem"] * 0.1) - 0.1) if self.catching_up else 1)
+        )
 
     @power.setter
     def power(self, value: float) -> None:
@@ -984,6 +1061,22 @@ class Ozzy(Hunter):
     def special_damage(self, value: float) -> None:
         self._special_damage = value
 
+    @property
+    def speed(self) -> float:
+        """Getter for the speed attribute. Accounts for the Attraction gem catch-up effect.
+
+        Returns:
+            float: The speed of the hunter.
+        """
+        return (
+            self._speed
+            / ((1.08 ** self.gems["attraction_catch-up"]) ** (1 + (self.gems["attraction_gem"] * 0.1) - 0.1) if self.catching_up else 1)
+        )
+
+    @speed.setter
+    def speed(self, value: float) -> None:
+        self._speed = value
+
     def get_results(self) -> List:
         """Fetch the hunter results for end-of-run statistics.
 
@@ -995,11 +1088,18 @@ class Ozzy(Hunter):
             'total_ms_extra_damage': self.total_ms_extra_damage,
             'total_potion': self.total_potion,
             'total_trickster_evades': self.total_trickster_evades,
+            'total_decay_damage': self.total_decay_damage,
+            'total_cripple_extra_damage': self.total_cripple_extra_damage,
+            'total_echo': self.total_echo,
         }
 
 
 if __name__ == "__main__":
-    o = Ozzy('./builds/ozzy_boss_threshold.yaml')
+    b = Borge('builds/current_borge.yaml')
+    print(b)
+    b.complete_stage(100)
+    print(b)
+    o = Ozzy('builds/current_ozzy.yaml')
     print(o)
-    o.times_revived = 2
+    o.complete_stage(100)
     print(o)

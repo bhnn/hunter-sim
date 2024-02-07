@@ -1,6 +1,5 @@
 meta:
   hunter: Ozzy
-  build_only: false
   level: 0
 
 stats:
@@ -46,8 +45,13 @@ inscryptions:
   i37: 0
   i40: 0
 
-mods: {
-}
+mods: {}
 
 relics:
   disk_of_dawn: 0
+
+gems:
+  attraction_gem: 0
+  attraction_catch-up: 0
+  attraction_node_#3: 0
+  innovation_node_#3: 0
