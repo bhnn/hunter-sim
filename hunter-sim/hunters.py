@@ -310,6 +310,7 @@ class Borge(Hunter):
             * (1 + (self.relics["disk_of_dawn"] * 0.02))
             * (1 + (0.015 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
             * (1 + (0.02 * self.gems["creation_node_#2"]))
+            * (1 + (0.2 * self.gems["creation_node_#1"]))
         )
         self.hp = self.max_hp
         # power
