@@ -28,6 +28,7 @@ class Hunter:
         self.missing_hp: float
         self.missing_hp_pct: float
         self.sim = None
+        self.catching_up: bool = True
 
         # statistics
         # main
@@ -112,6 +113,7 @@ class Hunter:
         self.mods = cfg["mods"]
         self.inscryptions = cfg["inscryptions"]
         self.relics = cfg["relics"]
+        self.gems = cfg["gems"]
 
     def validate_config(self, cfg: dict) -> bool:
         """Validate a build config dict against a perfect dummy build to see if they have identical keys in themselves and all value entries.
@@ -188,6 +190,16 @@ class Hunter:
             loot *= 1 + (self.talents["call_me_lucky_loot"] * 0.2)
             self.total_effect_procs += 1
         self.total_loot += loot
+
+    def complete_stage(self, stages: int = 1) -> None:
+        """Actions to take when the hunter completes a stage. The Hunter() implementation only handles stage progression.
+
+        Args:
+            stages (int, optional): The number of stages to complete. Defaults to 1.
+        """
+        self.current_stage += stages
+        if self.current_stage >= 100:
+            self.catching_up = False
 
     def compute_loot(self) -> float:
         """Compute the amount of loot gained from a kill. Affected by stage loot bonus, talents and attributes.
@@ -425,7 +437,16 @@ class Borge(Hunter):
             },
             "relics": {
                 "disk_of_dawn": 0
-            }
+            },
+            "gems": {
+                "attraction_gem": 0,
+                "attraction_catch-up": 0,
+                "attraction_node_#3": 0,
+                "innovation_node_#3" : 0,
+                "creation_node_#1": 0,
+                "creation_node_#2": 0,
+                "creation_node_#3": 0,
+            },
         }
 
     def attack(self, target) -> None:
@@ -566,9 +587,11 @@ class Borge(Hunter):
         Returns:
             float: The power of the hunter.
         """
-        # 100 * (1 + 0.5 (1 + 1 * 0.001))
-        # return self._power * ((1 + self.get_missing_pct) * (1 + self.attributes["born_for_battle"] * 0.001))
-        return self._power * (1 + (self.missing_hp_pct * self.attributes["born_for_battle"] * 0.001))
+        return (
+            self._power
+            * (1 + (self.missing_hp_pct * self.attributes["born_for_battle"] * 0.001))
+            * ((1.08 ** self.gems["attraction_catch-up"]) ** (1 + (self.gems["attraction_gem"] * 0.1) - 0.1) if self.catching_up else 1)
+        )
 
     @power.setter
     def power(self, value: float) -> None:
@@ -621,6 +644,7 @@ class Borge(Hunter):
             float: The speed of the hunter.
         """
         current_speed = (self._speed * (1 - self.attributes["atlas_protocol"] * 0.04)) if (self.current_stage % 100 == 0 and self.current_stage > 0) else self._speed
+        current_speed /= (1.08 ** self.gems["attraction_catch-up"]) ** (1 + (self.gems["attraction_gem"] * 0.1) - 0.1) if self.catching_up else 1
         current_speed -= self.fires_of_war
         self.fires_of_war = 0
         return current_speed
@@ -798,7 +822,13 @@ class Ozzy(Hunter):
             },
             "relics": {
                 "disk_of_dawn": 0
-            }
+            },
+            "gems": {
+                "attraction_gem": 0,
+                "attraction_catch-up": 0,
+                "attraction_node_#3": 0,
+                "innovation_node_#3" : 0,
+            },
         }
 
     def attack(self, target) -> None:
@@ -945,7 +975,11 @@ class Ozzy(Hunter):
         Returns:
             float: The power of the hunter.
         """
-        return self._power * (1 + (self.attributes["deal_with_death"] * 0.02 * self.times_revived))
+        return (
+            self._power
+            * (1 + (self.attributes["deal_with_death"] * 0.02 * self.times_revived))
+            * ((1.08 ** self.gems["attraction_catch-up"]) ** (1 + (self.gems["attraction_gem"] * 0.1) - 0.1) if self.catching_up else 1)
+        )
 
     @power.setter
     def power(self, value: float) -> None:
@@ -990,6 +1024,22 @@ class Ozzy(Hunter):
     def special_damage(self, value: float) -> None:
         self._special_damage = value
 
+    @property
+    def speed(self) -> float:
+        """Getter for the speed attribute. Accounts for the Attraction gem catch-up effect.
+
+        Returns:
+            float: The speed of the hunter.
+        """
+        return (
+            self._speed
+            / ((1.08 ** self.gems["attraction_catch-up"]) ** (1 + (self.gems["attraction_gem"] * 0.1) - 0.1) if self.catching_up else 1)
+        )
+
+    @speed.setter
+    def speed(self, value: float) -> None:
+        self._speed = value
+
     def get_results(self) -> List:
         """Fetch the hunter results for end-of-run statistics.
 
@@ -1007,3 +1057,9 @@ class Ozzy(Hunter):
 if __name__ == "__main__":
     b = Borge('builds/current_borge.yaml')
     print(b)
+    b.complete_stage(100)
+    print(b)
+    o = Ozzy('builds/current_ozzy.yaml')
+    print(o)
+    o.complete_stage(100)
+    print(o)

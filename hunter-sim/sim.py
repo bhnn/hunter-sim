@@ -305,7 +305,7 @@ class Simulation():
         """Increment stage counter for simulation and hunter.
         """
         self.current_stage += 1
-        self.hunter.current_stage += 1
+        self.hunter.complete_stage()
 
     def spawn_enemies(self, hunter) -> None:
         """Spawn enemies for the current stage.
