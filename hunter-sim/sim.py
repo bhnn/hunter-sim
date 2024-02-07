@@ -134,11 +134,11 @@ class SimulationManager():
         out.append(f'{c_on}Main stats:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         if 'enrage_log' in avg:
-            out.append(f'{c_on}Avg Enrage stacks: {avg["enrage_log"]:>20.2f}\t(+/- {std["enrage_log"]:>10.2f}){c_off}')
+            out.append(f'{c_on}Avg Enrage stacks: {avg["enrage_log"]:>20,.2f}\t(+/- {std["enrage_log"]:>10,.2f}){c_off}')
         if 'first_revive' in avg:
-            out.append(f'{c_on}Revive stage 1st: {avg["first_revive"]:>21.2f}\t(+/- {std["first_revive"]:>10.2f}){c_off}')
+            out.append(f'{c_on}Revive stage 1st: {avg["first_revive"]:>21,.2f}\t(+/- {std["first_revive"]:>10,.2f}){c_off}')
         if 'second_revive' in avg:
-            out.append(f'{c_on}Revive stage 2nd: {avg["second_revive"]:>21.2f}\t(+/- {std["second_revive"]:>10.2f}){c_off}')
+            out.append(f'{c_on}Revive stage 2nd: {avg["second_revive"]:>21,.2f}\t(+/- {std["second_revive"]:>10,.2f}){c_off}')
         out.append(f'{c_on}Avg total kills: {avg["total_kills"]:>22,.2f}\t(+/- {std["total_kills"]:>10,.2f}){c_off}')
         out.append(f'{c_on}Elapsed time: {str(timedelta(seconds=round(avg["elapsed_time"], 0))):>25}\t(+/- {str(timedelta(seconds=round(std["elapsed_time"], 0))):>10}){c_off}')
         c_on = '\033[38;2;195;61;3m' if coloured else ''
@@ -148,10 +148,12 @@ class SimulationManager():
         out.append(f'{c_on}Avg total damage: {avg["total_damage"]:>21,.2f}\t(+/- {std["total_damage"]:>10,.2f}){c_off}')
         if hunter_class == Borge:
             out.append(f'{c_on}Avg total crits: {avg["total_crits"]:>22,.2f}\t(+/- {std["total_crits"]:>10,.2f}){c_off}')
-            out.append(f'{c_on}Avg total extra from crits: {avg["total_extra_from_crits"]:>11,.2f}\t(+/- {std["total_extra_from_crits"]:>10.2f}){c_off}')
+            out.append(f'{c_on}Avg total extra from crits: {avg["total_extra_from_crits"]:>11,.2f}\t(+/- {std["total_extra_from_crits"]:>10,.2f}){c_off}')
         elif hunter_class == Ozzy:
-            out.append(f'{c_on}Avg total multistrikes: {avg["total_multistrikes"]:>15.2f}\t(+/- {std["total_multistrikes"]:>10.2f}){c_off}')
-            out.append(f'{c_on}Avg total extra from ms: {avg["total_ms_extra_damage"]:>14.2f}\t(+/- {std["total_ms_extra_damage"]:>10.2f}){c_off}')
+            out.append(f'{c_on}Avg total multistrikes: {avg["total_multistrikes"]:>15,.2f}\t(+/- {std["total_multistrikes"]:>10,.2f}){c_off}')
+            out.append(f'{c_on}Avg total extra from ms: {avg["total_ms_extra_damage"]:>14,.2f}\t(+/- {std["total_ms_extra_damage"]:>10,.2f}){c_off}')
+            out.append(f'{c_on}Avg total decay damage: {avg["total_decay_damage"]:>15,.2f}\t(+/- {std["total_decay_damage"]:>10,.2f}){c_off}')
+            out.append(f'{c_on}Avg total cripple extra: {avg["total_cripple_extra_damage"]:>14,.2f}\t(+/- {std["total_cripple_extra_damage"]:>10,.2f}){c_off}')
         c_on = '\033[38;2;1;163;87m' if coloured else ''
         out.append(f'{c_on}Sustain:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
@@ -170,9 +172,12 @@ class SimulationManager():
         out.append(f'{c_on}Effects:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         out.append(f'{c_on}Avg total effect procs: {avg["total_effect_procs"]:>15,.2f}\t(+/- {std["total_effect_procs"]:>10,.2f}){c_off}')
+        out.append(f'{c_on}Avg stun time inflicted: {str(timedelta(seconds=avg["total_stuntime_inflicted"])):>14.7}\t(+/- {str(timedelta(seconds=std["total_stuntime_inflicted"])):>10.7}){c_off}')
         if hunter_class == Borge:
             out.append(f'{c_on}Avg total helltouch: {avg["total_helltouch"]:>18,.2f}\t(+/- {std["total_helltouch"]:>10,.2f}){c_off}')
             out.append(f'{c_on}Avg total loth: {avg["total_loth"]:>23,.2f}\t(+/- {std["total_loth"]:>10,.2f}){c_off}')
+        elif hunter_class == Ozzy:
+            out.append(f'{c_on}Avg total echo procs: {avg["total_echo"]:>17,.2f}\t(+/- {std["total_echo"]:>10,.2f}){c_off}')
         out.append(f'{c_on}Avg total potion: {avg["total_potion"]:>21,.2f}\t(+/- {std["total_potion"]:>10,.2f}){c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         c_on = '\033[38;2;98;65;169m' if coloured else ''
@@ -236,11 +241,11 @@ class SimulationManager():
         out.append(f'{c_on}Main stats:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         if 'enrage_log' in avg1 and 'enrage_log' in avg2:
-            out.append(f'{c_on}Avg Enrage stacks: {max(avg1["enrage_log"], avg2["enrage_log"])-min(avg1["enrage_log"], avg2["enrage_log"]):>20.2f} stacks less{c_off}{SimulationManager.eval_perf(avg1["enrage_log"], avg2["enrage_log"]):>24}')
+            out.append(f'{c_on}Avg Enrage stacks: {max(avg1["enrage_log"], avg2["enrage_log"])-min(avg1["enrage_log"], avg2["enrage_log"]):>2,} stacks less{c_off}{SimulationManager.eval_perf(avg1["enrage_log"], avg2["enrage_log"]):>24}')
         if 'first_revive' in avg1 and 'first_revive' in avg2:
-            out.append(f'{c_on}Revive stage 1st: {max(avg1["first_revive"], avg2["first_revive"])-min(avg1["first_revive"], avg2["first_revive"]):>21.2f} stages later{c_off}{SimulationManager.eval_perf(avg1["first_revive"], avg2["first_revive"]):>23}')
+            out.append(f'{c_on}Revive stage 1st: {max(avg1["first_revive"], avg2["first_revive"])-min(avg1["first_revive"], avg2["first_revive"]):>21,.2f} stages later{c_off}{SimulationManager.eval_perf(avg1["first_revive"], avg2["first_revive"]):>23}')
         if 'second_revive' in avg1 and 'second_revive' in avg2:
-            out.append(f'{c_on}Revive stage 1st: {max(avg1["second_revive"], avg2["second_revive"])-min(avg1["second_revive"], avg2["second_revive"]):>21.2f} stages later{c_off}{SimulationManager.eval_perf(avg1["second_revive"], avg2["second_revive"]):>23}')
+            out.append(f'{c_on}Revive stage 2nd: {max(avg1["second_revive"], avg2["second_revive"])-min(avg1["second_revive"], avg2["second_revive"]):>21,.2f} stages later{c_off}{SimulationManager.eval_perf(avg1["second_revive"], avg2["second_revive"]):>23}')
         out.append(f'{c_on}Avg total kills: {max(avg1["total_kills"], avg2["total_kills"])-min(avg1["total_kills"], avg2["total_kills"]):>22,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_kills"], avg2["total_kills"]):>31}')
         out.append(f'{c_on}Elapsed time: {str(max(timedelta(seconds=round(avg1["elapsed_time"], 0)), timedelta(seconds=round(avg2["elapsed_time"], 0)))-min(timedelta(seconds=round(avg1["elapsed_time"], 0)), timedelta(seconds=round(avg2["elapsed_time"], 0)))):>25} faster{c_off}{SimulationManager.eval_perf(timedelta(seconds=round(avg1["elapsed_time"], 0)), timedelta(seconds=round(avg2["elapsed_time"], 0))):>29}')
         c_on = '\033[38;2;195;61;3m' if coloured else ''
@@ -252,8 +257,10 @@ class SimulationManager():
             out.append(f'{c_on}Avg total crits: {max(avg1["total_crits"], avg2["total_crits"])-min(avg1["total_crits"], avg2["total_crits"]):>22,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_crits"], avg2["total_crits"]):>31}')
             out.append(f'{c_on}Avg total extra from crits: {max(avg1["total_extra_from_crits"], avg2["total_extra_from_crits"])-min(avg1["total_extra_from_crits"], avg2["total_extra_from_crits"]):>11,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_extra_from_crits"], avg2["total_extra_from_crits"]):>31}')
         elif hunter_class == Ozzy:
-            out.append(f'{c_on}Avg total multistrikes: {max(avg1["total_multistrikes"], avg2["total_multistrikes"])-min(avg1["total_multistrikes"], avg2["total_multistrikes"]):>15.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_multistrikes"], avg2["total_multistrikes"]):>31}')
-            out.append(f'{c_on}Avg total extra from ms: {max(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"])-min(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"]):>14.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"]):>31}')
+            out.append(f'{c_on}Avg total multistrikes: {max(avg1["total_multistrikes"], avg2["total_multistrikes"])-min(avg1["total_multistrikes"], avg2["total_multistrikes"]):>15,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_multistrikes"], avg2["total_multistrikes"]):>31}')
+            out.append(f'{c_on}Avg total extra from ms: {max(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"])-min(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"]):>14,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"]):>31}')
+            out.append(f'{c_on}Avg total decay damage: {max(avg1["total_decay_damage"], avg2["total_decay_damage"])-min(avg1["total_decay_damage"], avg2["total_decay_damage"]):>15,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_decay_damage"], avg2["total_decay_damage"]):>31}')
+            out.append(f'{c_on}Avg total decay damage: {max(avg1["total_cripple_extra_damage"], avg2["total_cripple_extra_damage"])-min(avg1["total_cripple_extra_damage"], avg2["total_cripple_extra_damage"]):>15,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_cripple_extra_damage"], avg2["total_cripple_extra_damage"]):>31}')
         c_on = '\033[38;2;1;163;87m' if coloured else ''
         out.append(f'{c_on}Sustain:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
@@ -272,9 +279,12 @@ class SimulationManager():
         out.append(f'{c_on}Effects:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         out.append(f'{c_on}Avg total effect procs: {max(avg1["total_effect_procs"], avg2["total_effect_procs"])-min(avg1["total_effect_procs"], avg2["total_effect_procs"]):>15,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_effect_procs"], avg2["total_effect_procs"]):>31}')
+        out.append(f'{c_on}Avg stun time inflicted: {str(timedelta(seconds=max(avg1["total_stuntime_inflicted"], avg2["total_stuntime_inflicted"])-min(avg1["total_stuntime_inflicted"], avg2["total_stuntime_inflicted"]))):>14.7} more{c_off}{SimulationManager.eval_perf(avg1["total_stuntime_inflicted"], avg2["total_stuntime_inflicted"]):>31}')
         if hunter_class == Borge:
             out.append(f'{c_on}Avg total helltouch: {max(avg1["total_helltouch"], avg2["total_helltouch"])-min(avg1["total_helltouch"], avg2["total_helltouch"]):>18,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_helltouch"], avg2["total_helltouch"]):>31}')
             out.append(f'{c_on}Avg total loth: {max(avg1["total_loth"], avg2["total_loth"])-min(avg1["total_loth"], avg2["total_loth"]):>23,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_loth"], avg2["total_loth"]):>31}')
+        elif hunter_class == Ozzy:
+            out.append(f'{c_on}Avg total loth: {max(avg1["total_echo"], avg2["total_echo"])-min(avg1["total_echo"], avg2["total_echo"]):>23,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_echo"], avg2["total_echo"]):>31}')
         out.append(f'{c_on}Avg total potion: {max(avg1["total_potion"], avg2["total_potion"])-min(avg1["total_potion"], avg2["total_potion"]):>21,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_potion"], avg2["total_potion"]):>31}')
         out.append(f'{c_on}{divider}{c_off}')
         c_on = '\033[38;2;98;65;169m' if coloured else ''
