@@ -14,6 +14,7 @@ hunter_name_spacing: int = 7
 # TODO: Borge: move @property code as well?
 # TODO: DwD power is a little off: 200 ATK, 2 exo, 3 DwD, 1 revive should be 110.59 power but is 110.71. I think DwD might be 0.0196 power instead of 0.02
 # TODO: move total_attacks and total_damage into hunters and split off multistrikes
+# TODO: confirm how creation nodes 2+3 apply
 
 """ Assumptions:
 - order of attacks: main -> ms -> echo -> echo ms
@@ -308,6 +309,7 @@ class Borge(Hunter):
             * (1 + (self.inscryptions["i60"] * 0.03))
             * (1 + (self.relics["disk_of_dawn"] * 0.02))
             * (1 + (0.015 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
+            * (1 + (0.02 * self.gems["creation_node_#2"]))
         )
         self.hp = self.max_hp
         # power
@@ -321,6 +323,7 @@ class Borge(Hunter):
             * (1 + (self.attributes["soul_of_ares"] * 0.002))
             * (1 + (self.inscryptions["i60"] * 0.03))
             * (1 + (0.01 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
+            * (1 + (0.02 * self.gems["creation_node_#2"]))
         )
         # regen
         self.regen = (
@@ -331,13 +334,17 @@ class Borge(Hunter):
             )
             * (1 + (self.attributes["essence_of_ylith"] * 0.009))
             * (1 + (0.005 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
+            * (1 + (0.02 * self.gems["creation_node_#2"]))
         )
         # damage_reduction
         self.damage_reduction = (
-            0
-            + (self.base_stats["damage_reduction"] * 0.0144)
-            + (self.attributes["spartan_lineage"] * 0.015)
-            + (self.inscryptions["i24"] * 0.004)
+            (
+                0
+                + (self.base_stats["damage_reduction"] * 0.0144)
+                + (self.attributes["spartan_lineage"] * 0.015)
+                + (self.inscryptions["i24"] * 0.004)
+            )
+            * (1 + (0.02 * self.gems["creation_node_#2"]))
         )
         # evade_chance
         self.evade_chance = (
@@ -347,17 +354,23 @@ class Borge(Hunter):
         )
         # effect_chance
         self.effect_chance = (
-            0.04
-            + (self.base_stats["effect_chance"] * 0.005)
-            + (self.attributes["superior_sensors"] * 0.012)
-            + (self.inscryptions["i11"] * 0.02)
+            (
+                0.04
+                + (self.base_stats["effect_chance"] * 0.005)
+                + (self.attributes["superior_sensors"] * 0.012)
+                + (self.inscryptions["i11"] * 0.02)
+            )
+            * (1 + (0.02 * self.gems["creation_node_#2"]))
         )
         # special_chance
         self.special_chance = (
-            0.05
-            + (self.base_stats["special_chance"] * 0.0018)
-            + (self.attributes["explosive_punches"] * 0.044)
-            + (self.inscryptions["i4"] * 0.0065)
+            (
+                0.05
+                + (self.base_stats["special_chance"] * 0.0018)
+                + (self.attributes["explosive_punches"] * 0.044)
+                + (self.inscryptions["i4"] * 0.0065)
+            )
+            * (1 + (0.02 * self.gems["creation_node_#2"]))
         )
         # special_damage
         self.special_damage = (
