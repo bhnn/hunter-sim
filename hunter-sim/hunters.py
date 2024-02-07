@@ -190,6 +190,7 @@ class Hunter:
             # Talent: Call Me Lucky Loot, cannot proc on bosses
             loot *= 1 + (self.talents["call_me_lucky_loot"] * 0.2)
             self.total_effect_procs += 1
+        loot *= (1 + 0.25 * self.gems["attraction_node_#3"])
         self.total_loot += loot
 
     def complete_stage(self, stages: int = 1) -> None:
