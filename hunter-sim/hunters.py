@@ -307,6 +307,7 @@ class Borge(Hunter):
             * (1 + (self.attributes["soul_of_ares"] * 0.01))
             * (1 + (self.inscryptions["i60"] * 0.03))
             * (1 + (self.relics["disk_of_dawn"] * 0.02))
+            * (1 + (0.015 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
         )
         self.hp = self.max_hp
         # power
@@ -319,6 +320,7 @@ class Borge(Hunter):
             )
             * (1 + (self.attributes["soul_of_ares"] * 0.002))
             * (1 + (self.inscryptions["i60"] * 0.03))
+            * (1 + (0.01 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
         )
         # regen
         self.regen = (
@@ -328,6 +330,7 @@ class Borge(Hunter):
                 + (self.attributes["essence_of_ylith"] * 0.04)
             )
             * (1 + (self.attributes["essence_of_ylith"] * 0.009))
+            * (1 + (0.005 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
         )
         # damage_reduction
         self.damage_reduction = (
