@@ -13,7 +13,6 @@ hunter_name_spacing: int = 7
 # TODO: Ozzy: move @property code to on_death() to speed things up?
 # TODO: Borge: move @property code as well?
 # TODO: DwD power is a little off: 200 ATK, 2 exo, 3 DwD, 1 revive should be 110.59 power but is 110.71. I think DwD might be 0.0196 power instead of 0.02
-# TODO: move total_attacks and total_damage into hunters and split off multistrikes
 # TODO: confirm how creation nodes 2+3 apply
 
 """ Assumptions:
@@ -56,6 +55,7 @@ class Hunter:
 
         # effects
         self.total_effect_procs: int = 0
+        self.total_stuntime_inflicted: float = 0
 
         # loot
         self.total_loot: float = 0
@@ -81,6 +81,7 @@ class Hunter:
             'total_mitigated': self.total_mitigated,
             'total_effect_procs': self.total_effect_procs,
             'total_loot': self.total_loot,
+            'total_stuntime_inflicted': self.total_stuntime_inflicted,
         }
 
     @staticmethod
@@ -135,8 +136,6 @@ class Hunter:
             damage (float): The amount of damage to deal.
         """
         target.receive_damage(damage)
-        self.total_damage += damage
-        self.total_attacks += 1
 
     def receive_damage(self, damage: float) -> float:
         """Receive damage from an attack. Accounts for damage reduction, evade chance and reflected damage.
@@ -481,6 +480,8 @@ class Borge(Hunter):
             damage = self.power
             logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f}")
         super(Borge, self).attack(target, damage)
+        self.total_damage += damage
+        self.total_attacks += 1
 
         #  on_attack() effects
         self.heal_hp(damage * self.lifesteal, 'steal')
@@ -549,6 +550,7 @@ class Borge(Hunter):
         stun_effect = 0.5 if is_boss else 1
         stun_duration = self.talents['impeccable_impacts'] * 0.1 * stun_effect
         enemy.stun(stun_duration)
+        self.total_stuntime_inflicted += stun_duration
 
     def apply_pog(self, enemy) -> None:
         """Apply the Presence of a God effect to an enemy.
@@ -698,12 +700,17 @@ class Ozzy(Hunter):
         # offence
         self.total_multistrikes: int = 0
         self.total_ms_extra_damage: float = 0
+        self.total_decay_damage: float = 0
+        self.total_cripple_extra_damage: float = 0
 
         # sustain
         self.total_potion: float = 0
 
         # defence
         self.total_trickster_evades: int = 0
+
+        # effects
+        self.total_echo: int = 0
 
     def __create__(self, config_path: str) -> None:
         """Create an Ozzy instance from a build config file. Computes all final stats from stat growth formulae and
@@ -863,7 +870,6 @@ class Ozzy(Hunter):
             if random.random() < self.special_chance:
                 # Stat: Multi-Strike
                 self.attack_queue.append('(MS)')
-                self.total_multistrikes += 1
                 hpush(self.sim.queue, (0, 1, 'hunter_special'))
             if random.random() < self.effect_chance and self.talents["thousand_needles"]:
                 # Talent: Thousand Needles, will call Hunter.apply_stun(). Only Ozzy's main attack can stun.
@@ -874,6 +880,7 @@ class Ozzy(Hunter):
                 self.attack_queue.append('(ECHO)')
                 hpush(self.sim.queue, (0, 2, 'hunter_special'))
             damage = self.power
+            self.total_attacks += 1
             atk_type = ''
         else: # triggered attacks
             atk_type = self.attack_queue.pop(0)
@@ -881,16 +888,18 @@ class Ozzy(Hunter):
                 case '(MS)':
                     damage = self.power * self.special_damage
                     self.total_ms_extra_damage += damage
+                    self.total_multistrikes += 1
                 case '(ECHO)':
                     if random.random() < self.special_chance:
                         # Stat: Multi-Strike
                         self.attack_queue.append('(ECHO-MS)')
-                        self.total_multistrikes += 1
                         hpush(self.sim.queue, (0, 3, 'hunter_special'))
                     damage = self.power * (self.talents["echo_bullets"] * 0.05)
+                    self.total_echo += 1
                 case '(ECHO-MS)':
                     damage = self.power * self.special_damage
                     self.total_ms_extra_damage += damage
+                    self.total_multistrikes += 1
                 case _:
                     raise ValueError(f'Unknown attack type: {atk_type}')
         # omen of decay
@@ -902,6 +911,10 @@ class Ozzy(Hunter):
         self.crippling_on_target = 0
         logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{cripple_damage:>6.2f} {atk_type} OMEN: {omen_damage:>6.2f}")
         super(Ozzy, self).attack(target, cripple_damage)
+        self.total_decay_damage += omen_damage
+        self.total_cripple_extra_damage += (cripple_damage - omen_final)
+        if atk_type == '':
+            self.total_damage += cripple_damage
 
         # on_attack() effects
         # crippling shots and omen of decay inflict _extra damage_ that does not count towards lifesteal
@@ -966,6 +979,7 @@ class Ozzy(Hunter):
         stun_effect = 0.5 if is_boss else 1
         stun_duration = self.talents['thousand_needles'] * 0.05 * stun_effect
         enemy.stun(stun_duration)
+        self.total_stuntime_inflicted += stun_duration
 
     def apply_snek(self, enemy) -> None:
         """Apply the Soul of Snek effect to an enemy.
@@ -1067,6 +1081,9 @@ class Ozzy(Hunter):
             'total_ms_extra_damage': self.total_ms_extra_damage,
             'total_potion': self.total_potion,
             'total_trickster_evades': self.total_trickster_evades,
+            'total_decay_damage': self.total_decay_damage,
+            'total_cripple_extra_damage': self.total_cripple_extra_damage,
+            'total_echo': self.total_echo,
         }
 
 
