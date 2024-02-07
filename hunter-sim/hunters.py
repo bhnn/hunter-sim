@@ -109,6 +109,7 @@ class Hunter:
             cfg = yaml.safe_load(f)
         if not (invalid_keys := self.validate_config(cfg)) == set():
             raise BuildConfigError(invalid_keys)
+        self.meta = cfg["meta"]
         self.base_stats = cfg["stats"]
         self.talents = cfg["talents"]
         self.attributes = cfg["attributes"]
