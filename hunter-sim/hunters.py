@@ -291,7 +291,7 @@ class Hunter:
         if not in_colour:
             c_on = c_off
         print(self)
-        print('Stats:\t\t{} {} {}   {} {} {}   {} {} {}'.format(*self.base_stats.values()))
+        print('Stats {}:\t{} {} {}   {} {} {}   {} {} {}'.format(f'({c_on}l.{c_off}{self.meta["level"]:>3})', *self.base_stats.values()))
         print(f'Tal {tals}:\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.talents.items()))
         print(f'Att {attr}:\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.attributes.items()))
         if invalid:
