@@ -1,7 +1,7 @@
 import logging
 import random
 from heapq import heappush as hpush
-from typing import List
+from typing import List, Tuple
 
 import yaml
 from util.exceptions import BuildConfigError
@@ -129,6 +129,29 @@ class Hunter:
         """
         return (set(cfg.keys()) ^ set(self.load_dummy().keys())) | set().union(*cfg.values()) ^ set().union(*self.load_dummy().values())
 
+    def validate_build(self) -> Tuple[int, int, set, int, int]:
+        """Validate the attributes of a build to make sure no attribute maximum levels are exceeded.
+
+        Raises:
+            ValueError: When the function is called from a Hunter instance.
+
+        Returns:
+            Tuple[int, int, set, int, int]: Attribute points spent, points available, any invalid points found, talent points spent, points available
+        """
+        if self.__class__ == Hunter:
+            raise ValueError('Cannot validate a Hunter() instance.')
+        invalid, attr_spent, tal_spent = set(), 0, 0
+        # go through all talents and attributes and check if they are within the valid range, then add their cost to the total
+        for tal in self.talents.keys():
+            if (lvl := self.talents[tal]) > self.costs["talents"][tal]["max"]:
+                invalid.add(tal)
+            tal_spent += lvl
+        for att in self.attributes.keys():
+            if (lvl := self.attributes[att]) > self.costs["attributes"][att]["max"]:
+                invalid.add(att)
+            attr_spent += lvl * self.costs["attributes"][att]["cost"]
+        return attr_spent, (self.meta["level"] * 3), invalid, tal_spent, (self.meta["level"])
+
     def attack(self, target, damage: float) -> None:
         """Attack the enemy unit.
 
@@ -250,19 +273,30 @@ class Hunter:
     def missing_hp_pct(self) -> float:
         return round((1 - self.hp / self.max_hp) * 100, 0)
 
-    def show_build(self, in_colour: bool = False) -> None:
+    def show_build(self, in_colour: bool = True) -> None:
         """Prints the build of this Hunter's instance.
         """
         c_off = '\033[0m'
         c_on = '\033[38;2;128;128;128m'
+        attr_spent, attr_avail, invalid, tal_spent, tal_avail = self.validate_build()
+        if tal_spent > tal_avail:
+            tals = f'(\033[91m{tal_spent:>3}\033[0m/{c_on}{tal_avail:>3}{c_off})'
+        else:
+            tals = f'({tal_spent:>3}/{c_on}{tal_avail:>3}{c_off})'
+        if attr_spent > attr_avail:
+            attr = f'(\033[91m{attr_spent:>3}\033[0m/{c_on}{attr_avail:>3}{c_off})'
+        else:
+            attr = f'({attr_spent:>3}/{c_on}{attr_avail:>3}{c_off})'
+        invalid_out = f'\033[91mInvalid\033[0m:\t{(", ".join(invalid)).title()}'
         if not in_colour:
             c_on = c_off
         print(self)
         print('Stats:\t\t{} {} {}   {} {} {}   {} {} {}'.format(*self.base_stats.values()))
-        print('Tals:\t\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.talents.items()))
-        print('Attr:\t\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.attributes.items()))
+        print(f'Tal {tals}:\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.talents.items()))
+        print(f'Att {attr}:\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.attributes.items()))
+        if invalid:
+            print(invalid_out)
         print('\n'.join(['-'*120]))
-        # print('Tals:\t' + ' '.join(['{:>10}'.format(t) for t in [f'[{"".join(l[0].upper() for l in k.split("_"))}: {v}]' for k, v in self.talents.items()]]))
 
     def __str__(self) -> str:
         """Prints the stats of this Hunter's instance.
@@ -275,6 +309,94 @@ class Hunter:
 
 class Borge(Hunter):
     ### SETUP
+
+    costs = {
+        "talents": {
+            "death_is_my_companion": { # +1 revive at 80% hp
+                "cost": 1,
+                "max": 2,
+            },
+            "life_of_the_hunt": { # chance on hit to heal for x0.06 damage dealt
+                "cost": 1,
+                "max": 5,
+            },
+            "unfair_advantage": { # chance to heal x0.02 max hp on kill
+                "cost": 1,
+                "max": 5,
+            },
+            "impeccable_impacts": { # chance to stun on hit, grants +2 attack power per point
+                "cost": 1,
+                "max": 10,
+            },
+            "omen_of_defeat": { # -0.08 enemy regen
+                "cost": 1,
+                "max": 10,
+            },
+            "call_me_lucky_loot": { # chance on kill to gain x0.2 increased loot per point
+                "cost": 1,
+                "max": 10,
+            },
+            "presence_of_god": { # -0.04 enemy starting hp per point
+                "cost": 1,
+                "max": 15,
+            },
+            "fires_of_war": { # chance on hit to double attack speed for 0.1 seconds per point
+                "cost": 1,
+                "max": 15,
+            },
+        },
+        "attributes": {
+            "soul_of_ares": { # x0.01 hp, x0.02 power
+                "cost": 1,
+                "max": float("inf"),
+            },
+            "essence_of_ylith": { # +0.04 regen, x0.009 hp
+                "cost": 1,
+                "max": float("inf"),
+            },
+            "spartan_lineage": { # +0.015 dr
+                "cost": 2,
+                "max": 6,
+            },
+            "timeless_mastery": { # +0.14 loot
+                "cost": 3,
+                "max": 5,
+            },
+            "helltouch_barrier": { # +0.08 reflected damage
+                "cost": 2,
+                "max": 10,
+            },
+            "lifedrain_inhalers": { # +0.0008 missing health regen
+                "cost": 2,
+                "max": 10,
+            },
+            "explosive_punches": { # +0.044 special chance, +0.08 special damage
+                "cost": 3,
+                "max": 6,
+            },
+            "book_of_baal": { # +0.0111 lifesteal
+                "cost": 3,
+                "max": 6,
+            },
+            "superior_sensors": { # +0.016 evade chance, +0.012 effect chance
+                "cost": 2,
+                "max": 6,
+            },
+            "atlas_protocol": { # +0.007 damage reduction, +0.014 effect chance, +0.025 special chance, x-0.04% speed
+                "cost": 3,
+                "max": 6,
+            },
+            "weakspot_analysis": { # -0.11 crit damage taken reduction
+                "cost": 2,
+                "max": 6,
+            },
+            "born_for_battle": { # +0.001 power per 1% missing hp
+                "cost": 5,
+                "max": 3,
+            },
+        },
+    }
+
     def __init__(self, config_path: str):
         super(Borge, self).__init__(name='Borge')
         self.__create__(config_path)
@@ -691,6 +813,94 @@ class Borge(Hunter):
 
 class Ozzy(Hunter):
     ### SETUP
+
+    costs = {
+        "talents": {
+            "death_is_my_companion": { # +1 revive, 80% of max hp
+                "cost": 1,
+                "max": 2,
+            },
+            "tricksters_boon": { # +1 trickster charge
+                "cost": 1,
+                "max": 1,
+            },
+            "unfair_advantage": { # chance to heal x0.02 max hp on kill
+                "cost": 1,
+                "max": 5,
+            },
+            "thousand_needles": { # -0.06 speed and chance to stun for 0.05s per point on hit
+                "cost": 1,
+                "max": 10,
+            },
+            "omen_of_decay": { # x0.08 enemy max hp per hit per point
+                "cost": 1,
+                "max": 10,
+            },
+            "call_me_lucky_loot": { # chance on kill to gain x0.2 increased loot per point
+                "cost": 1,
+                "max": 10,
+            },
+            "crippling_shots": { # chance on hit to deal x0.03 extra damage per point on the next hit
+                "cost": 1,
+                "max": 15,
+            },
+            "echo_bullets": { # chance on hit to deal x0.05 damage per point to enemy
+                "cost": 1,
+                "max": 15,
+            },
+        },
+        "attributes": {
+            "living_off_the_land": { # x0.02 hp, x0.02 regen
+                "cost": 1,
+                "max": float("inf"),
+            },
+            "exo_piercers": { # x0.012 power
+                "cost": 1,
+                "max": float("inf"),
+            },
+            "timeless_mastery": { # +0.16 loot
+                "cost": 3,
+                "max": 5,
+            },
+            "shimmering_scorpion": { # +0.033 lifesteal
+                "cost": 3,
+                "max": 5,
+            },
+            "wings_of_ibu": { # +0.026 dr, +0.005 evade chance
+                "cost": 2,
+                "max": 5,
+            },
+            "extermination_protocol": { # +0.028 effect chance
+                "cost": 2,
+                "max": 5,
+            },
+            "soul_of_snek": { # +0.088 enemy regen reduction
+                "cost": 3,
+                "max": 5,
+            },
+            "vectid_elixir": { # x0.15 regen after unfair advantage proc
+                "cost": 2,
+                "max": 10,
+            },
+            "cycle_of_death": { # +0.023 special chance, +0.02 special damage per revive used
+                "cost": 3,
+                "max": 5,
+            },
+            "gift_of_medusa": { # 0.05 hunter hp as enemy -regen
+                "cost": 3,
+                "max": 5,
+            },
+            "deal_with_death": { # x0.02 power, +0.016 dr per revive used
+                "cost": 5,
+                "max": 3,
+            },
+            "dance_of_dashes": { # 0.15 chance to gain trickster charge on evade
+                "cost": 3,
+                "max": 4,
+            },
+        },
+    }
+
     def __init__(self, config_path: str):
         super(Ozzy, self).__init__(name='Ozzy')
         self.__create__(config_path)
