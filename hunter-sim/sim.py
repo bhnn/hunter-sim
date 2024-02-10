@@ -7,7 +7,7 @@ from heapq import heappop as hpop
 from heapq import heappush as hpush
 from itertools import chain
 from math import floor
-from typing import List
+from typing import List, Tuple
 
 import yaml
 from hunters import Borge, Hunter, Ozzy
@@ -89,7 +89,7 @@ class SimulationManager():
         return res
 
     @classmethod
-    def make_printable(cls, res_dict: dict) -> [dict, dict]:
+    def make_printable(cls, res_dict: dict) -> Tuple[dict, dict]:
         """Converts the results dict into a printable format and computes averages and standard deviations.
 
         Args:
@@ -245,7 +245,7 @@ class SimulationManager():
         out.append(f'{c_on}Main stats:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
         if 'enrage_log' in avg1 and 'enrage_log' in avg2:
-            out.append(f'{c_on}Avg Enrage stacks: {max(avg1["enrage_log"], avg2["enrage_log"])-min(avg1["enrage_log"], avg2["enrage_log"]):>2,} stacks less{c_off}{SimulationManager.eval_perf(avg1["enrage_log"], avg2["enrage_log"]):>24}')
+            out.append(f'{c_on}Avg Enrage stacks: {round(max(avg1["enrage_log"], avg2["enrage_log"])-min(avg1["enrage_log"], avg2["enrage_log"]), 2):>20,.2f} stacks less{c_off}{SimulationManager.eval_perf(avg1["enrage_log"], avg2["enrage_log"]):>24}')
         if 'first_revive' in avg1 and 'first_revive' in avg2:
             out.append(f'{c_on}Revive stage 1st: {max(avg1["first_revive"], avg2["first_revive"])-min(avg1["first_revive"], avg2["first_revive"]):>21,.2f} stages later{c_off}{SimulationManager.eval_perf(avg1["first_revive"], avg2["first_revive"]):>23}')
         if 'second_revive' in avg1 and 'second_revive' in avg2:
