@@ -264,7 +264,7 @@ class SimulationManager():
             out.append(f'{c_on}Avg total multistrikes: {max(avg1["total_multistrikes"], avg2["total_multistrikes"])-min(avg1["total_multistrikes"], avg2["total_multistrikes"]):>15,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_multistrikes"], avg2["total_multistrikes"]):>31}')
             out.append(f'{c_on}Avg total extra from ms: {max(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"])-min(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"]):>14,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"]):>31}')
             out.append(f'{c_on}Avg total decay damage: {max(avg1["total_decay_damage"], avg2["total_decay_damage"])-min(avg1["total_decay_damage"], avg2["total_decay_damage"]):>15,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_decay_damage"], avg2["total_decay_damage"]):>31}')
-            out.append(f'{c_on}Avg total decay damage: {max(avg1["total_cripple_extra_damage"], avg2["total_cripple_extra_damage"])-min(avg1["total_cripple_extra_damage"], avg2["total_cripple_extra_damage"]):>15,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_cripple_extra_damage"], avg2["total_cripple_extra_damage"]):>31}')
+            out.append(f'{c_on}Avg total cripple extra: {max(avg1["total_cripple_extra_damage"], avg2["total_cripple_extra_damage"])-min(avg1["total_cripple_extra_damage"], avg2["total_cripple_extra_damage"]):>15,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_cripple_extra_damage"], avg2["total_cripple_extra_damage"]):>31}')
         c_on = '\033[38;2;1;163;87m' if coloured else ''
         out.append(f'{c_on}Sustain:{c_off}')
         out.append(f'{c_on}{divider}{c_off}')
