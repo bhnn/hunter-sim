@@ -288,12 +288,27 @@ class Hunter:
         else:
             attr = f'({attr_spent:>3}/{c_on}{attr_avail:>3}{c_off})'
         invalid_out = f'\033[91mInvalid\033[0m:\t{(", ".join(invalid)).title()}'
+        gem_names = {
+            "attraction_gem": "ATT",
+            "attraction_catch-up": "C0-99",
+            "attraction_node_#3": "AN-3",
+            "innovation_node_#3" : "IN-3",
+            "creation_node_#1": "CR-1",
+            "creation_node_#2": "CR-2",
+            "creation_node_#3": "CR-3",
+        }
+        gem_state = {
+            0: u'\u2718',
+            1: u'\u2714',
+        }
         if not in_colour:
             c_on = c_off
         print(self)
         print('Stats {}:\t{} {} {}   {} {} {}   {} {} {}'.format(f'({c_on}l.{c_off}{self.meta["level"]:>3})', *self.base_stats.values()))
         print(f'Tal {tals}:\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.talents.items()))
         print(f'Att {attr}:\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.attributes.items()))
+        print(f'Gems:\t\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join(gem_names[k]), c_off, gem_state[v] if k not in ['attraction_gem', 'attraction_catch-up'] else v) for k, v in self.gems.items()))
+        print(f'Relics:\t\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.relics.items()))
         if invalid:
             print(invalid_out)
         print('\n'.join(['-'*120]))
@@ -1306,10 +1321,12 @@ class Ozzy(Hunter):
 
 if __name__ == "__main__":
     b = Borge('builds/current_borge.yaml')
-    print(b)
-    b.complete_stage(100)
-    print(b)
-    o = Ozzy('builds/current_ozzy.yaml')
-    print(o)
-    o.complete_stage(100)
-    print(o)
+    b.show_build()
+    # print(b)
+    # b.complete_stage(100)
+    # print(b)
+    # o = Ozzy('builds/current_ozzy.yaml')
+    # print(o)
+    # o.complete_stage(100)
+    # print(o)
+    
