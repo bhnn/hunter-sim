@@ -61,7 +61,6 @@ class Enemy:
                     + (0.004 if stage > 100 else 0)
                 ),
                 'speed':(4.53 - (stage * 0.006)),
-                'speed2': -1,
             }
         elif isinstance(hunter, Ozzy):
             return {
@@ -88,13 +87,12 @@ class Enemy:
                     + (0.01 if stage > 100 else 0)
                 ),
                 'speed': 3.20 - (stage * 0.004),
-                'speed2': -1,
             }
         else:
             raise ValueError(f'Unknown hunter: {hunter}')
 
     def __create__(self, name: str, hp: float, power: float, regen: float, damage_reduction: float, evade_chance: float, 
-                 special_chance: float, special_damage: float, speed: float, speed2: float) -> None:
+                 special_chance: float, special_damage: float, speed: float, **kwargs) -> None:
         """Creates an Enemy instance.
 
         Args:
@@ -107,7 +105,9 @@ class Enemy:
             special_chance (float): Special chance (for now crit-only) value of the enemy.
             special_damage (float): Special damage value of the enemy.
             speed (float): Speed value of the enemy.
-            speed2 (float): Speed2 value of the enemy, used for secondary attacks.
+            **kwargs: Optional arguments for special attacks and secondary speeds.
+                special (str): Name of the special attack of the enemy.
+                speed2 (float): Speed of the secondary attack of the enemy.
         """
         self.name: str = name
         self.hp: float = float(hp)
@@ -120,8 +120,11 @@ class Enemy:
         self.special_chance: float = min(special_chance, 0.25)
         self.special_damage: float = min(special_damage, 2.5)
         self.speed: float = speed
-        self.speed2: float = speed2
-        self.has_special: bool = speed2 > 0
+        self.has_special = False
+        if 'special' in kwargs:
+            self.secondary_attack: str = kwargs['special']
+            self.speed2: float = kwargs['speed2']
+            self.has_special: bool = True
         self.stun_duration: float = 0
         self.missing_hp: float
 
@@ -320,7 +323,6 @@ class Boss(Enemy):
                     'damage_reduction': 0.05,
                     'evade_chance': 0.004,
                     'speed': 9.50,
-                    'speed2': -1,
                 }
             elif stage == 200:
                 return {
@@ -333,21 +335,37 @@ class Boss(Enemy):
                     'evade_chance': 0.004,
                     'speed': 8.05,
                     'speed2': 14.49,
+                    'special': 'gothmorgor'
                 }
             else:
                 raise ValueError(f'Invalid stage for boss creation: {stage}')
         elif isinstance(hunter, Ozzy):
-            return {
-                'hp': 29328,
-                'power': 229.05,
-                'regen': 59.52,
-                'special_chance': 0.3094,
-                'special_damage': 1.83,
-                'damage_reduction': 0.05,
-                'evade_chance': 0.01,
-                'speed': 6.87,
-                'speed2': -1,
-            }
+            if stage == 100:
+                return {
+                    'hp': 29328,
+                    'power': 229.05,
+                    'regen': 59.52,
+                    'special_chance': 0.3094,
+                    'special_damage': 1.83,
+                    'damage_reduction': 0.05,
+                    'evade_chance': 0.01,
+                    'speed': 6.87,
+                }
+            elif stage == 200:
+                return {
+                    'hp': 221170,
+                    'power': 1610,
+                    'regen': 196.01,
+                    'special_chance': 0.25,
+                    'special_damage': 2.50,
+                    'damage_reduction': 0.09,
+                    'evade_chance': 0.01,
+                    'speed': 5.89,
+                    'speed2': 25.4,
+                    'special': 'exoscarab'
+                }
+            else:
+                raise ValueError(f'Invalid stage for boss creation: {stage}')
         else:
             raise ValueError(f'Unknown hunter: {hunter}')
 
