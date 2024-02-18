@@ -354,7 +354,7 @@ class Simulation():
         self.current_stage = 0
         self.elapsed_time = 0
         self.queue = []
-        hpush(self.queue, (hunter.speed, 1, 'hunter'))
+        hpush(self.queue, (round(hunter.speed, 3), 1, 'hunter'))
         hpush(self.queue, (self.elapsed_time, 3, 'regen'))
         while not hunter.is_dead():
             logging.debug('')
