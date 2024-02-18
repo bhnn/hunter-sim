@@ -391,7 +391,7 @@ class Boss(Enemy):
             raise ValueError(f'Unknown special attack: {self.secondary_attack}')
 
     def on_death(self) -> None:
-        """Extends the Enemy::enrage() method to log enrage stacks on death.
+        """Extends the Enemy::on_death() method to log enrage stacks on death.
         """
         super(Boss, self).on_death()
         self.sim.hunter.enrage_log.append(self.enrage_stacks)
