@@ -7,22 +7,21 @@ from heapq import heappop as hpop
 from heapq import heappush as hpush
 from itertools import chain
 from math import floor
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
-import yaml
 from hunters import Borge, Hunter, Ozzy
 from tqdm import tqdm
 from units import Boss, Enemy
 
 
-def sim_worker(hunter_class: Hunter, config_path: str) -> None:
+def sim_worker(hunter_class: Hunter, config_dict: Dict) -> None:
     """Worker process for running simulations in parallel.
     """
-    return Simulation(hunter_class(config_path)).run()
+    return Simulation(hunter_class(config_dict)).run()
 
 class SimulationManager():
-    def __init__(self, hunter_config_path: str) -> None:
-        self.hunter_config_path = hunter_config_path
+    def __init__(self, hunter_config_dict: Dict) -> None:
+        self.hunter_config_dict = hunter_config_dict
         self.results: List = []
 
     def run(self, repetitions: int, num_processes: int = -1, show_stats: bool = True) -> None:
@@ -36,7 +35,7 @@ class SimulationManager():
         res = self.__run_sims(repetitions, num_processes)
         self.pprint_res(res, show_stats=show_stats)
 
-    def compare_against(self, compare_path: str, repetitions: int, num_processes: int = -1, show_stats: bool = True) -> None:
+    def compare_against(self, compare_dict: str, repetitions: int, num_processes: int = -1, show_stats: bool = True) -> None:
         """Run simulations for 2 builds, compare results and print.
 
         Args:
@@ -47,7 +46,7 @@ class SimulationManager():
         """
         print('BUILD 1:')
         res = self.__run_sims(repetitions, num_processes)
-        self.hunter_config_path = compare_path
+        self.hunter_config_dict = compare_dict
         print('BUILD 2:')
         res_c = self.__run_sims(repetitions, num_processes)
         self.pprint_compare(res, res_c, 'Build Comparison', show_stats=show_stats)
@@ -66,22 +65,18 @@ class SimulationManager():
             dict: Results of simulations.
         """
         # prepare sim instances to run
-        with open(self.hunter_config_path, 'r') as f:
-            cfg = yaml.safe_load(f)
-        match cfg["meta"]["hunter"].lower():
+        match self.hunter_config_dict["meta"]["hunter"].lower():
             case "borge":
                 hunter_class = Borge
             case "ozzy":
                 hunter_class = Ozzy
-            case _:
-                raise ValueError(f'Unknown hunter type found in config {f}')
-        hunter_class(self.hunter_config_path).show_build()
+        hunter_class(self.hunter_config_dict).show_build()
         if num_processes > 0:
             with ProcessPoolExecutor(max_workers=num_processes) as e:
-                self.results = list(tqdm(e.map(sim_worker, [hunter_class] * repetitions, [self.hunter_config_path] * repetitions), total=repetitions, leave=True))
+                self.results = list(tqdm(e.map(sim_worker, [hunter_class] * repetitions, [self.hunter_config_dict] * repetitions), total=repetitions, leave=True))
         else:
             for _ in tqdm(range(repetitions), leave=False):
-                self.results.append(Simulation(hunter_class(self.hunter_config_path)).run())
+                self.results.append(Simulation(hunter_class(self.hunter_config_dict)).run())
         
         # prepare results
         res = {'hunter': hunter_class}
@@ -91,7 +86,7 @@ class SimulationManager():
         return res
 
     @classmethod
-    def make_printable(cls, res_dict: dict) -> Tuple[dict, dict]:
+    def make_printable(cls, res_dict: Dict) -> Tuple[dict, dict]:
         """Converts the results dict into a printable format and computes averages and standard deviations.
 
         Args:
@@ -108,7 +103,6 @@ class SimulationManager():
             enrage = res_dict.pop('enrage_log')
             avg = {k: statistics.fmean(v) for k, v in res_dict.items() if v and type(v[0]) != list}
             std = {k: statistics.stdev(v) for k, v in res_dict.items() if v and type(v[0]) != list}
-            print(enrage)
             if len(enrage) > 1:
                 avg["enrage_log"] = statistics.fmean(enrage)
                 std["enrage_log"] = statistics.stdev(enrage)
@@ -124,7 +118,7 @@ class SimulationManager():
         return avg, std
 
     @classmethod
-    def pprint_res(cls, res_dict: dict, custom_message: str = None, coloured: bool = False, show_stats: bool = True) -> None:
+    def pprint_res(cls, res_dict: Dict, custom_message: str = None, coloured: bool = False, show_stats: bool = True) -> None:
         """Pretty print results dict.
 
         Args:
@@ -233,7 +227,7 @@ class SimulationManager():
             return ''
 
     @classmethod
-    def pprint_compare(cls, res1: dict, res2: dict, custom_message: str = None, coloured: bool = False, show_stats: bool = True) -> None:
+    def pprint_compare(cls, res1: Dict, res2: Dict, custom_message: str = None, coloured: bool = False, show_stats: bool = True) -> None:
         """Pretty print comparison of 2 results dicts.
 
         Args:
@@ -314,7 +308,6 @@ class SimulationManager():
         out.append(f'{c_on}{divider}{c_off}')
         c_on = '\033[38;2;128;128;128m'
         if statistics.median(res1["final_stage"]) > 100 and min(res1["final_stage"]) % 100 == 0:
-            # out.append(f'Final stage reached by BUILD 1:  MAX:{c_on}{(mx := max(res1["final_stage"])):>4} ({final_pct1[mx]:>6.2%}{c_off}), MED:{c_on}{(med := floor(statistics.median(res1["final_stage"]))):>4} ({final_pct1[med]:>6.2%}){c_off}, MIN:{c_on}{(mn := min(res1["final_stage"])):>4} ({final_pct1[mn]:>6.2%}){c_off}')
             final_pct1 = {i:j/len(res1["final_stage"]) for i,j in Counter(res1["final_stage"]).items()}
             out.append(f'Final stage reached by BUILD 1:  MAX:{c_on}{max(res1["final_stage"]):>4}{c_off}, MED:{c_on}{floor(statistics.median(res1["final_stage"])):>4}{c_off}, AVG:{c_on}{floor(statistics.mean(res1["final_stage"])):>4}{c_off}, MIN:\033[91m{(mn := min(res1["final_stage"])):>4} ({final_pct1[mn]:>6.2%}){c_off}')
 
