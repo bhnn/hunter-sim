@@ -1,9 +1,8 @@
 import logging
 import random
 from heapq import heappush as hpush
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
-import yaml
 from util.exceptions import BuildConfigError
 
 hunter_name_spacing: int = 7
@@ -96,29 +95,27 @@ class Hunter:
         """
         raise NotImplementedError('load_dummy() not implemented for Hunter() base class')
 
-    def load_build(self, config_path: str) -> None:
-        """Load a build config from a yaml file, validate it and assign the stats to the hunter's internal dictionaries.
+    def load_build(self, config_dict: Dict) -> None:
+        """Load a build config from build config dict, validate it and assign the stats to the hunter's internal dictionaries.
 
         Args:
-            config_path (str): The path to the config file.
+            config_dict (dict): A build config dictionary object.
 
         Raises:
             ValueError: If the config file is invalid.
         """
-        with open(config_path, 'r') as f:
-            cfg = yaml.safe_load(f)
-        if not (invalid_keys := self.validate_config(cfg)) == set():
+        if not (invalid_keys := self.validate_config(config_dict)) == set():
             raise BuildConfigError(invalid_keys)
-        self.meta = cfg["meta"]
-        self.base_stats = cfg["stats"]
-        self.talents = cfg["talents"]
-        self.attributes = cfg["attributes"]
-        self.mods = cfg["mods"]
-        self.inscryptions = cfg["inscryptions"]
-        self.relics = cfg["relics"]
-        self.gems = cfg["gems"]
+        self.meta = config_dict["meta"]
+        self.base_stats = config_dict["stats"]
+        self.talents = config_dict["talents"]
+        self.attributes = config_dict["attributes"]
+        self.mods = config_dict["mods"]
+        self.inscryptions = config_dict["inscryptions"]
+        self.relics = config_dict["relics"]
+        self.gems = config_dict["gems"]
 
-    def validate_config(self, cfg: dict) -> bool:
+    def validate_config(self, cfg: Dict) -> bool:
         """Validate a build config dict against a perfect dummy build to see if they have identical keys in themselves and all value entries.
 
         Args:
@@ -412,9 +409,9 @@ class Borge(Hunter):
         },
     }
 
-    def __init__(self, config_path: str):
+    def __init__(self, config_dict: Dict):
         super(Borge, self).__init__(name='Borge')
-        self.__create__(config_path)
+        self.__create__(config_dict)
 
         # statistics
         # offence
@@ -427,14 +424,14 @@ class Borge(Hunter):
         self.total_potion: float = 0
         self.total_inhaler: float = 0
 
-    def __create__(self, config_path: str) -> None:
-        """Create a Borge instance from a build config file. Computes all final stats from stat growth formulae and additional
+    def __create__(self, config_dict: Dict) -> None:
+        """Create a Borge instance from a build config dict. Computes all final stats from stat growth formulae and additional
         power sources.
 
         Args:
-            config_path (str): The path to the build config file.
+            config_dict (dict): Build config dictionary object.
         """
-        self.load_build(config_path)
+        self.load_build(config_dict)
         # hp
         self.max_hp = (
             (
@@ -916,9 +913,9 @@ class Ozzy(Hunter):
         },
     }
 
-    def __init__(self, config_path: str):
+    def __init__(self, config_dict: Dict):
         super(Ozzy, self).__init__(name='Ozzy')
-        self.__create__(config_path)
+        self.__create__(config_dict)
         self.trickster_charges: int = 0
         self.crippling_on_target: int = 0
         self.empowered_regen: int = 0
@@ -940,14 +937,14 @@ class Ozzy(Hunter):
         # effects
         self.total_echo: int = 0
 
-    def __create__(self, config_path: str) -> None:
-        """Create an Ozzy instance from a build config file. Computes all final stats from stat growth formulae and
+    def __create__(self, config_dict: Dict) -> None:
+        """Create an Ozzy instance from a build config dict. Computes all final stats from stat growth formulae and
         additional power sources.
 
         Args:
-            config_path (str): The path to the build config file.
+            config_dict (dict): Build config dictionary object.
         """
-        self.load_build(config_path)
+        self.load_build(config_dict)
         # hp
         self.max_hp = (
             (
