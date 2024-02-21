@@ -273,6 +273,7 @@ class Boss(Enemy):
         """
         super(Boss, self).__init__(name, hunter, stage, sim)
         self.enrage_stacks: int = 0
+        self.harden_ticks_left: int = 0 # Exoscarab secondary attack mechanic
         self.max_enrage: bool = False
 
     def fetch_stats(self, hunter: Hunter, stage: int) -> dict:
@@ -387,8 +388,39 @@ class Boss(Enemy):
             self.enrage_stacks += 1
         elif self.secondary_attack == 'exoscarab':
             self.enrage_stacks += 5
+            self.apply_harden(True)
         else:
             raise ValueError(f'Unknown special attack: {self.secondary_attack}')
+
+    def regen_hp(self) -> None:
+        """Regenerates hp according to the regen stat. Also deals with the Harden effect of the Exoscarab boss.
+        """
+        regen_value = self.regen
+        if self.harden_ticks_left > 0:
+            # Harden effect: 3x regen for 5 ticks
+            for _ in range(3):
+                self.heal_hp(regen_value, 'regen')
+            self.harden_ticks_left -= 1
+            if self.harden_ticks_left == 0:
+                self.apply_harden(False)
+        else:
+            self.heal_hp(regen_value, 'regen')
+        # handle death from Ozzy's Gift of Medusa
+        if self.is_dead():
+            self.on_death()
+
+    def apply_harden(self, enable: bool) -> None:
+        """Handles Harden effect application and removal on the boss.
+
+        Args:
+            enable (bool): Whether to enable or disable the Harden effect.
+        """
+        if enable:
+            self.harden_ticks_left = 5
+            self.previous_dr = self.damage_reduction
+            self.damage_reduction = 0.95
+        else:
+            self.damage_reduction = self.previous_dr
 
     def on_death(self) -> None:
         """Extends the Enemy::on_death() method to log enrage stacks on death.
