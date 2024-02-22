@@ -67,20 +67,20 @@ class Hunter:
         """
         return {
             'final_stage': self.current_stage,
-            'total_kills': self.total_kills,
+            'kills': self.total_kills,
             'revive_log': self.revive_log,
             'enrage_log': self.enrage_log,
-            'total_attacks': self.total_attacks,
-            'total_damage': self.total_damage,
-            'total_taken': self.total_taken,
-            'total_regen': self.total_regen,
-            'total_attacks_suffered': self.total_attacks_suffered,
-            'total_lifesteal': self.total_lifesteal,
-            'total_evades': self.total_evades,
-            'total_mitigated': self.total_mitigated,
-            'total_effect_procs': self.total_effect_procs,
+            'attacks': self.total_attacks,
+            'damage': self.total_damage,
+            'damage_taken': self.total_taken,
+            'regenerated_hp': self.total_regen,
+            'attacks_suffered': self.total_attacks_suffered,
+            'lifesteal': self.total_lifesteal,
+            'evades': self.total_evades,
+            'mitigated_damage': self.total_mitigated,
+            'effect_procs': self.total_effect_procs,
             'total_loot': self.total_loot,
-            'total_stuntime_inflicted': self.total_stuntime_inflicted,
+            'stun_duration_inflicted': self.total_stuntime_inflicted,
         }
 
     @staticmethod
@@ -816,11 +816,11 @@ class Borge(Hunter):
             List: List of all collected stats.
         """
         return super(Borge, self).get_results() | {
-            'total_crits': self.total_crits,
-            'total_extra_from_crits': self.total_extra_from_crits,
-            'total_helltouch': self.total_helltouch,
-            'total_loth': self.total_loth,
-            'total_potion': self.total_potion,
+            'crits': self.total_crits,
+            'extra_damage_from_crits': self.total_extra_from_crits,
+            'helltouch_barrier': self.total_helltouch,
+            'life_of_the_hunt_healing': self.total_loth,
+            'unfair_advantage_healing': self.total_potion,
         }
 
 class Ozzy(Hunter):
@@ -1306,13 +1306,13 @@ class Ozzy(Hunter):
             List: List of all collected stats.
         """
         return super(Ozzy, self).get_results() | {
-            'total_multistrikes': self.total_multistrikes,
-            'total_ms_extra_damage': self.total_ms_extra_damage,
-            'total_potion': self.total_potion,
-            'total_trickster_evades': self.total_trickster_evades,
-            'total_decay_damage': self.total_decay_damage,
-            'total_cripple_extra_damage': self.total_cripple_extra_damage,
-            'total_echo': self.total_echo,
+            'multistrikes': self.total_multistrikes,
+            'extra_damage_from_ms': self.total_ms_extra_damage,
+            'unfair_advantage_healing': self.total_potion,
+            'trickster_evades': self.total_trickster_evades,
+            'decay_damage': self.total_decay_damage,
+            'extra_damage_from_crippling_strikes': self.total_cripple_extra_damage,
+            'echo_bullets': self.total_echo,
         }
 
 
