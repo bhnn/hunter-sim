@@ -230,7 +230,7 @@ class Enemy:
         """
         self.sim.hunter.total_kills += 1
         logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tDIED")
-        self.sim.queue = [(p1, p2, u) for p1, p2, u in self.sim.queue if u != 'enemy']
+        self.sim.queue = [(p1, p2, u) for p1, p2, u in self.sim.queue if u not in ['enemy', 'enemy_special']]
         heapify(self.sim.queue)
 
     def kill(self) -> None:
