@@ -74,6 +74,7 @@ Runs a single simulation of the build `experimental_borge.yaml` and saves the co
 Optional:
 
 - `-c`: Path to another hunter build config file to compare against the first. The results display of the simulation will change to compare which build performed best on which statistic.
+- `-s`: Suppresses most of the combat statistics that are shown after finishing the simulation, except for Loot and Stages
 - `-d`: Will save 2 empty config files (Borge and Ozzy) into `builds/` in your current directory. This will always produce config files that contain all build components currently accepted
 - `-v`: Prints simulation progress to terminal. Usually they have a limited history and long encounters will produce a lot of messages, so this is best used for short sims.
 - `-l`: Produces a log file of the simulation and save it to `logs/` in your current directory. Can be used for runs of any length.
