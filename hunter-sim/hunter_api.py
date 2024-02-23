@@ -1,9 +1,8 @@
 from fastapi import FastAPI
 from sim import SimulationManager
-import json
-from hunters import Hunter, Borge, Ozzy
+from hunters import Borge, Ozzy
 
-from pydantic import BaseModel, create_model
+from pydantic import BaseModel
 
 
 def start_application():
