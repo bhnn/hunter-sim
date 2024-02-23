@@ -7,6 +7,7 @@ from hunters import Borge, Hunter, Ozzy
 
 unit_name_spacing: int = 7
 
+# TODO: Verify whether Gothmogor's secondary attack contributes to enrage stacks
 
 class Enemy:
     ### CREATION
@@ -61,7 +62,6 @@ class Enemy:
                     + (0.004 if stage > 100 else 0)
                 ),
                 'speed':(4.53 - (stage * 0.006)),
-                'speed2': -1,
             }
         elif isinstance(hunter, Ozzy):
             return {
@@ -88,13 +88,12 @@ class Enemy:
                     + (0.01 if stage > 100 else 0)
                 ),
                 'speed': 3.20 - (stage * 0.004),
-                'speed2': -1,
             }
         else:
             raise ValueError(f'Unknown hunter: {hunter}')
 
     def __create__(self, name: str, hp: float, power: float, regen: float, damage_reduction: float, evade_chance: float, 
-                 special_chance: float, special_damage: float, speed: float, speed2: float) -> None:
+                 special_chance: float, special_damage: float, speed: float, **kwargs) -> None:
         """Creates an Enemy instance.
 
         Args:
@@ -107,7 +106,9 @@ class Enemy:
             special_chance (float): Special chance (for now crit-only) value of the enemy.
             special_damage (float): Special damage value of the enemy.
             speed (float): Speed value of the enemy.
-            speed2 (float): Speed2 value of the enemy, used for secondary attacks.
+            **kwargs: Optional arguments for special attacks and secondary speeds.
+                special (str): Name of the special attack of the enemy.
+                speed2 (float): Speed of the secondary attack of the enemy.
         """
         self.name: str = name
         self.hp: float = float(hp)
@@ -120,8 +121,14 @@ class Enemy:
         self.special_chance: float = min(special_chance, 0.25)
         self.special_damage: float = min(special_damage, 2.5)
         self.speed: float = speed
-        self.speed2: float = speed2
-        self.has_special: bool = speed2 > 0
+        self.has_special = False
+        if isinstance(self, Boss): # regular boss enrage effect
+            self.enrage_effect = kwargs['enrage_effect']
+        if isinstance(self, Boss) and 'special' in kwargs: # boss enrage effect for secondary moves
+            self.secondary_attack: str = kwargs['special']
+            self.speed2: float = kwargs['speed2']
+            self.enrage_effect2 = kwargs['enrage_effect2']
+            self.has_special: bool = True
         self.stun_duration: float = 0
         self.missing_hp: float
 
@@ -162,22 +169,6 @@ class Enemy:
             damage = self.power
             is_crit = False
             logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f}")
-        hunter.receive_damage(self, damage, is_crit)
-
-    def attack_special(self, hunter: Hunter) -> None:
-        """Attack the hunter with a special attack.
-
-        Args:
-            hunter (Hunter): The hunter to attack.
-        """
-        if random.random() < self.special_chance:
-            damage = self.power * self.special_damage
-            is_crit = True
-            logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f} SPECIAL (crit)")
-        else:
-            damage = self.power
-            is_crit = False
-            logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f} SPECIAL")
         hunter.receive_damage(self, damage, is_crit)
 
     def receive_damage(self, damage: float, is_reflected: bool = False) -> None:
@@ -239,7 +230,7 @@ class Enemy:
         """
         self.sim.hunter.total_kills += 1
         logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tDIED")
-        self.sim.queue = [(p1, p2, u) for p1, p2, u in self.sim.queue if u != 'enemy']
+        self.sim.queue = [(p1, p2, u) for p1, p2, u in self.sim.queue if u not in ['enemy', 'enemy_special']]
         heapify(self.sim.queue)
 
     def kill(self) -> None:
@@ -282,19 +273,8 @@ class Boss(Enemy):
         """
         super(Boss, self).__init__(name, hunter, stage, sim)
         self.enrage_stacks: int = 0
+        self.harden_ticks_left: int = 0 # Exoscarab secondary attack mechanic
         self.max_enrage: bool = False
-        if isinstance(hunter, Borge):
-            if stage == 100:
-                self.enrage_effect = 0.0475
-                self.enrage_effect2 = 0
-            elif stage == 200:
-                self.enrage_effect = 0.04
-                self.enrage_effect2 = 0.0725
-        elif isinstance(hunter, Ozzy):
-            self.enrage_effect = 0.033658536585365856
-            self.enrage_effect2 = 0
-        else:
-            raise ValueError(f'Unknown hunter: {hunter}')
 
     def fetch_stats(self, hunter: Hunter, stage: int) -> dict:
         """Fetches the stats of the boss.
@@ -320,7 +300,8 @@ class Boss(Enemy):
                     'damage_reduction': 0.05,
                     'evade_chance': 0.004,
                     'speed': 9.50,
-                    'speed2': -1,
+                    'enrage_effect': 0.0475,
+                    'enrage_effect2': 0,
                 }
             elif stage == 200:
                 return {
@@ -333,21 +314,43 @@ class Boss(Enemy):
                     'evade_chance': 0.004,
                     'speed': 8.05,
                     'speed2': 14.49,
+                    'special': 'gothmorgor',
+                    'enrage_effect': 0.04,
+                    'enrage_effect2': 0.0725,
                 }
             else:
                 raise ValueError(f'Invalid stage for boss creation: {stage}')
         elif isinstance(hunter, Ozzy):
-            return {
-                'hp': 29328,
-                'power': 229.05,
-                'regen': 59.52,
-                'special_chance': 0.3094,
-                'special_damage': 1.83,
-                'damage_reduction': 0.05,
-                'evade_chance': 0.01,
-                'speed': 6.87,
-                'speed2': -1,
-            }
+            if stage == 100:
+                return {
+                    'hp': 29328,
+                    'power': 229.05,
+                    'regen': 59.52,
+                    'special_chance': 0.3094,
+                    'special_damage': 1.83,
+                    'damage_reduction': 0.05,
+                    'evade_chance': 0.01,
+                    'speed': 6.87,
+                    'enrage_effect': 0.033658536585365856,
+                    'enrage_effect2': 0,
+                }
+            elif stage == 200:
+                return {
+                    'hp': 221170,
+                    'power': 1610,
+                    'regen': 196.01,
+                    'special_chance': 0.25,
+                    'special_damage': 2.50,
+                    'damage_reduction': 0.09,
+                    'evade_chance': 0.01,
+                    'speed': 5.89,
+                    'speed2': 25.4,
+                    'special': 'exoscarab',
+                    'enrage_effect': 0.029,
+                    'enrage_effect2': 0,
+                }
+            else:
+                raise ValueError(f'Invalid stage for boss creation: {stage}')
         else:
             raise ValueError(f'Unknown hunter: {hunter}')
 
@@ -366,8 +369,61 @@ class Boss(Enemy):
             self.special_chance = 1
             logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tMAX ENRAGE (x3 damage, 100% crit chance)")
 
+    def attack_special(self, hunter: Hunter) -> None:
+        """Attack the hunter with a special attack.
+
+        Args:
+            hunter (Hunter): The hunter to attack.
+        """
+        if self.secondary_attack == 'gothmorgor':
+            if random.random() < self.special_chance:
+                damage = self.power * self.special_damage
+                is_crit = True
+                logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f} SECONDARY (crit)")
+            else:
+                damage = self.power
+                is_crit = False
+                logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f} SECONDARY")
+            hunter.receive_damage(self, damage, is_crit)
+            self.enrage_stacks += 1
+        elif self.secondary_attack == 'exoscarab':
+            self.enrage_stacks += 5
+            self.apply_harden(True)
+        else:
+            raise ValueError(f'Unknown special attack: {self.secondary_attack}')
+
+    def regen_hp(self) -> None:
+        """Regenerates hp according to the regen stat. Also deals with the Harden effect of the Exoscarab boss.
+        """
+        regen_value = self.regen
+        if self.harden_ticks_left > 0:
+            # Harden effect: 3x regen for 5 ticks
+            for _ in range(3):
+                self.heal_hp(regen_value, 'regen')
+            self.harden_ticks_left -= 1
+            if self.harden_ticks_left == 0:
+                self.apply_harden(False)
+        else:
+            self.heal_hp(regen_value, 'regen')
+        # handle death from Ozzy's Gift of Medusa
+        if self.is_dead():
+            self.on_death()
+
+    def apply_harden(self, enable: bool) -> None:
+        """Handles Harden effect application and removal on the boss.
+
+        Args:
+            enable (bool): Whether to enable or disable the Harden effect.
+        """
+        if enable:
+            self.harden_ticks_left = 5
+            self.previous_dr = self.damage_reduction
+            self.damage_reduction = 0.95
+        else:
+            self.damage_reduction = self.previous_dr
+
     def on_death(self) -> None:
-        """Extends the Enemy::enrage() method to log enrage stacks on death.
+        """Extends the Enemy::on_death() method to log enrage stacks on death.
         """
         super(Boss, self).on_death()
         self.sim.hunter.enrage_log.append(self.enrage_stacks)

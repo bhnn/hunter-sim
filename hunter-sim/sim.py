@@ -7,48 +7,54 @@ from heapq import heappop as hpop
 from heapq import heappush as hpush
 from itertools import chain
 from math import floor
-from typing import List, Tuple
+from string import capwords
+from typing import Dict, Generator, List, Tuple
 
-import yaml
+import rich
 from hunters import Borge, Hunter, Ozzy
 from tqdm import tqdm
 from units import Boss, Enemy
 
 
-def sim_worker(hunter_class: Hunter, config_path: str) -> None:
+def sim_worker(hunter_class: Hunter, config_dict: Dict) -> None:
     """Worker process for running simulations in parallel.
     """
-    return Simulation(hunter_class(config_path)).run()
+    return Simulation(hunter_class(config_dict)).run()
 
 class SimulationManager():
-    def __init__(self, hunter_config_path: str) -> None:
-        self.hunter_config_path = hunter_config_path
+    def __init__(self, hunter_config_dict: Dict) -> None:
+        self.hunter_config_dict = hunter_config_dict
         self.results: List = []
 
-    def run(self, repetitions: int, num_processes: int = -1) -> None:
+    def run(self, repetitions: int, num_processes: int = -1, show_stats: bool = True) -> None:
         """Run simulations and print results.
 
         Args:
             repetitions (int): Number of simulations to run.
-            num_processes (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
+            num_processes (int, optional): Number of processes to use for parallelisation. Defaults to -1, which processes runs sequentially.
+            show_stats (bool, optional): Whether to show combat statistics after the simulation, only the stage breakdown and loot. Defaults to True.
         """
         res = self.__run_sims(repetitions, num_processes)
-        self.pprint_res(res)
+        avg, std = self.prepare_results(res)
+        self.display_stats(avg, std, show_stats)
 
-    def compare_against(self, compare_path: str, repetitions: int, num_processes: int = -1) -> None:
+    def compare_against(self, compare_dict: str, repetitions: int, num_processes: int = -1, show_stats: bool = True) -> None:
         """Run simulations for 2 builds, compare results and print.
 
         Args:
             compare_path (str): Path to valid build config file to compare against the current hunter build.
             repetitions (int): Number of simulations to run.
-            threaded (int, optional): threaded (int, optional): Number of threads to use for parallelisation. Defaults to -1, which processes runs sequentially.
+            num_processes (int, optional): Number of processes to use for parallelisation. Defaults to -1, which processes runs sequentially.
+            show_stats (bool, optional): Whether to show combat statistics after the simulation, only the stage breakdown and loot. Defaults to True.
         """
         print('BUILD 1:')
         res = self.__run_sims(repetitions, num_processes)
-        self.hunter_config_path = compare_path
+        self.hunter_config_dict = compare_dict
         print('BUILD 2:')
         res_c = self.__run_sims(repetitions, num_processes)
-        self.pprint_compare(res, res_c, 'Build Comparison')
+        (res, _), (res_c, _) = self.prepare_results(res), self.prepare_results(res_c)
+        res, res_c = self.make_comparable(res, res_c)
+        self.display_stats(res, res_c, show_stats)
 
     def __run_sims(self, repetitions: int, num_processes: int = -1) -> dict:
         """Run simulations and return results.
@@ -64,22 +70,18 @@ class SimulationManager():
             dict: Results of simulations.
         """
         # prepare sim instances to run
-        with open(self.hunter_config_path, 'r') as f:
-            cfg = yaml.safe_load(f)
-        match cfg["meta"]["hunter"].lower():
+        match self.hunter_config_dict["meta"]["hunter"].lower():
             case "borge":
                 hunter_class = Borge
             case "ozzy":
                 hunter_class = Ozzy
-            case _:
-                raise ValueError(f'Unknown hunter type found in config {f}')
-        hunter_class(self.hunter_config_path).show_build()
+        hunter_class(self.hunter_config_dict).show_build()
         if num_processes > 0:
             with ProcessPoolExecutor(max_workers=num_processes) as e:
-                self.results = list(tqdm(e.map(sim_worker, [hunter_class] * repetitions, [self.hunter_config_path] * repetitions), total=repetitions, leave=True))
+                self.results = list(tqdm(e.map(sim_worker, [hunter_class] * repetitions, [self.hunter_config_dict] * repetitions), total=repetitions, leave=True))
         else:
             for _ in tqdm(range(repetitions), leave=False):
-                self.results.append(Simulation(hunter_class(self.hunter_config_path)).run())
+                self.results.append(Simulation(hunter_class(self.hunter_config_dict)).run())
         
         # prepare results
         res = {'hunter': hunter_class}
@@ -89,20 +91,40 @@ class SimulationManager():
         return res
 
     @classmethod
-    def make_printable(cls, res_dict: dict) -> Tuple[dict, dict]:
-        """Converts the results dict into a printable format and computes averages and standard deviations.
+    def prepare_results(cls, res_dict: Dict) -> Tuple[Dict, Dict]:
+        """Turn a simulation's result dictionary into averages and standard deviations.
 
         Args:
-            res_dict (dict): Results dict.
+            res_dict (Dict): Results of simulations.
 
         Returns:
-            [dict, dict]: Average and standard deviation dicts.
+            Tuple[Dict, Dict]: Averages and standard deviations of the results.
         """
-        res_dict["enrage_log"] = list(chain.from_iterable(res_dict["enrage_log"]))
-        res_dict["first_revive"] = [r[0] for r in res_dict["revive_log"] if r]
-        res_dict["second_revive"] = [r[1] for r in res_dict["revive_log"] if r and len(r) > 1]
-        res_dict["lph"] = [(res_dict["total_loot"][i] / (res_dict["elapsed_time"][i] / (60 * 60))) for i in range(len(res_dict["total_loot"]))]
-        if len(res_dict["final_stage"]) > 1:
+        res_avg, res_std = {}, {}
+        hunter = res_dict.pop('hunter')
+        # Enrages
+        enrage = {'enrage_stacks:_1st_boss': [], 'enrage_stacks:_2nd_boss': [], 'enrage_stacks:_3rd_boss': []}
+        for e in res_dict.pop('enrage_log'):
+            try:
+                enrage['enrage_stacks:_1st_boss'].append(e[0])
+                enrage['enrage_stacks:_2nd_boss'].append(e[1])
+                enrage['enrage_stacks:_3rd_boss'].append(e[2])
+            except:
+                pass
+        res_dict = res_dict | enrage
+        # Revives
+        revives = {'first_revive_stage': [], 'second_revive_stage': []}
+        for e in res_dict.pop("revive_log"):
+            try:
+                revives['first_revive_stage'].append(e[0])
+                revives['second_revive_stage'].append(e[1])
+            except:
+                pass
+        res_dict = res_dict | revives
+        # Loot
+        res_dict['loot_per_hour'] = [(res_dict['total_loot'][i] / (res_dict['elapsed_time'][i] / (60 * 60))) for i in range(len(res_dict['total_loot']))]
+        # compute averages and standard deviations
+        if len(res_dict['elapsed_time']) > 1:
             avg = {k: statistics.fmean(v) for k, v in res_dict.items() if v and type(v[0]) != list}
             std = {k: statistics.stdev(v) for k, v in res_dict.items() if v and type(v[0]) != list}
         else:
@@ -111,199 +133,192 @@ class SimulationManager():
                 if type(v) == list and len(v) == 1:
                     avg[k] = v[0]
             std = {k: 0 for k in res_dict}
-        return avg, std
+        # declare which stats belong to which categories
+        output_format = {
+            'main': ['elapsed_time', 'kills', 'first_revive_stage', 'second_revive_stage', 'enrage_stacks:_1st_boss', 'enrage_stacks:_2nd_boss', 'enrage_stacks:_3rd_boss'],
+            'offence': ['attacks', 'damage', 'crits', 'extra_damage_from_crits', 'multistrikes', 'extra_damage_from_ms', 'decay_damage', 'extra_damage_from_crippling_shots'],
+            'sustain': ['damage_taken', 'regenerated_hp', 'attacks_suffered', 'lifesteal'],
+            'defence': ['evades', 'trickster_evades', 'mitigated_damage'],
+            'effects': ['effect_procs', 'stun_duration_inflicted', 'helltouch_barrier', 'life_of_the_hunt_healing', 'echo_bullets', 'unfair_advantage_healing'],
+            'loot': ['loot_per_hour'],
+        }
+        for k, v in output_format.items():
+            res_avg[k] = {val: avg[val] for val in v if val in avg}
+            res_std[k] = {val: std[val] for val in v if val in std}
+        # custom formatting
+        res_avg['main']['elapsed_time'] = timedelta(seconds=round(avg["elapsed_time"]))
+        res_std['main']['elapsed_time'] = timedelta(seconds=round(std["elapsed_time"]))
+        res_avg['effects']['stun_duration_inflicted'] = timedelta(seconds=round(avg['stun_duration_inflicted']))
+        res_std['effects']['stun_duration_inflicted'] = timedelta(seconds=round(std['stun_duration_inflicted']))
+        res_avg['loot'].update({'best_lph': max(res_dict['loot_per_hour']), 'worst_lph': min(res_dict['loot_per_hour'])})
+        res_std['loot'].update({'best_lph': 0, 'worst_lph': 0})
+        res_avg['final_stage'] = {
+            'aggregates': {'highest': max(res_dict['final_stage']), 'median': floor(statistics.median(res_dict['final_stage'])), 'average': floor(statistics.mean(res_dict['final_stage'])), 'lowest': min(res_dict['final_stage'])},
+            'chances': {i:j/len(res_dict["final_stage"]) for i,j in dict(sorted(Counter(res_dict["final_stage"]).items())).items()},
+            }
+        res_avg['is_comparison'] = False
+        return res_avg, res_std
 
     @classmethod
-    def pprint_res(cls, res_dict: dict, custom_message: str = None, coloured: bool = False) -> None:
-        """Pretty print results dict.
+    def make_comparable(cls, dict1: Dict, dict2: Dict) -> Tuple[Dict, Dict]:
+        """Make two result dictionaries comparable for display.
 
         Args:
-            res_dict (dict): Results dict.
-            custom_message (str, optional): A custom title for the headline of the printout. Defaults to None.
-            coloured (bool, optional): Whether to colour the output or not. Defaults to False.
-        """
-        hunter_class = res_dict.pop('hunter')
-        avg, std = cls.make_printable(res_dict)
-        res_dict["lph"] = [(res_dict["total_loot"][i] / (res_dict["elapsed_time"][i] / (60 * 60))) for i in range(len(res_dict["total_loot"]))]
-        out = []
-        divider = "-" * 10
-        c_off = '\033[0m'
-        out.append(f'Average over {len(res_dict["total_kills"])} run{"s" if len(res_dict["total_kills"]) > 1 else ""}:\t\t {"> " + custom_message + " <" if custom_message else ""}')
-        out.append("#" * 56)
-        c_on = '\033[38;2;93;101;173m' if coloured else ''
-        out.append(f'{c_on}Main stats:{c_off}')
-        out.append(f'{c_on}{divider}{c_off}')
-        if 'enrage_log' in avg:
-            out.append(f'{c_on}Avg Enrage stacks: {avg["enrage_log"]:>20,.2f}\t(+/- {std["enrage_log"]:>10,.2f}){c_off}')
-        if 'first_revive' in avg:
-            out.append(f'{c_on}Revive stage 1st: {avg["first_revive"]:>21,.2f}\t(+/- {std["first_revive"]:>10,.2f}){c_off}')
-        if 'second_revive' in avg:
-            out.append(f'{c_on}Revive stage 2nd: {avg["second_revive"]:>21,.2f}\t(+/- {std["second_revive"]:>10,.2f}){c_off}')
-        out.append(f'{c_on}Avg total kills: {avg["total_kills"]:>22,.2f}\t(+/- {std["total_kills"]:>10,.2f}){c_off}')
-        out.append(f'{c_on}Elapsed time: {str(timedelta(seconds=round(avg["elapsed_time"], 0))):>25}\t(+/- {str(timedelta(seconds=round(std["elapsed_time"], 0))):>10}){c_off}')
-        c_on = '\033[38;2;195;61;3m' if coloured else ''
-        out.append(f'{c_on}Offence:{c_off}')
-        out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg total attacks: {avg["total_attacks"]:>20,.2f}\t(+/- {std["total_attacks"]:>10,.2f}){c_off}')
-        out.append(f'{c_on}Avg total damage: {avg["total_damage"]:>21,.2f}\t(+/- {std["total_damage"]:>10,.2f}){c_off}')
-        if hunter_class == Borge:
-            out.append(f'{c_on}Avg total crits: {avg["total_crits"]:>22,.2f}\t(+/- {std["total_crits"]:>10,.2f}){c_off}')
-            out.append(f'{c_on}Avg total extra from crits: {avg["total_extra_from_crits"]:>11,.2f}\t(+/- {std["total_extra_from_crits"]:>10,.2f}){c_off}')
-        elif hunter_class == Ozzy:
-            out.append(f'{c_on}Avg total multistrikes: {avg["total_multistrikes"]:>15,.2f}\t(+/- {std["total_multistrikes"]:>10,.2f}){c_off}')
-            out.append(f'{c_on}Avg total extra from ms: {avg["total_ms_extra_damage"]:>14,.2f}\t(+/- {std["total_ms_extra_damage"]:>10,.2f}){c_off}')
-            out.append(f'{c_on}Avg total decay damage: {avg["total_decay_damage"]:>15,.2f}\t(+/- {std["total_decay_damage"]:>10,.2f}){c_off}')
-            out.append(f'{c_on}Avg total cripple extra: {avg["total_cripple_extra_damage"]:>14,.2f}\t(+/- {std["total_cripple_extra_damage"]:>10,.2f}){c_off}')
-        c_on = '\033[38;2;1;163;87m' if coloured else ''
-        out.append(f'{c_on}Sustain:{c_off}')
-        out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg total taken: {avg["total_taken"]:>22,.2f}\t(+/- {std["total_taken"]:>10,.2f}){c_off}')
-        out.append(f'{c_on}Avg total regen: {avg["total_regen"]:>22,.2f}\t(+/- {std["total_regen"]:>10,.2f}){c_off}')
-        out.append(f'{c_on}Avg total attacks taken: {avg["total_attacks_suffered"]:>14,.2f}\t(+/- {std["total_attacks_suffered"]:>10,.2f}){c_off}')
-        out.append(f'{c_on}Avg total lifesteal: {avg["total_lifesteal"]:>18,.2f}\t(+/- {std["total_lifesteal"]:>10,.2f}){c_off}')
-        c_on = '\033[38;2;234;186;1m' if coloured else ''
-        out.append(f'{c_on}Defence:{c_off}')
-        out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg total evades: {avg["total_evades"]:>21,.2f}\t(+/- {std["total_evades"]:>10,.2f}){c_off}')
-        if hunter_class == Ozzy:
-            out.append(f'{c_on}Avg trickster evades: {avg["total_trickster_evades"]:>17,.2f}\t(+/- {std["total_trickster_evades"]:>10,.2f}){c_off}')
-        out.append(f'{c_on}Avg total mitigated: {avg["total_mitigated"]:>18,.2f}\t(+/- {std["total_mitigated"]:>10,.2f}){c_off}')
-        c_on = '\033[38;2;14;156;228m' if coloured else ''
-        out.append(f'{c_on}Effects:{c_off}')
-        out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg total effect procs: {avg["total_effect_procs"]:>15,.2f}\t(+/- {std["total_effect_procs"]:>10,.2f}){c_off}')
-        out.append(f'{c_on}Avg stun time inflicted: {str(timedelta(seconds=avg["total_stuntime_inflicted"])):>14.7}\t(+/- {str(timedelta(seconds=std["total_stuntime_inflicted"])):>10.7}){c_off}')
-        if hunter_class == Borge:
-            out.append(f'{c_on}Avg total helltouch: {avg["total_helltouch"]:>18,.2f}\t(+/- {std["total_helltouch"]:>10,.2f}){c_off}')
-            out.append(f'{c_on}Avg total loth: {avg["total_loth"]:>23,.2f}\t(+/- {std["total_loth"]:>10,.2f}){c_off}')
-        elif hunter_class == Ozzy:
-            out.append(f'{c_on}Avg total echo procs: {avg["total_echo"]:>17,.2f}\t(+/- {std["total_echo"]:>10,.2f}){c_off}')
-        out.append(f'{c_on}Avg total potion: {avg["total_potion"]:>21,.2f}\t(+/- {std["total_potion"]:>10,.2f}){c_off}')
-        out.append(f'{c_on}{divider}{c_off}')
-        c_on = '\033[38;2;98;65;169m' if coloured else ''
-        out.append(f'{c_on}Loot:{c_off} (arbitrary values, for comparison only)')
-        out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg LPH: {avg["lph"]:>30,.2f}\t(+/- {std["lph"]:>10,.2f}){c_off}')
-        out.append(f'{c_on}Best LPH: {max(res_dict["lph"]):>29,.2f}\t{c_off}')
-        out.append(f'{c_on}Worst LPH: {min(res_dict["lph"]):>28,.2f}\t{c_off}')
-        out.append(f'{c_on}{divider}{c_off}')
-        c_on = '\033[38;2;128;128;128m'
-        out.append(f'Final stage reached:  MAX:{c_on}{max(res_dict["final_stage"]):>4}{c_off}, MED:{c_on}{floor(statistics.median(res_dict["final_stage"])):>4}{c_off}, AVG:{c_on}{floor(statistics.mean(res_dict["final_stage"])):>4}{c_off}, MIN:{c_on}{min(res_dict["final_stage"]):>4}{c_off}')
-        out.append('')
-        stage_out = []
-        final_stage_pct = {i:j/len(res_dict["final_stage"]) for i,j in Counter(res_dict["final_stage"]).items()}
-        for i, k in enumerate(sorted([*final_stage_pct])):
-            stage_out.append(f'{k:>3d}: {c_on}{final_stage_pct[k]:>6.2%}{c_off}   ' + ("\n" if (i + 1) % 5 == 0 and i > 0 else ""))
-        out.append(''.join(stage_out))
-        out.append('')
-        print('\n'.join(out))
-
-    @classmethod
-    def eval_perf(cls, b1: float, b2: float) -> str:
-        """Evaluate performance of 2 builds by comparing the passed values.
-
-        Args:
-            b1 (float): Performance of build 1.
-            b2 (float): Performance of build 2.
+            dict1 (Dict): Average stats dictionary for build 1.
+            dict2 (Dict): Average stats dictionary for build 2.
 
         Returns:
-            str: Performance evaluation: "BUILD 1/2 (+ diff%)".
+            Tuple[Dict, Dict]: Flat and percentage difference dictionaries for the two builds.
         """
-        if b1 > b2:
-            if b2 == 0:
-                return f'>> BUILD 1 (+{b1:,.2f})'
-            return f'>> BUILD 1 (+{(b1/b2)-1:>7,.2%})'
-        elif b2 > b1:
-            if b1 == 0:
-                return f'>> BUILD 2 (+{b2:,.2f})'
-            return f'>> BUILD 2 (+{(b2/b1)-1:>7,.2%})'
-        else:
-            return ''
+        flat_diff, pct_diff = {}, {}
+        flat_diff['is_comparison'] = not dict1.pop('is_comparison')
+        for k, v in dict1.items():
+            if k not in ['final_stage']:
+                flat_diff[k], pct_diff[k] = {}, {}
+                for vk in v:
+                    if vk not in ['elapsed_time', 'worst_lph', 'enrage_stacks:_1st_boss', 'enrage_stacks:_2nd_boss', 'enrage_stacks:_3rd_boss']:
+                        if dict1[k][vk] > dict2[k][vk]:
+                            flat_diff[k][vk] = dict1[k][vk] - dict2[k][vk]
+                            pct_diff[k][vk] = (dict1[k][vk] / dict2[k][vk]) - 1 if dict2[k][vk] != 0 else float('inf') # BUILD 1
+                        else:
+                            flat_diff[k][vk] = dict2[k][vk] - dict1[k][vk]
+                            # negative value signals output function that this is build2 instead of 1
+                            pct_diff[k][vk] = -1 * ((dict2[k][vk] / dict1[k][vk]) - 1) if dict1[k][vk] != 0 else -1 # BUILD 2
+                    else:
+                        if dict2[k][vk] > dict1[k][vk]:
+                            flat_diff[k][vk] = dict2[k][vk] - dict1[k][vk]
+                            pct_diff[k][vk] = (dict2[k][vk] / dict1[k][vk]) - 1 if dict1[k][vk] != 0 else -1 # BUILD 1
+                        else:
+                            flat_diff[k][vk] = dict1[k][vk] - dict2[k][vk]
+                            pct_diff[k][vk] = -1 * ((dict1[k][vk] / dict2[k][vk]) - 1) if dict2[k][vk] != 0 else float('inf') # BUILD 2
+        flat_diff.update({'final_stage': {'build_1': dict1['final_stage'], 'build_2': dict2['final_stage']}})
+        return flat_diff, pct_diff
 
     @classmethod
-    def pprint_compare(cls, res1: dict, res2: dict, custom_message: str = None, coloured: bool = False) -> None:
-        """Pretty print comparison of 2 results dicts.
+    def display_stats(cls, dict1: Dict, dict2: Dict, show_stats: bool) -> None:
+        """Display combat statistics in a table.
 
         Args:
-            res1 (dict): Result dict of the first build
-            res2 (dict): Result dict of the second build
-            custom_message (str, optional): A custom title for the headline of the printout. Defaults to None.
-            coloured (bool, optional): Whether to colour the output or not. Defaults to False.
+            dict1 (Dict): Average stats dictionary for single runs, or flat difference dictionary for comparisons.
+            dict2 (Dict): Standard deviation dictionary for single runs, or percentage difference dictionary for comparisons.
+            show_stats (bool): Whether to show combat statistics after the simulation, or only the stage breakdown and loot.
         """
-        hunter_class = res1.pop('hunter')
-        res2.pop('hunter')
-        avg1, _ = cls.make_printable(res1)
-        avg2, _ = cls.make_printable(res2)
-        res1["lph"] = [(res1["total_loot"][i] / (res1["elapsed_time"][i] / (60 * 60))) for i in range(len(res1["total_loot"]))]
-        res2["lph"] = [(res2["total_loot"][i] / (res2["elapsed_time"][i] / (60 * 60))) for i in range(len(res2["total_loot"]))]
-        out = []
-        divider = "-" * 10
-        c_off = '\033[0m'
-        out.append(f'Average over {len(res1["total_kills"])} run{"s" if len(res1["total_kills"]) > 1 else ""}:\t\t {"> " + custom_message + " <" if custom_message else ""}')
-        out.append("#" * 56)
-        c_on = '\033[38;2;93;101;173m' if coloured else ''
-        out.append(f'{c_on}Main stats:{c_off}')
-        out.append(f'{c_on}{divider}{c_off}')
-        if 'enrage_log' in avg1 and 'enrage_log' in avg2:
-            out.append(f'{c_on}Avg Enrage stacks: {round(max(avg1["enrage_log"], avg2["enrage_log"])-min(avg1["enrage_log"], avg2["enrage_log"]), 2):>20,.2f} stacks less{c_off}{SimulationManager.eval_perf(avg1["enrage_log"], avg2["enrage_log"]):>24}')
-        if 'first_revive' in avg1 and 'first_revive' in avg2:
-            out.append(f'{c_on}Revive stage 1st: {max(avg1["first_revive"], avg2["first_revive"])-min(avg1["first_revive"], avg2["first_revive"]):>21,.2f} stages later{c_off}{SimulationManager.eval_perf(avg1["first_revive"], avg2["first_revive"]):>23}')
-        if 'second_revive' in avg1 and 'second_revive' in avg2:
-            out.append(f'{c_on}Revive stage 2nd: {max(avg1["second_revive"], avg2["second_revive"])-min(avg1["second_revive"], avg2["second_revive"]):>21,.2f} stages later{c_off}{SimulationManager.eval_perf(avg1["second_revive"], avg2["second_revive"]):>23}')
-        out.append(f'{c_on}Avg total kills: {max(avg1["total_kills"], avg2["total_kills"])-min(avg1["total_kills"], avg2["total_kills"]):>22,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_kills"], avg2["total_kills"]):>31}')
-        out.append(f'{c_on}Elapsed time: {str(max(timedelta(seconds=round(avg1["elapsed_time"], 0)), timedelta(seconds=round(avg2["elapsed_time"], 0)))-min(timedelta(seconds=round(avg1["elapsed_time"], 0)), timedelta(seconds=round(avg2["elapsed_time"], 0)))):>25} faster{c_off}{SimulationManager.eval_perf(timedelta(seconds=round(avg1["elapsed_time"], 0)), timedelta(seconds=round(avg2["elapsed_time"], 0))):>29}')
-        c_on = '\033[38;2;195;61;3m' if coloured else ''
-        out.append(f'{c_on}Offence:{c_off}')
-        out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg total attacks: {max(avg1["total_attacks"], avg2["total_attacks"])-min(avg1["total_attacks"], avg2["total_attacks"]):>20,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_attacks"], avg2["total_attacks"]):>31}')
-        out.append(f'{c_on}Avg total damage: {max(avg1["total_damage"], avg2["total_damage"])-min(avg1["total_damage"], avg2["total_damage"]):>21,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_damage"], avg2["total_damage"]):>31}')
-        if hunter_class == Borge:
-            out.append(f'{c_on}Avg total crits: {max(avg1["total_crits"], avg2["total_crits"])-min(avg1["total_crits"], avg2["total_crits"]):>22,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_crits"], avg2["total_crits"]):>31}')
-            out.append(f'{c_on}Avg total extra from crits: {max(avg1["total_extra_from_crits"], avg2["total_extra_from_crits"])-min(avg1["total_extra_from_crits"], avg2["total_extra_from_crits"]):>11,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_extra_from_crits"], avg2["total_extra_from_crits"]):>31}')
-        elif hunter_class == Ozzy:
-            out.append(f'{c_on}Avg total multistrikes: {max(avg1["total_multistrikes"], avg2["total_multistrikes"])-min(avg1["total_multistrikes"], avg2["total_multistrikes"]):>15,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_multistrikes"], avg2["total_multistrikes"]):>31}')
-            out.append(f'{c_on}Avg total extra from ms: {max(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"])-min(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"]):>14,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_ms_extra_damage"], avg2["total_ms_extra_damage"]):>31}')
-            out.append(f'{c_on}Avg total decay damage: {max(avg1["total_decay_damage"], avg2["total_decay_damage"])-min(avg1["total_decay_damage"], avg2["total_decay_damage"]):>15,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_decay_damage"], avg2["total_decay_damage"]):>31}')
-            out.append(f'{c_on}Avg total decay damage: {max(avg1["total_cripple_extra_damage"], avg2["total_cripple_extra_damage"])-min(avg1["total_cripple_extra_damage"], avg2["total_cripple_extra_damage"]):>15,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_cripple_extra_damage"], avg2["total_cripple_extra_damage"]):>31}')
-        c_on = '\033[38;2;1;163;87m' if coloured else ''
-        out.append(f'{c_on}Sustain:{c_off}')
-        out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg total taken: {max(avg1["total_taken"], avg2["total_taken"])-min(avg1["total_taken"], avg2["total_taken"]):>22,.2f} less{c_off}{SimulationManager.eval_perf(avg1["total_taken"], avg2["total_taken"]):>31}')
-        out.append(f'{c_on}Avg total regen: {max(avg1["total_regen"], avg2["total_regen"])-min(avg1["total_regen"], avg2["total_regen"]):>22,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_regen"], avg2["total_regen"]):>31}')
-        out.append(f'{c_on}Avg total attacks taken: {max(avg1["total_attacks_suffered"], avg2["total_attacks_suffered"])-min(avg1["total_attacks_suffered"], avg2["total_attacks_suffered"]):>14,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_attacks_suffered"], avg2["total_attacks_suffered"]):>31}')
-        out.append(f'{c_on}Avg total lifesteal: {max(avg1["total_lifesteal"], avg2["total_lifesteal"])-min(avg1["total_lifesteal"], avg2["total_lifesteal"]):>18,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_lifesteal"], avg2["total_lifesteal"]):>31}')
-        c_on = '\033[38;2;234;186;1m' if coloured else ''
-        out.append(f'{c_on}Defence:{c_off}')
-        out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg total evades: {max(avg1["total_evades"], avg2["total_evades"])-min(avg1["total_evades"], avg2["total_evades"]):>21,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_evades"], avg2["total_evades"]):>31}')
-        if hunter_class == Ozzy:
-            out.append(f'{c_on}Avg trickster evades: {max(avg1["total_trickster_evades"], avg2["total_trickster_evades"])-min(avg1["total_trickster_evades"], avg2["total_trickster_evades"]):>17,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_trickster_evades"], avg2["total_trickster_evades"]):>31}')
-        out.append(f'{c_on}Avg total mitigated: {max(avg1["total_mitigated"], avg2["total_mitigated"])-min(avg1["total_mitigated"], avg2["total_mitigated"]):>18,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_mitigated"], avg2["total_mitigated"]):>31}')
-        c_on = '\033[38;2;14;156;228m' if coloured else ''
-        out.append(f'{c_on}Effects:{c_off}')
-        out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg total effect procs: {max(avg1["total_effect_procs"], avg2["total_effect_procs"])-min(avg1["total_effect_procs"], avg2["total_effect_procs"]):>15,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_effect_procs"], avg2["total_effect_procs"]):>31}')
-        out.append(f'{c_on}Avg stun time inflicted: {str(timedelta(seconds=max(avg1["total_stuntime_inflicted"], avg2["total_stuntime_inflicted"])-min(avg1["total_stuntime_inflicted"], avg2["total_stuntime_inflicted"]))):>14.7} more{c_off}{SimulationManager.eval_perf(avg1["total_stuntime_inflicted"], avg2["total_stuntime_inflicted"]):>31}')
-        if hunter_class == Borge:
-            out.append(f'{c_on}Avg total helltouch: {max(avg1["total_helltouch"], avg2["total_helltouch"])-min(avg1["total_helltouch"], avg2["total_helltouch"]):>18,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_helltouch"], avg2["total_helltouch"]):>31}')
-            out.append(f'{c_on}Avg total loth: {max(avg1["total_loth"], avg2["total_loth"])-min(avg1["total_loth"], avg2["total_loth"]):>23,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_loth"], avg2["total_loth"]):>31}')
-        elif hunter_class == Ozzy:
-            out.append(f'{c_on}Avg total loth: {max(avg1["total_echo"], avg2["total_echo"])-min(avg1["total_echo"], avg2["total_echo"]):>23,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_echo"], avg2["total_echo"]):>31}')
-        out.append(f'{c_on}Avg total potion: {max(avg1["total_potion"], avg2["total_potion"])-min(avg1["total_potion"], avg2["total_potion"]):>21,.2f} more{c_off}{SimulationManager.eval_perf(avg1["total_potion"], avg2["total_potion"]):>31}')
-        out.append(f'{c_on}{divider}{c_off}')
-        c_on = '\033[38;2;98;65;169m' if coloured else ''
-        out.append(f'{c_on}Loot:{c_off} (arbitrary values, for comparison only)')
-        out.append(f'{c_on}{divider}{c_off}')
-        out.append(f'{c_on}Avg LPH: {max(avg1["lph"], avg2["lph"])-min(avg1["lph"], avg2["lph"]):>30,.2f} more{c_off}{SimulationManager.eval_perf(avg1["lph"], avg2["lph"]):>31}')
-        out.append(f'{c_on}Best LPH: {max(max(res1["lph"]), max(res2["lph"]))-min(max(res1["lph"]), max(res2["lph"])):>29,.2f} more{c_off}{SimulationManager.eval_perf(max(res1["lph"]), max(res2["lph"])):>31}')
-        out.append(f'{c_on}Worst LPH: {max(min(res1["lph"]), min(res2["lph"]))-min(min(res1["lph"]), min(res2["lph"])):>28,.2f} more{c_off}{SimulationManager.eval_perf(min(res1["lph"]), min(res2["lph"])):>31}')
-        out.append(f'{c_on}{divider}{c_off}')
-        c_on = '\033[38;2;128;128;128m'
-        out.append(f'Final stage reached by BUILD 1:  MAX:{c_on}{max(res1["final_stage"]):>4}{c_off}, MED:{c_on}{floor(statistics.median(res1["final_stage"])):>4}{c_off}, AVG:{c_on}{floor(statistics.mean(res1["final_stage"])):>4}{c_off}, MIN:{c_on}{min(res1["final_stage"]):>4}{c_off}')
-        out.append(f'Final stage reached by BUILD 2:  MAX:{c_on}{max(res2["final_stage"]):>4}{c_off}, MED:{c_on}{floor(statistics.median(res2["final_stage"])):>4}{c_off}, AVG:{c_on}{floor(statistics.mean(res2["final_stage"])):>4}{c_off}, MIN:{c_on}{min(res2["final_stage"]):>4}{c_off}')
-        out.append('')
-        out.append('')
-        print('\n'.join(out))
+        def get_all_values(d: Dict) -> Generator:
+            """Nested helper function to yield all values from a nested dictionary.
+
+            Args:
+                d (Dict): Dictionary to extract values from.
+
+            Yields:
+                Generator: Values from the dictionary.
+            """
+            for _, v in d.items():
+                if not isinstance(v, dict):
+                    if not isinstance(v, timedelta):
+                        yield v
+                else:
+                    yield from get_all_values(v)
+
+        console = rich.get_console()
+        # base table
+        stats_table = rich.table.Table(title="Combat Statistics", expand=True, show_header=True, header_style="bold dim cyan", caption='*) Loot values are arbitrary and for build comparison only.\n\u2020) Smaller values are better here.')
+        if is_comparison := dict1.pop('is_comparison'):
+            # different from regular runs because comparisons use row highlights for builds1/2, so no colours needed
+            stats_table.add_column("Category", style="dim cyan")
+            stats_table.add_column("Statistic",)
+            stats_table.add_column("Average diff.", justify='right',)
+            stats_table.add_column(r"% diff", justify='right',)
+            stats_table.add_column("Winner", justify='center',)
+            # some options: light_goldenrod1, light_goldenrod2, light_pink1, light_salmon1, light_salmon3, pale_violet_red1,
+            # misty_rose3, tan, dark_sea_green1, dark_sea_green2, light_steel_blue, pale_green1, 
+            cb1 = '[light_salmon1]'
+            cb2 = '[light_steel_blue]'
+            cbn = '[dim]'
+        else:
+            stats_table.add_column("Category", style="dim cyan")
+            stats_table.add_column("Statistic", style="cyan")
+            stats_table.add_column("Average", justify='right', style="yellow")
+            stats_table.add_column("+/- Std Dev", justify='right', style="dim yellow")
+        keys_to_display = ['main', 'offence', 'sustain', 'defence', 'effects', 'loot'] if show_stats else ['loot']
+        # for combat stat table column widths, adjusted via output formatting
+        max_width_avg = max([max(len(f'{k:,.2f}') for k in get_all_values(dict1))])
+        max_width_std = max([max(len(f'{k:,.2f}') for k in get_all_values(dict2))])
+        for k in keys_to_display:
+            last_key = ''
+            for subkey in dict1[k]:
+                main_cat = capwords(k if k != last_key else '')
+                if main_cat == 'Loot': main_cat += '*'
+                if subkey in ['best_lph', 'worst_lph']:
+                    # to capitalise LPH, capwords doesn't do that
+                    cstat = ' '.join([capwords(subkey.split('_')[0]), 'LPH'])
+                else:
+                    cstat = ' '.join(capwords(subkey).split('_'))
+                # no decimal formatting for timedeltas
+                val = f'{str(dict1[k][subkey]):>{max_width_avg}}' if isinstance(dict1[k][subkey], timedelta) else f'{dict1[k][subkey]:>{max_width_avg},.2f}'
+                if is_comparison:
+                    row_style = cb1 if dict2[k][subkey] > 0 else cb2 if dict2[k][subkey] < 0 else cbn
+                    cstat = f'{row_style}{cstat}'
+                    val = f'{row_style}{val}'
+                    if subkey in ['elapsed_time', 'worst_lph', 'enrage_stacks:_1st_boss', 'enrage_stacks:_2nd_boss', 'enrage_stacks:_3rd_boss']:
+                        cstat += '[dim]\u2020'
+                    if dict2[k][subkey] > 0:
+                        diff = f'{row_style}{abs(dict2[k][subkey]):>{max_width_std},.2%}'
+                        winner = f'{row_style}1'
+                    elif dict2[k][subkey] < 0:
+                        diff = f'{row_style}{abs(dict2[k][subkey]):>{max_width_std},.2%}'
+                        winner = f'{row_style}2'
+                    else:
+                        diff = f'{row_style}-'
+                        winner = f'{row_style}-'
+                    stats_table.add_row(main_cat, cstat, val, diff, winner)
+                else:
+                    stdev = f'{str(dict2[k][subkey]):>{max_width_std}}' if isinstance(dict1[k][subkey], timedelta) else f'{dict2[k][subkey]:>{max_width_std},.2f}'
+                    stats_table.add_row(main_cat, cstat, val, stdev)
+                if last_key != k:
+                    # so the main category is only shown everytime it changes, makes for a less busy table
+                    last_key = k
+            stats_table.add_section()
+        stage_table = rich.table.Table(title="Final Stage Highlights", show_header=True, header_style="bold dim cyan", expand=True)
+        stage_table.add_column("Build", style="cyan")
+        stage_table.add_column("Highest", justify='right', style="cyan")
+        stage_table.add_column("Median", justify='right', style="cyan")
+        stage_table.add_column("Average", justify='right', style="cyan")
+        stage_table.add_column("Lowest", justify='right', style="cyan")
+        if is_comparison:
+            # add both builds + min-level alerts in case of boss deaths
+            row1 = [f'Build 1', *map(str, dict1['final_stage']['build_1']['aggregates'].values())]
+            row2 = [f'Build 2', *map(str, dict1['final_stage']['build_2']['aggregates'].values())]
+            if dict1['final_stage']['build_1']['aggregates']['highest'] > dict1['final_stage']['build_1']['aggregates']['lowest'] and dict1['final_stage']['build_1']['aggregates']['lowest'] % 100 == 0:
+                row1[-1] = f"[red]{row1[-1]} ({dict1['final_stage']['build_1']['chances'][dict1['final_stage']['build_1']['aggregates']['lowest']]:.2%})"
+            if dict1['final_stage']['build_2']['aggregates']['highest'] > dict1['final_stage']['build_2']['aggregates']['lowest'] and dict1['final_stage']['build_2']['aggregates']['lowest'] % 100 == 0:
+                row2[-1] = f"[red]{row2[-1]} ({dict1['final_stage']['build_2']['chances'][dict1['final_stage']['build_2']['aggregates']['lowest']]:.2%})"
+            stage_table.add_row(*row1, style=cb1[1:-1])
+            stage_table.add_row(*row2, style=cb2[1:-1])
+        else:
+            # just add build 1 for single-hunter simulations
+            row1 = ['Build 1', *map(str, dict1['final_stage']['aggregates'].values())]
+            if dict1['final_stage']['aggregates']['highest'] > dict1['final_stage']['aggregates']['lowest'] and dict1['final_stage']['aggregates']['lowest'] % 100 == 0:
+                row1[-1] = f"[red]{row1[-1]} ({dict1['final_stage']['chances'][dict1['final_stage']['aggregates']['lowest']]:.2%})"
+            stage_table.add_row(*row1)
+        if not is_comparison:
+            # add stage breakdown panel for single-hunter simulations
+            stage_breakdown_table = rich.table.Table(title="Stage Results").grid(padding=0, expand=True)
+            items_per_row = 6
+            for _ in range(items_per_row):
+                stage_breakdown_table.add_column("", style="cyan")
+                stage_breakdown_table.add_column("", style="dim")
+            # dict1['final_stage']['chances'] = dict(sorted(dict1['final_stage']['chances'].items(), key=lambda item: item[0]))
+            stages = list(map(lambda x: f'{x:>4}', dict1['final_stage']['chances'].keys()))
+            chances = list(map(lambda x: f'{x:>7,.2%}', dict1['final_stage']['chances'].values()))
+            for i in range(0, len(dict1['final_stage']['chances'].keys()), items_per_row):
+                row = [e for e in chain(*zip(stages[i:i+items_per_row], chances[i:i+items_per_row]))]
+                stage_breakdown_table.add_row(*row)
+            sbt_panel = rich.panel.Panel(stage_breakdown_table, title="Stage Result Breakdown", border_style="bold dim cyan")
+        table_group = rich.console.Group(
+            *[stats_table, stage_table, sbt_panel] if not is_comparison else [stats_table, stage_table],
+        )
+        panel = rich.panel.Panel.fit(table_group, title="Simulation Results", border_style="bold dim cyan")
+        console.print(panel)
 
 
 class Simulation():
@@ -332,7 +347,7 @@ class Simulation():
         else:
             self.enemies = [Enemy(f'E{self.current_stage:>3}{i+1:>3}', hunter, self.current_stage, self) for i in range(10)]
 
-    def run(self) -> defaultdict:
+    def run(self) -> Dict:
         """Run a single simulation.
 
         Returns:
@@ -354,7 +369,7 @@ class Simulation():
         self.current_stage = 0
         self.elapsed_time = 0
         self.queue = []
-        hpush(self.queue, (hunter.speed, 1, 'hunter'))
+        hpush(self.queue, (round(hunter.speed, 3), 1, 'hunter'))
         hpush(self.queue, (self.elapsed_time, 3, 'regen'))
         while not hunter.is_dead():
             logging.debug('')
@@ -407,17 +422,6 @@ class Simulation():
             self.complete_stage()
         raise ValueError('Hunter is dead, no return triggered')
 
-    # def run_upgrade_experiment(self, repetitions: int, stat_boost: int) -> defaultdict:
-    #     res = list()
-    #     for stat in tqdm(['hp', 'power', 'regen', 'damage_reduction', 'evade_chance', 'effect_chance', 'special_chance', 'special_damage', 'speed', 'default']):
-    #         h = deepcopy(self.hunter)
-    #         if stat != 'default':
-    #             h.base_stats[stat] += stat_boost
-    #         print(h)
-    #         r = self.__run_sim(h, repetitions)
-    #         res.append((stat, {k: round(statistics.fmean(v), 2) for k, v in r.items()}))
-    #     sorted_res = sorted(res, key=lambda x: x[1]['total_kills'], reverse=True)
-    #     print(sorted_res)
 
 def main():
     num_sims = 25

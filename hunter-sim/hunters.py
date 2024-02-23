@@ -1,9 +1,8 @@
 import logging
 import random
 from heapq import heappush as hpush
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
-import yaml
 from util.exceptions import BuildConfigError
 
 hunter_name_spacing: int = 7
@@ -68,20 +67,20 @@ class Hunter:
         """
         return {
             'final_stage': self.current_stage,
-            'total_kills': self.total_kills,
+            'kills': self.total_kills,
             'revive_log': self.revive_log,
             'enrage_log': self.enrage_log,
-            'total_attacks': self.total_attacks,
-            'total_damage': self.total_damage,
-            'total_taken': self.total_taken,
-            'total_regen': self.total_regen,
-            'total_attacks_suffered': self.total_attacks_suffered,
-            'total_lifesteal': self.total_lifesteal,
-            'total_evades': self.total_evades,
-            'total_mitigated': self.total_mitigated,
-            'total_effect_procs': self.total_effect_procs,
+            'attacks': self.total_attacks,
+            'damage': self.total_damage,
+            'damage_taken': self.total_taken,
+            'regenerated_hp': self.total_regen,
+            'attacks_suffered': self.total_attacks_suffered,
+            'lifesteal': self.total_lifesteal,
+            'evades': self.total_evades,
+            'mitigated_damage': self.total_mitigated,
+            'effect_procs': self.total_effect_procs,
             'total_loot': self.total_loot,
-            'total_stuntime_inflicted': self.total_stuntime_inflicted,
+            'stun_duration_inflicted': self.total_stuntime_inflicted,
         }
 
     @staticmethod
@@ -96,29 +95,27 @@ class Hunter:
         """
         raise NotImplementedError('load_dummy() not implemented for Hunter() base class')
 
-    def load_build(self, config_path: str) -> None:
-        """Load a build config from a yaml file, validate it and assign the stats to the hunter's internal dictionaries.
+    def load_build(self, config_dict: Dict) -> None:
+        """Load a build config from build config dict, validate it and assign the stats to the hunter's internal dictionaries.
 
         Args:
-            config_path (str): The path to the config file.
+            config_dict (dict): A build config dictionary object.
 
         Raises:
             ValueError: If the config file is invalid.
         """
-        with open(config_path, 'r') as f:
-            cfg = yaml.safe_load(f)
-        if not (invalid_keys := self.validate_config(cfg)) == set():
+        if not (invalid_keys := self.validate_config(config_dict)) == set():
             raise BuildConfigError(invalid_keys)
-        self.meta = cfg["meta"]
-        self.base_stats = cfg["stats"]
-        self.talents = cfg["talents"]
-        self.attributes = cfg["attributes"]
-        self.mods = cfg["mods"]
-        self.inscryptions = cfg["inscryptions"]
-        self.relics = cfg["relics"]
-        self.gems = cfg["gems"]
+        self.meta = config_dict["meta"]
+        self.base_stats = config_dict["stats"]
+        self.talents = config_dict["talents"]
+        self.attributes = config_dict["attributes"]
+        self.mods = config_dict["mods"]
+        self.inscryptions = config_dict["inscryptions"]
+        self.relics = config_dict["relics"]
+        self.gems = config_dict["gems"]
 
-    def validate_config(self, cfg: dict) -> bool:
+    def validate_config(self, cfg: Dict) -> bool:
         """Validate a build config dict against a perfect dummy build to see if they have identical keys in themselves and all value entries.
 
         Args:
@@ -288,12 +285,27 @@ class Hunter:
         else:
             attr = f'({attr_spent:>3}/{c_on}{attr_avail:>3}{c_off})'
         invalid_out = f'\033[91mInvalid\033[0m:\t{(", ".join(invalid)).title()}'
+        gem_names = {
+            "attraction_gem": "ATT",
+            "attraction_catch-up": "C0-99",
+            "attraction_node_#3": "AN-3",
+            "innovation_node_#3" : "IN-3",
+            "creation_node_#1": "CR-1",
+            "creation_node_#2": "CR-2",
+            "creation_node_#3": "CR-3",
+        }
+        gem_state = {
+            0: u'\u2718',
+            1: u'\u2714',
+        }
         if not in_colour:
             c_on = c_off
         print(self)
         print('Stats {}:\t{} {} {}   {} {} {}   {} {} {}'.format(f'({c_on}l.{c_off}{self.meta["level"]:>3})', *self.base_stats.values()))
         print(f'Tal {tals}:\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.talents.items()))
         print(f'Att {attr}:\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.attributes.items()))
+        print(f'Gems:\t\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join(gem_names[k]), c_off, gem_state[v] if k not in ['attraction_gem', 'attraction_catch-up'] else v) for k, v in self.gems.items()))
+        print(f'Relics:\t\t' + ' '.join('[{}{}{}: {}]'.format(c_on, ''.join([l[0].upper() for l in k.split('_')]), c_off, v) for k, v in self.relics.items()))
         if invalid:
             print(invalid_out)
         print('\n'.join(['-'*120]))
@@ -397,9 +409,9 @@ class Borge(Hunter):
         },
     }
 
-    def __init__(self, config_path: str):
+    def __init__(self, config_dict: Dict):
         super(Borge, self).__init__(name='Borge')
-        self.__create__(config_path)
+        self.__create__(config_dict)
 
         # statistics
         # offence
@@ -412,14 +424,14 @@ class Borge(Hunter):
         self.total_potion: float = 0
         self.total_inhaler: float = 0
 
-    def __create__(self, config_path: str) -> None:
-        """Create a Borge instance from a build config file. Computes all final stats from stat growth formulae and additional
+    def __create__(self, config_dict: Dict) -> None:
+        """Create a Borge instance from a build config dict. Computes all final stats from stat growth formulae and additional
         power sources.
 
         Args:
-            config_path (str): The path to the build config file.
+            config_dict (dict): Build config dictionary object.
         """
-        self.load_build(config_path)
+        self.load_build(config_dict)
         # hp
         self.max_hp = (
             (
@@ -804,11 +816,11 @@ class Borge(Hunter):
             List: List of all collected stats.
         """
         return super(Borge, self).get_results() | {
-            'total_crits': self.total_crits,
-            'total_extra_from_crits': self.total_extra_from_crits,
-            'total_helltouch': self.total_helltouch,
-            'total_loth': self.total_loth,
-            'total_potion': self.total_potion,
+            'crits': self.total_crits,
+            'extra_damage_from_crits': self.total_extra_from_crits,
+            'helltouch_barrier': self.total_helltouch,
+            'life_of_the_hunt_healing': self.total_loth,
+            'unfair_advantage_healing': self.total_potion,
         }
 
 class Ozzy(Hunter):
@@ -901,9 +913,9 @@ class Ozzy(Hunter):
         },
     }
 
-    def __init__(self, config_path: str):
+    def __init__(self, config_dict: Dict):
         super(Ozzy, self).__init__(name='Ozzy')
-        self.__create__(config_path)
+        self.__create__(config_dict)
         self.trickster_charges: int = 0
         self.crippling_on_target: int = 0
         self.empowered_regen: int = 0
@@ -925,14 +937,14 @@ class Ozzy(Hunter):
         # effects
         self.total_echo: int = 0
 
-    def __create__(self, config_path: str) -> None:
-        """Create an Ozzy instance from a build config file. Computes all final stats from stat growth formulae and
+    def __create__(self, config_dict: Dict) -> None:
+        """Create an Ozzy instance from a build config dict. Computes all final stats from stat growth formulae and
         additional power sources.
 
         Args:
-            config_path (str): The path to the build config file.
+            config_dict (dict): Build config dictionary object.
         """
-        self.load_build(config_path)
+        self.load_build(config_dict)
         # hp
         self.max_hp = (
             (
@@ -1294,22 +1306,24 @@ class Ozzy(Hunter):
             List: List of all collected stats.
         """
         return super(Ozzy, self).get_results() | {
-            'total_multistrikes': self.total_multistrikes,
-            'total_ms_extra_damage': self.total_ms_extra_damage,
-            'total_potion': self.total_potion,
-            'total_trickster_evades': self.total_trickster_evades,
-            'total_decay_damage': self.total_decay_damage,
-            'total_cripple_extra_damage': self.total_cripple_extra_damage,
-            'total_echo': self.total_echo,
+            'multistrikes': self.total_multistrikes,
+            'extra_damage_from_ms': self.total_ms_extra_damage,
+            'unfair_advantage_healing': self.total_potion,
+            'trickster_evades': self.total_trickster_evades,
+            'decay_damage': self.total_decay_damage,
+            'extra_damage_from_crippling_strikes': self.total_cripple_extra_damage,
+            'echo_bullets': self.total_echo,
         }
 
 
 if __name__ == "__main__":
     b = Borge('builds/current_borge.yaml')
-    print(b)
-    b.complete_stage(100)
-    print(b)
-    o = Ozzy('builds/current_ozzy.yaml')
-    print(o)
-    o.complete_stage(100)
-    print(o)
+    b.show_build()
+    # print(b)
+    # b.complete_stage(100)
+    # print(b)
+    # o = Ozzy('builds/current_ozzy.yaml')
+    # print(o)
+    # o.complete_stage(100)
+    # print(o)
+    

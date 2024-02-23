@@ -88,7 +88,7 @@ The sim needs <ins>at least Python v3.10</ins> to function.
 
 > ModuleNotFoundError: No module named `xyz`
 
-[Installation](#installation) step 6 deals with installing all the required modules to run the code. If you're still seeing this error after running the command, then you might have multiple Python versions installed and the modules were installed into the wrong one. Try installing the missing modules using `python -m pip install xyz`.
+[Installation](#installation) step 6 deals with installing all the required modules to run the code. If you're still seeing this error after running the command, then either 1. an update might have introduced a new package and you need to repeat [Installation](#installation) step 6 or 2. you might have multiple Python versions installed and the modules were installed into the wrong one. Try installing the missing modules using `python -m pip install xyz`.
 
 > Terminal window shows:
 
