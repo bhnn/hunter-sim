@@ -257,7 +257,7 @@ class Enemy:
         Returns:
             str: The stats as a formatted string.
         """
-        return f'[{self.name:>{unit_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>18}] [AP:{self.power:>7.2f}] [Regen:{self.regen:>6.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: ------] [CHC: {self.special_chance:>6.4f}] [CHD: {self.special_damage:>5.2f}] [Speed:{self.speed:>5.2f}]{(f" [Speed2:{self.speed2:>6.2f}]") if self.has_special else ""}'
+        return f'[{self.name:>{unit_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>18}] [AP:{self.power:>8.2f}] [Regen:{self.regen:>7.2f}] [DR: {self.damage_reduction:>6.2%}] [Evasion: {self.evade_chance:>6.2%}] [Effect: ------] [CHC: {self.special_chance:>6.2%}] [CHD: {self.special_damage:>5.2f}] [Speed:{self.speed:>5.2f}]{(f" [Speed2:{self.speed2:>6.2f}]") if self.has_special else ""}'
 
 
 class Boss(Enemy):
