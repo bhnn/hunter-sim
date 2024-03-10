@@ -79,6 +79,23 @@ class Hunter:
         else:
             return globals()[cfg["meta"]["hunter"].title()](cfg)
 
+    def as_dict(self) -> dict:
+        """Create a build config dictionary from a loaded hunter instance.
+
+        Returns:
+            dict: The hunter build dict.
+        """
+        return {
+            "meta": self.meta,
+            "stats": self.base_stats,
+            "talents": self.talents,
+            "attributes": self.attributes,
+            "mods": self.mods,
+            "inscryptions": self.inscryptions,
+            "relics": self.relics,
+            "gems": self.gems,
+        }
+
     def get_results(self) -> List:
         """Fetch the hunter results for end-of-run statistics.
 
