@@ -1032,6 +1032,7 @@ class Ozzy(Hunter):
         self.total_ms_extra_damage: float = 0
         self.total_decay_damage: float = 0
         self.total_cripple_extra_damage: float = 0
+        self.medusa_kills: int = 0
 
         # sustain
         self.total_potion: float = 0
@@ -1419,6 +1420,7 @@ class Ozzy(Hunter):
             'trickster_evades': self.total_trickster_evades,
             'decay_damage': self.total_decay_damage,
             'extra_damage_from_crippling_strikes': self.total_cripple_extra_damage,
+            'medusa_kills': self.medusa_kills,
             'echo_bullets': self.total_echo,
         }
 

@@ -206,6 +206,7 @@ class Enemy:
         self.heal_hp(regen_value, 'regen')
         # handle death from Ozzy's Gift of Medusa
         if self.is_dead():
+            self.sim.hunter.medusa_kills += 1
             self.on_death()
 
     def stun(self, duration: float) -> None:
