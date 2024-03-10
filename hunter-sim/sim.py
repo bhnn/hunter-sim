@@ -139,7 +139,7 @@ class SimulationManager():
             'offence': ['attacks', 'damage', 'crits', 'extra_damage_from_crits', 'multistrikes', 'extra_damage_from_ms', 'decay_damage', 'extra_damage_from_crippling_shots'],
             'sustain': ['damage_taken', 'regenerated_hp', 'attacks_suffered', 'lifesteal'],
             'defence': ['evades', 'trickster_evades', 'mitigated_damage'],
-            'effects': ['effect_procs', 'stun_duration_inflicted', 'helltouch_barrier', 'life_of_the_hunt_healing', 'echo_bullets', 'unfair_advantage_healing'],
+            'effects': ['effect_procs', 'stun_duration_inflicted', 'helltouch_barrier', 'helltouch_kills', 'medusa_kills', 'life_of_the_hunt_healing', 'echo_bullets', 'unfair_advantage_healing'],
             'loot': ['loot_per_hour'],
         }
         for k, v in output_format.items():
