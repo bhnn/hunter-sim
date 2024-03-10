@@ -184,6 +184,8 @@ class Enemy:
             self.hp -= mitigated_damage
             logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tTAKE\t{mitigated_damage:>6.2f}, {self.hp:.2f} HP left")
             if self.is_dead():
+                if is_reflected:
+                    self.sim.hunter.helltouch_kills += 1
                 self.on_death()
 
     def heal_hp(self, value: float, source: str) -> None:

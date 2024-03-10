@@ -496,6 +496,7 @@ class Borge(Hunter):
         self.total_crits: int = 0
         self.total_extra_from_crits: float = 0
         self.total_helltouch: float = 0
+        self.helltouch_kills: int = 0
 
         # sustain
         self.total_loth: float = 0
@@ -897,6 +898,7 @@ class Borge(Hunter):
             'crits': self.total_crits,
             'extra_damage_from_crits': self.total_extra_from_crits,
             'helltouch_barrier': self.total_helltouch,
+            'helltouch_kills': self.helltouch_kills,
             'life_of_the_hunt_healing': self.total_loth,
             'unfair_advantage_healing': self.total_potion,
         }
