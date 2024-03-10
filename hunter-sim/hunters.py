@@ -495,9 +495,9 @@ class Borge(Hunter):
                 + (self.base_stats["effect_chance"] * 0.005)
                 + (self.attributes["superior_sensors"] * 0.012)
                 + (self.inscryptions["i11"] * 0.02)
+                + (0.03 * self.gems["innovation_node_#3"])
             )
             * (1 + (0.02 * self.gems["creation_node_#2"]))
-            * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # special_chance
         self.special_chance = (
@@ -996,8 +996,8 @@ class Ozzy(Hunter):
                 0.05
                 + (self.base_stats["special_chance"] * 0.0038)
                 + (self.inscryptions["i40"] * 0.005)
+                + (0.03 * self.gems["innovation_node_#3"])
             )
-            * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # special_damage
         self.special_damage = (
