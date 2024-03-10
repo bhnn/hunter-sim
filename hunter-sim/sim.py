@@ -382,8 +382,6 @@ class Simulation():
                     trample_kills = hunter.apply_trample(self.enemies)
                     if trample_kills > 0:
                         logging.debug(f'[{hunter.name:>7}]:\tTRAMPLE {trample_kills} enemies')
-                        hunter.total_kills += trample_kills
-                        hunter.total_attacks += 1
                         hunter.total_damage += trample_kills * hunter.power
                         self.enemies = [e for e in self.enemies if not e.is_dead()]
                         continue
