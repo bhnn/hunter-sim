@@ -585,10 +585,11 @@ class Borge(Hunter):
                 "i60": 0, # 0.03 borge hp, power, loot
             },
             "mods": {
-                "trample": False
+                "trample": False,
             },
             "relics": {
-                "disk_of_dawn": 0
+                "disk_of_dawn": 0,
+                "long_range_artillery_crawler": 0,
             },
             "gems": {
                 "attraction_gem": 0,
@@ -1072,7 +1073,8 @@ class Ozzy(Hunter):
             "mods": {
             },
             "relics": {
-                "disk_of_dawn": 0
+                "disk_of_dawn": 0,
+                "bee-gone_companion_drone": 0,
             },
             "gems": {
                 "attraction_gem": 0,
