@@ -148,7 +148,7 @@ class Hunter:
         self.talents = config_dict["talents"]
         self.attributes = config_dict["attributes"]
         self.mods = config_dict["mods"]
-        self.inscryptions = config_dict["inscryptions"]
+        self.inscryptions = {k: self.costs["inscryptions"][k]["max"] if v == "max" else v for k, v in config_dict["inscryptions"].items()}
         self.relics = config_dict["relics"]
         self.gems = config_dict["gems"]
 
@@ -443,6 +443,48 @@ class Borge(Hunter):
                 "max": 3,
             },
         },
+        "inscryptions": {
+            "i3": { # +6 hp
+                "cost": 1,
+                "max": 8,
+            },
+            "i4": { # +0.0065 crit chance
+                "cost": 1,
+                "max": 6,
+            },
+            "i11": { # +0.02 effect chance
+                "cost": 1,
+                "max": 3,
+            },
+            "i13": { # +8 power
+                "cost": 1,
+                "max": 8,
+            },
+            "i14": { # +1.1 loot
+                "cost": 1,
+                "max": 5,
+            },
+            "i23": { # -0.04 speed
+                "cost": 1,
+                "max": 5,
+            },
+            "i24": { # +0.004 damage reduction
+                "cost": 1,
+                "max": 8,
+            },
+            "i27": { # +24 hp
+                "cost": 1,
+                "max": 10,
+            },
+            "i44": { # +1.08 loot
+                "cost": 1,
+                "max": 10,
+            },
+            "i60": { # +0.03 hp, power, loot
+                "cost": 1,
+                "max": 10,
+            },
+        },
     }
 
     def __init__(self, config_dict: Dict):
@@ -494,6 +536,7 @@ class Borge(Hunter):
             )
             * (1 + (self.attributes["soul_of_ares"] * 0.002))
             * (1 + (self.inscryptions["i60"] * 0.03))
+            * (1 + (self.relics["long_range_artillery_crawler"] * 0.02))
             * (1 + (0.01 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
             * (1 + (0.02 * self.gems["creation_node_#2"]))
             * (1 + (0.03 * self.gems["innovation_node_#3"]))
@@ -862,7 +905,6 @@ class Borge(Hunter):
 
 class Ozzy(Hunter):
     ### SETUP
-
     costs = {
         "talents": {
             "death_is_my_companion": { # +1 revive, 80% of max hp
@@ -948,6 +990,32 @@ class Ozzy(Hunter):
                 "max": 4,
             },
         },
+        "inscryptions": {
+            "i31": { # +0.006 ozzy effect chance
+                "cost": 1,
+                "max": 10,
+            },
+            "i32": { # x1.5 ozzy loot
+                "cost": 1,
+                "max": 8,
+            },
+            "i33": { # x1.75 ozzy xp
+                "cost": 1,
+                "max": 6,
+            },
+            "i36": { # -0.03 ozzy speed
+                "cost": 1,
+                "max": 5,
+            },
+            "i37": { # +0.0111 ozzy dr
+                "cost": 1,
+                "max": 7,
+            },
+            "i40": { # +0.005 ozzy multistrike chance
+                "cost": 1,
+                "max": 10,
+            },
+        },
     }
 
     def __init__(self, config_dict: Dict):
@@ -999,6 +1067,7 @@ class Ozzy(Hunter):
                 + (self.base_stats["power"] * (0.3 + 0.01 * (self.base_stats["power"] // 10)))
             )
             * (1 + (self.attributes["exo_piercers"] * 0.012))
+            * (1 + (self.relics["bee-gone_companion_drone"] * 0.02))
             * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # regen
@@ -1355,5 +1424,7 @@ class Ozzy(Hunter):
 
 
 if __name__ == "__main__":
-    h = Hunter.from_file('builds/current_borge.yaml')
+    h = Hunter.from_file('builds/current_ozzy.yaml')
     h.show_build()
+    h.complete_stage(150)
+    print(h)
