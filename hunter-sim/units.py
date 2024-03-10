@@ -228,17 +228,22 @@ class Enemy:
     def on_death(self) -> None:
         """Executes on death effects. For enemy units, that is mostly just removing them from the sim queue and incrementing hunter kills.
         """
-        self.sim.hunter.total_kills += 1
         logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tDIED")
         self.sim.queue = [(p1, p2, u) for p1, p2, u in self.sim.queue if u not in ['enemy', 'enemy_special']]
         heapify(self.sim.queue)
+        self.sim.hunter.total_kills += 1
+        self.sim.hunter.on_kill()
 
     def kill(self) -> None:
         """Kills the unit.
+
+        Currently only used for Trample, which is a guaranteed kill. on_death() is not called here to suppress logging,
+        and because the trampled units attacks are not queued yet, so this would take up unnecessary processing.
         """
         self.hp = 0
-        # not sure about this one yet
-        # self.on_death()
+        self.sim.hunter.total_kills += 1
+        self.sim.hunter.total_attacks += 1
+        self.sim.hunter.on_kill()
 
     ### UTILITY
 
