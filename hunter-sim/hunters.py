@@ -243,7 +243,7 @@ class Hunter:
         """Actions to take when the hunter kills an enemy. The Hunter() implementation only handles loot.
         """
         loot = self.compute_loot()
-        if self.current_stage % 100 != 0 and random.random() < self.effect_chance and (LL := self.talents["call_me_lucky_loot"]):
+        if (self.current_stage % 100 != 0 and self.current_stage > 0) and random.random() < self.effect_chance and (LL := self.talents["call_me_lucky_loot"]):
             # Talent: Call Me Lucky Loot, cannot proc on bosses
             loot *= 1 + (self.talents["call_me_lucky_loot"] * 0.2)
             self.total_effect_procs += 1
@@ -716,8 +716,6 @@ class Borge(Hunter):
             # Talent: Fires of War
             self.apply_fow()
             self.total_effect_procs += 1
-        if target.is_dead():
-            self.on_kill()
 
     def receive_damage(self, attacker, damage: float, is_crit: bool) -> None:
         """Receive damage from an attack. Accounts for damage reduction, evade chance and reflected damage.
