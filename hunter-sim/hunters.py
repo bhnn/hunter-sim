@@ -3,6 +3,7 @@ import random
 from heapq import heappush as hpush
 from typing import Dict, List, Tuple
 
+import yaml
 from util.exceptions import BuildConfigError
 
 hunter_name_spacing: int = 7
@@ -58,6 +59,25 @@ class Hunter:
 
         # loot
         self.total_loot: float = 0
+
+    @classmethod
+    def from_file(cls, file_path: str) -> 'Hunter':
+        """Create a Hunter instance from a build config file.
+
+        Args:
+            file_path (str): The path to the build config file.
+
+        Returns:
+            Hunter: The Hunter instance.
+        """
+        with open(file_path, 'r') as f:
+            cfg = yaml.safe_load(f)
+        if cfg["meta"]["hunter"].lower() not in ["borge", "ozzy"]:
+            raise ValueError("hunter_sim.py: error: invalid hunter found in primary build config file. Please specify a valid hunter.")
+        if cls != Hunter:
+            return cls(cfg)
+        else:
+            return globals()[cfg["meta"]["hunter"].title()](cfg)
 
     def get_results(self) -> List:
         """Fetch the hunter results for end-of-run statistics.
@@ -1318,13 +1338,5 @@ class Ozzy(Hunter):
 
 
 if __name__ == "__main__":
-    b = Borge('builds/current_borge.yaml')
-    b.show_build()
-    # print(b)
-    # b.complete_stage(100)
-    # print(b)
-    # o = Ozzy('builds/current_ozzy.yaml')
-    # print(o)
-    # o.complete_stage(100)
-    # print(o)
-    
+    h = Hunter.from_file('builds/current_borge.yaml')
+    h.show_build()
