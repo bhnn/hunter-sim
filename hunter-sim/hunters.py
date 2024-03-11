@@ -1084,7 +1084,7 @@ class Ozzy(Hunter):
                 + (self.base_stats["power"] * (0.3 + 0.01 * (self.base_stats["power"] // 10)))
             )
             * (1 + (self.attributes["exo_piercers"] * 0.012))
-            * (1 + (self.relics["bee-gone_companion_drone"] * 0.02))
+            * (1 + (self.relics["bee_gone_companion_drone"] * 0.02))
             * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # regen
@@ -1197,7 +1197,7 @@ class Ozzy(Hunter):
             },
             "relics": {
                 "disk_of_dawn": 0,
-                "bee-gone_companion_drone": 0,
+                "bee_gone_companion_drone": 0,
             },
             "gems": {
                 "attraction_gem": 0,
