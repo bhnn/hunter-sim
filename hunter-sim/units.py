@@ -220,6 +220,14 @@ class Enemy:
         hpush(self.sim.queue, (qe[0] + duration, qe[1], qe[2]))
         logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tSTUNNED\t{duration:>6.2f} sec")
 
+    def is_boss(self) -> bool:
+        """Check if the unit is a boss.
+
+        Returns:
+            bool: True if the unit is a boss, False otherwise.
+        """
+        return isinstance(self, Boss)
+
     def is_dead(self) -> bool:
         """Check if the unit is dead.
 
@@ -228,10 +236,11 @@ class Enemy:
         """
         return self.hp <= 0
 
-    def on_death(self) -> None:
+    def on_death(self, suppress_logging: bool = False) -> None:
         """Executes on death effects. For enemy units, that is mostly just removing them from the sim queue and incrementing hunter kills.
         """
-        logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tDIED")
+        if not suppress_logging:
+            logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tDIED")
         self.sim.queue = [(p1, p2, u) for p1, p2, u in self.sim.queue if u not in ['enemy', 'enemy_special']]
         heapify(self.sim.queue)
         self.sim.hunter.total_kills += 1
@@ -240,13 +249,10 @@ class Enemy:
     def kill(self) -> None:
         """Kills the unit.
 
-        Currently only used for Trample, which is a guaranteed kill. on_death() is not called here to suppress logging,
-        and because the trampled units attacks are not queued yet, so this would take up unnecessary processing.
+        Currently only used for Trample, which is a guaranteed kill.
         """
         self.hp = 0
-        self.sim.hunter.total_kills += 1
-        self.sim.hunter.total_attacks += 1
-        self.sim.hunter.on_kill()
+        self.on_death(suppress_logging=True)
 
     ### UTILITY
 
