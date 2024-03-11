@@ -4,10 +4,8 @@ A simulation of the Interstellar Hunt content from the android incremental game 
 
 Working features:
 
-- 🟩 Borge: including all talents and attributes, up to stage 199
-- 🟨 Ozzy: mostly accurate, up to stage 199
-  - 🟩 talents and attributes
-  - 🟨 DwD talent has a numerical bug that I don't know the correct numbers to currently. It's close but not accurate at the moment
+- 🟩 Borge: including all talents and attributes, up to stage 200
+- 🟩 Ozzy: including all talents and attributes, up to stage 200
 - 🟩 Build comparison: run sims of 2 different builds and see which performed better on each statistic
 - 🟩 Sim as many repetitions as desired to get robust predictions
 - 🟥 Easily compare and explore best upgrade paths
