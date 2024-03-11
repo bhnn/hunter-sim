@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 
 import yaml
-from hunters import Borge, Ozzy
+from hunters import Hunter, Borge, Ozzy
 from sim import SimulationManager
 from util.exceptions import BuildConfigError
 
@@ -46,20 +46,11 @@ def main(path: str, compare_path: str, num_sims: int, show_stats: bool, dump_con
     if num_sims == 1 and verbose:
         logging.getLogger().setLevel(logging.DEBUG)
     try:
-        with open(path, 'r') as f:
-            cfg1 = yaml.safe_load(f)
-        if cfg1["meta"]["hunter"].lower() not in ["borge", "ozzy"]:
-            print("hunter_sim.py: error: invalid hunter found in primary build config file. Please specify a valid hunter.")
-            sys.exit(1)
+        hunter1 = Hunter.from_file(path)
         if compare_path:
-            with open(compare_path, 'r') as f:
-                cfg2 = yaml.safe_load(f)
-            if cfg2["meta"]["hunter"].lower() not in ["borge", "ozzy"]:
-                print("hunter_sim.py: error: invalid hunter found in secondary build config file. Please specify a valid hunter.")
-                sys.exit(1)
-            if cfg1["meta"]["hunter"] != cfg2["meta"]["hunter"]:
-                print("hunter_sim.py: error: cannot compare builds of different hunters")
-                sys.exit(1)
+            hunter2 = Hunter.from_file(compare_path)
+            if type(hunter1) != type(hunter2):
+                raise ValueError("hunter_sim.py: error: cannot compare builds of different hunters")
         if num_sims == 1 and log:
             log_dir = os.path.join(os.getcwd(), 'logs')
             Path(log_dir).mkdir(parents=True, exist_ok=True)
@@ -69,10 +60,10 @@ def main(path: str, compare_path: str, num_sims: int, show_stats: bool, dump_con
                 force=True,
                 level=logging.DEBUG,
             )
-        smgr = SimulationManager(cfg1)
+        smgr = SimulationManager(hunter1.as_dict())
         if compare_path:
             import timing
-            smgr.compare_against(cfg2, num_sims, num_processes=processes, show_stats=show_stats)
+            smgr.compare_against(hunter2.as_dict(), num_sims, num_processes=processes, show_stats=show_stats)
         else:
             import timing
             smgr.run(num_sims, num_processes=processes, show_stats=show_stats)
@@ -82,7 +73,9 @@ def main(path: str, compare_path: str, num_sims: int, show_stats: bool, dump_con
     except BuildConfigError as e:
         print(e)
         sys.exit(1)
-
+    except ValueError as e:
+        print(e)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

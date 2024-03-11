@@ -184,6 +184,8 @@ class Enemy:
             self.hp -= mitigated_damage
             logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tTAKE\t{mitigated_damage:>6.2f}, {self.hp:.2f} HP left")
             if self.is_dead():
+                if is_reflected:
+                    self.sim.hunter.helltouch_kills += 1
                 self.on_death()
 
     def heal_hp(self, value: float, source: str) -> None:
@@ -204,6 +206,7 @@ class Enemy:
         self.heal_hp(regen_value, 'regen')
         # handle death from Ozzy's Gift of Medusa
         if self.is_dead():
+            self.sim.hunter.medusa_kills += 1
             self.on_death()
 
     def stun(self, duration: float) -> None:
@@ -217,6 +220,14 @@ class Enemy:
         hpush(self.sim.queue, (qe[0] + duration, qe[1], qe[2]))
         logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tSTUNNED\t{duration:>6.2f} sec")
 
+    def is_boss(self) -> bool:
+        """Check if the unit is a boss.
+
+        Returns:
+            bool: True if the unit is a boss, False otherwise.
+        """
+        return isinstance(self, Boss)
+
     def is_dead(self) -> bool:
         """Check if the unit is dead.
 
@@ -225,20 +236,23 @@ class Enemy:
         """
         return self.hp <= 0
 
-    def on_death(self) -> None:
+    def on_death(self, suppress_logging: bool = False) -> None:
         """Executes on death effects. For enemy units, that is mostly just removing them from the sim queue and incrementing hunter kills.
         """
-        self.sim.hunter.total_kills += 1
-        logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tDIED")
+        if not suppress_logging:
+            logging.debug(f"[{self.name:>{unit_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tDIED")
         self.sim.queue = [(p1, p2, u) for p1, p2, u in self.sim.queue if u not in ['enemy', 'enemy_special']]
         heapify(self.sim.queue)
+        self.sim.hunter.total_kills += 1
+        self.sim.hunter.on_kill()
 
     def kill(self) -> None:
         """Kills the unit.
+
+        Currently only used for Trample, which is a guaranteed kill.
         """
         self.hp = 0
-        # not sure about this one yet
-        # self.on_death()
+        self.on_death(suppress_logging=True)
 
     ### UTILITY
 
@@ -257,7 +271,7 @@ class Enemy:
         Returns:
             str: The stats as a formatted string.
         """
-        return f'[{self.name:>{unit_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>18}] [AP:{self.power:>7.2f}] [Regen:{self.regen:>6.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: ------] [CHC: {self.special_chance:>6.4f}] [CHD: {self.special_damage:>5.2f}] [Speed:{self.speed:>5.2f}]{(f" [Speed2:{self.speed2:>6.2f}]") if self.has_special else ""}'
+        return f'[{self.name:>{unit_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>18}] [AP:{self.power:>8.2f}] [Regen:{self.regen:>7.2f}] [DR: {self.damage_reduction:>6.2%}] [Evasion: {self.evade_chance:>6.2%}] [Effect: ------] [CHC: {self.special_chance:>6.2%}] [CHD: {self.special_damage:>5.2f}] [Speed:{self.speed:>5.2f}]{(f" [Speed2:{self.speed2:>6.2f}]") if self.has_special else ""}'
 
 
 class Boss(Enemy):
