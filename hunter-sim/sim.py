@@ -11,7 +11,7 @@ from string import capwords
 from typing import Dict, Generator, List, Tuple
 
 import rich
-from hunters import Borge, Hunter, Ozzy
+from hunters import Borge, Hunter, Ozzy, hunter_name_spacing
 from tqdm import tqdm
 from units import Boss, Enemy
 
@@ -347,6 +347,11 @@ class Simulation():
         else:
             self.enemies = [Enemy(f'E{self.current_stage:>3}{i+1:>3}', hunter, self.current_stage, self) for i in range(10)]
 
+    def refresh_enemies(self) -> None:
+        """Remove dead enemies from the list.
+        """
+        self.enemies = [e for e in self.enemies if not e.is_dead()]
+
     def run(self) -> Dict:
         """Run a single simulation.
 
@@ -378,13 +383,6 @@ class Simulation():
             while self.enemies:
                 logging.debug('')
                 logging.debug(hunter)
-                if 'trample' in hunter.mods and hunter.mods['trample'] and not isinstance(self.enemies[0], Boss):
-                    trample_kills = hunter.apply_trample(self.enemies)
-                    if trample_kills > 0:
-                        logging.debug(f'[{hunter.name:>7}]:\tTRAMPLE {trample_kills} enemies')
-                        hunter.total_damage += trample_kills * hunter.power
-                        self.enemies = [e for e in self.enemies if not e.is_dead()]
-                        continue
                 enemy = self.enemies.pop(0)
                 logging.debug(enemy)
                 enemy.queue_initial_attack()
@@ -422,17 +420,15 @@ class Simulation():
 
 
 def main():
-    num_sims = 25
-    if num_sims == 1:
-        logging.basicConfig(
-            filename='./logs/ozzy_test.txt',
-            filemode='w',
-            force=True,
-            level=logging.DEBUG,
-        )
-        logging.getLogger().setLevel(logging.DEBUG)
-    smgr = SimulationManager('./builds/current_borge.yaml')
-    smgr.run(num_sims, threaded=4)
+    logging.basicConfig(
+        filename='./logs/ozzy_test.txt',
+        filemode='w',
+        force=True,
+        level=logging.DEBUG,
+    )
+    logging.getLogger().setLevel(logging.DEBUG)
+    smgr = SimulationManager(Borge.from_file('./builds/current_borge.yaml').as_dict())
+    smgr.run(1, num_processes=-1, show_stats=True)
 
 
 if __name__ == "__main__":
