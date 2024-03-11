@@ -8,12 +8,10 @@ from util.exceptions import BuildConfigError
 
 hunter_name_spacing: int = 7
 
-# TODO: maybe find a better way to trample()
 # TODO: validate vectid elixir
 # TODO: Ozzy: move @property code to on_death() to speed things up?
 # TODO: Borge: move @property code as well?
 # TODO: DwD power is a little off: 200 ATK, 2 exo, 3 DwD, 1 revive should be 110.59 power but is 110.71. I think DwD might be 0.0196 power instead of 0.02
-# TODO: confirm how creation nodes 2+3 apply
 
 """ Assumptions:
 - order of attacks: main -> ms -> echo -> echo ms
@@ -497,6 +495,7 @@ class Borge(Hunter):
         self.total_extra_from_crits: float = 0
         self.total_helltouch: float = 0
         self.helltouch_kills: int = 0
+        self.trample_kills: int = 0
 
         # sustain
         self.total_loth: float = 0
@@ -697,7 +696,16 @@ class Borge(Hunter):
         else:
             damage = self.power
             logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f}")
-        super(Borge, self).attack(target, damage)
+        if self.mods["trample"] and not target.is_boss() and damage > target.max_hp:
+            # Mod: Trample
+            trample_kills = self.apply_trample(damage, current_target=target)
+            if trample_kills > 1:
+                logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tTRAMPLE {trample_kills} enemies")
+                self.trample_kills += trample_kills
+            else:
+                super(Borge, self).attack(target, damage)
+        else:
+            super(Borge, self).attack(target, damage)
         self.total_damage += damage
         self.total_attacks += 1
 
@@ -792,26 +800,33 @@ class Borge(Hunter):
         """Apply the temporaryFires of War effect to Borge.
         """
         self.fires_of_war = self.talents["fires_of_war"] * 0.1
-        logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\t[FoW]]\t{self.fires_of_war:>6.2f} sec')
+        logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\t[FoW]\t{self.fires_of_war:>6.2f} sec')
 
-    def apply_trample(self, enemies: List) -> int:
+    def apply_trample(self, damage: float, current_target) -> int:
         """Apply the Trample effect to a number of enemies.
 
         Args:
-            enemies (List): The list of enemies to trample.
+            damage (float): The damage of the current attack.
+            current_target (Enemy): The enemy that was attacked.
 
         Returns:
             int: The number of enemies killed by the trample effect.
         """
-        alive_index = [i for i, e in enumerate(enemies) if not e.is_dead()]
-        if not alive_index:
+        enemies = self.sim.enemies
+        if not enemies:
             return 0
+        trample_power = min(int(damage / enemies[0].max_hp), 10)
         trample_kills = 0
-        trample_power = min(int(self.power / enemies[0].max_hp), 10)
+        # trample only triggers if the damage is enough to kill at least 2 enemies
         if trample_power > 1:
+            # make sure to kill current target first to properly manage the simulation queue
+            current_target.kill()
+            trample_kills += 1
+            alive_index = [i for i, e in enumerate(enemies) if not e.is_dead()]
             for i in alive_index[:trample_power]:
                 enemies[i].kill()
                 trample_kills += 1
+            self.sim.refresh_enemies()
         return trample_kills
 
     ### UTILITY
@@ -899,6 +914,7 @@ class Borge(Hunter):
             'extra_damage_from_crits': self.total_extra_from_crits,
             'helltouch_barrier': self.total_helltouch,
             'helltouch_kills': self.helltouch_kills,
+            'trample_kills': self.trample_kills,
             'life_of_the_hunt_healing': self.total_loth,
             'unfair_advantage_healing': self.total_potion,
         }
