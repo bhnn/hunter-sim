@@ -2,3 +2,6 @@ PyYAML==6.0.1
 rich==13.7.0
 setuptools==68.2.2
 tqdm==4.66.1
+fastapi==0.109.2
+pydantic==2.6.1
+uvicorn==0.27.1
