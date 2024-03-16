@@ -3,16 +3,15 @@ import random
 from heapq import heappush as hpush
 from typing import Dict, List, Tuple
 
+import yaml
 from util.exceptions import BuildConfigError
 
 hunter_name_spacing: int = 7
 
-# TODO: maybe find a better way to trample()
 # TODO: validate vectid elixir
 # TODO: Ozzy: move @property code to on_death() to speed things up?
 # TODO: Borge: move @property code as well?
 # TODO: DwD power is a little off: 200 ATK, 2 exo, 3 DwD, 1 revive should be 110.59 power but is 110.71. I think DwD might be 0.0196 power instead of 0.02
-# TODO: confirm how creation nodes 2+3 apply
 
 """ Assumptions:
 - order of attacks: main -> ms -> echo -> echo ms
@@ -58,6 +57,42 @@ class Hunter:
 
         # loot
         self.total_loot: float = 0
+
+    @classmethod
+    def from_file(cls, file_path: str) -> 'Hunter':
+        """Create a Hunter instance from a build config file.
+
+        Args:
+            file_path (str): The path to the build config file.
+
+        Returns:
+            Hunter: The Hunter instance.
+        """
+        with open(file_path, 'r') as f:
+            cfg = yaml.safe_load(f)
+        if cfg["meta"]["hunter"].lower() not in ["borge", "ozzy"]:
+            raise ValueError("hunter_sim.py: error: invalid hunter found in primary build config file. Please specify a valid hunter.")
+        if cls != Hunter:
+            return cls(cfg)
+        else:
+            return globals()[cfg["meta"]["hunter"].title()](cfg)
+
+    def as_dict(self) -> dict:
+        """Create a build config dictionary from a loaded hunter instance.
+
+        Returns:
+            dict: The hunter build dict.
+        """
+        return {
+            "meta": self.meta,
+            "stats": self.base_stats,
+            "talents": self.talents,
+            "attributes": self.attributes,
+            "mods": self.mods,
+            "inscryptions": self.inscryptions,
+            "relics": self.relics,
+            "gems": self.gems,
+        }
 
     def get_results(self) -> List:
         """Fetch the hunter results for end-of-run statistics.
@@ -111,7 +146,7 @@ class Hunter:
         self.talents = config_dict["talents"]
         self.attributes = config_dict["attributes"]
         self.mods = config_dict["mods"]
-        self.inscryptions = config_dict["inscryptions"]
+        self.inscryptions = {k: self.costs["inscryptions"][k]["max"] if v == "max" else v for k, v in config_dict["inscryptions"].items()}
         self.relics = config_dict["relics"]
         self.gems = config_dict["gems"]
 
@@ -206,7 +241,7 @@ class Hunter:
         """Actions to take when the hunter kills an enemy. The Hunter() implementation only handles loot.
         """
         loot = self.compute_loot()
-        if self.current_stage % 100 != 0 and random.random() < self.effect_chance and (LL := self.talents["call_me_lucky_loot"]):
+        if (self.current_stage % 100 != 0 and self.current_stage > 0) and random.random() < self.effect_chance and (LL := self.talents["call_me_lucky_loot"]):
             # Talent: Call Me Lucky Loot, cannot proc on bosses
             loot *= 1 + (self.talents["call_me_lucky_loot"] * 0.2)
             self.total_effect_procs += 1
@@ -316,12 +351,11 @@ class Hunter:
         Returns:
             str: The stats as a formatted string.
         """
-        return f'[{self.name:>{hunter_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>18}] [AP:{self.power:>7.2f}] [Regen:{self.regen:>6.2f}] [DR: {self.damage_reduction:>6.4f}] [Evasion: {self.evade_chance:>6.4f}] [Effect: {self.effect_chance:>6.4f}] [SpC: {self.special_chance:>6.4f}] [SpD: {self.special_damage:>5.2f}] [Speed:{self.speed:>5.2f}] [LS: {self.lifesteal:>4.3f}]'
+        return f'[{self.name:>{hunter_name_spacing}}]:\t[HP:{(str(round(self.hp, 2)) + "/" + str(round(self.max_hp, 2))):>18}] [AP:{self.power:>8.2f}] [Regen:{self.regen:>7.2f}] [DR: {self.damage_reduction:>6.2%}] [Evasion: {self.evade_chance:>6.2%}] [Effect: {self.effect_chance:>6.2%}] [SpC: {self.special_chance:>6.2%}] [SpD: {self.special_damage:>5.2f}] [Speed:{self.speed:>5.2f}] [LS: {self.lifesteal:>4.2%}]'
 
 
 class Borge(Hunter):
     ### SETUP
-
     costs = {
         "talents": {
             "death_is_my_companion": { # +1 revive at 80% hp
@@ -407,6 +441,48 @@ class Borge(Hunter):
                 "max": 3,
             },
         },
+        "inscryptions": {
+            "i3": { # +6 hp
+                "cost": 1,
+                "max": 8,
+            },
+            "i4": { # +0.0065 crit chance
+                "cost": 1,
+                "max": 6,
+            },
+            "i11": { # +0.02 effect chance
+                "cost": 1,
+                "max": 3,
+            },
+            "i13": { # +8 power
+                "cost": 1,
+                "max": 8,
+            },
+            "i14": { # +1.1 loot
+                "cost": 1,
+                "max": 5,
+            },
+            "i23": { # -0.04 speed
+                "cost": 1,
+                "max": 5,
+            },
+            "i24": { # +0.004 damage reduction
+                "cost": 1,
+                "max": 8,
+            },
+            "i27": { # +24 hp
+                "cost": 1,
+                "max": 10,
+            },
+            "i44": { # +1.08 loot
+                "cost": 1,
+                "max": 10,
+            },
+            "i60": { # +0.03 hp, power, loot
+                "cost": 1,
+                "max": 10,
+            },
+        },
     }
 
     def __init__(self, config_dict: Dict):
@@ -418,6 +494,8 @@ class Borge(Hunter):
         self.total_crits: int = 0
         self.total_extra_from_crits: float = 0
         self.total_helltouch: float = 0
+        self.helltouch_kills: int = 0
+        self.trample_kills: int = 0
 
         # sustain
         self.total_loth: float = 0
@@ -458,6 +536,7 @@ class Borge(Hunter):
             )
             * (1 + (self.attributes["soul_of_ares"] * 0.002))
             * (1 + (self.inscryptions["i60"] * 0.03))
+            * (1 + (self.relics["long_range_artillery_crawler"] * 0.02))
             * (1 + (0.01 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
             * (1 + (0.02 * self.gems["creation_node_#2"]))
             * (1 + (0.03 * self.gems["innovation_node_#3"]))
@@ -496,9 +575,9 @@ class Borge(Hunter):
                 + (self.base_stats["effect_chance"] * 0.005)
                 + (self.attributes["superior_sensors"] * 0.012)
                 + (self.inscryptions["i11"] * 0.02)
+                + (0.03 * self.gems["innovation_node_#3"])
             )
             * (1 + (0.02 * self.gems["creation_node_#2"]))
-            * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # special_chance
         self.special_chance = (
@@ -586,10 +665,11 @@ class Borge(Hunter):
                 "i60": 0, # 0.03 borge hp, power, loot
             },
             "mods": {
-                "trample": False
+                "trample": False,
             },
             "relics": {
-                "disk_of_dawn": 0
+                "disk_of_dawn": 0,
+                "long_range_artillery_crawler": 0,
             },
             "gems": {
                 "attraction_gem": 0,
@@ -616,7 +696,16 @@ class Borge(Hunter):
         else:
             damage = self.power
             logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tATTACK\t{damage:>6.2f}")
-        super(Borge, self).attack(target, damage)
+        if self.mods["trample"] and not target.is_boss() and damage > target.max_hp:
+            # Mod: Trample
+            trample_kills = self.apply_trample(damage, current_target=target)
+            if trample_kills > 1:
+                logging.debug(f"[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\tTRAMPLE {trample_kills} enemies")
+                self.trample_kills += trample_kills
+            else:
+                super(Borge, self).attack(target, damage)
+        else:
+            super(Borge, self).attack(target, damage)
         self.total_damage += damage
         self.total_attacks += 1
 
@@ -636,8 +725,6 @@ class Borge(Hunter):
             # Talent: Fires of War
             self.apply_fow()
             self.total_effect_procs += 1
-        if target.is_dead():
-            self.on_kill()
 
     def receive_damage(self, attacker, damage: float, is_crit: bool) -> None:
         """Receive damage from an attack. Accounts for damage reduction, evade chance and reflected damage.
@@ -713,26 +800,33 @@ class Borge(Hunter):
         """Apply the temporaryFires of War effect to Borge.
         """
         self.fires_of_war = self.talents["fires_of_war"] * 0.1
-        logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\t[FoW]]\t{self.fires_of_war:>6.2f} sec')
+        logging.debug(f'[{self.name:>{hunter_name_spacing}}][@{self.sim.elapsed_time:>5}]:\t[FoW]\t{self.fires_of_war:>6.2f} sec')
 
-    def apply_trample(self, enemies: List) -> int:
+    def apply_trample(self, damage: float, current_target) -> int:
         """Apply the Trample effect to a number of enemies.
 
         Args:
-            enemies (List): The list of enemies to trample.
+            damage (float): The damage of the current attack.
+            current_target (Enemy): The enemy that was attacked.
 
         Returns:
             int: The number of enemies killed by the trample effect.
         """
-        alive_index = [i for i, e in enumerate(enemies) if not e.is_dead()]
-        if not alive_index:
+        enemies = self.sim.enemies
+        if not enemies:
             return 0
+        trample_power = min(int(damage / enemies[0].max_hp), 10)
         trample_kills = 0
-        trample_power = min(int(self.power / enemies[0].max_hp), 10)
+        # trample only triggers if the damage is enough to kill at least 2 enemies
         if trample_power > 1:
+            # make sure to kill current target first to properly manage the simulation queue
+            current_target.kill()
+            trample_kills += 1
+            alive_index = [i for i, e in enumerate(enemies) if not e.is_dead()]
             for i in alive_index[:trample_power]:
                 enemies[i].kill()
                 trample_kills += 1
+            self.sim.refresh_enemies()
         return trample_kills
 
     ### UTILITY
@@ -819,13 +913,14 @@ class Borge(Hunter):
             'crits': self.total_crits,
             'extra_damage_from_crits': self.total_extra_from_crits,
             'helltouch_barrier': self.total_helltouch,
+            'helltouch_kills': self.helltouch_kills,
+            'trample_kills': self.trample_kills,
             'life_of_the_hunt_healing': self.total_loth,
             'unfair_advantage_healing': self.total_potion,
         }
 
 class Ozzy(Hunter):
     ### SETUP
-
     costs = {
         "talents": {
             "death_is_my_companion": { # +1 revive, 80% of max hp
@@ -911,6 +1006,32 @@ class Ozzy(Hunter):
                 "max": 4,
             },
         },
+        "inscryptions": {
+            "i31": { # +0.006 ozzy effect chance
+                "cost": 1,
+                "max": 10,
+            },
+            "i32": { # x1.5 ozzy loot
+                "cost": 1,
+                "max": 8,
+            },
+            "i33": { # x1.75 ozzy xp
+                "cost": 1,
+                "max": 6,
+            },
+            "i36": { # -0.03 ozzy speed
+                "cost": 1,
+                "max": 5,
+            },
+            "i37": { # +0.0111 ozzy dr
+                "cost": 1,
+                "max": 7,
+            },
+            "i40": { # +0.005 ozzy multistrike chance
+                "cost": 1,
+                "max": 10,
+            },
+        },
     }
 
     def __init__(self, config_dict: Dict):
@@ -927,6 +1048,7 @@ class Ozzy(Hunter):
         self.total_ms_extra_damage: float = 0
         self.total_decay_damage: float = 0
         self.total_cripple_extra_damage: float = 0
+        self.medusa_kills: int = 0
 
         # sustain
         self.total_potion: float = 0
@@ -962,6 +1084,7 @@ class Ozzy(Hunter):
                 + (self.base_stats["power"] * (0.3 + 0.01 * (self.base_stats["power"] // 10)))
             )
             * (1 + (self.attributes["exo_piercers"] * 0.012))
+            * (1 + (self.relics["bee_gone_companion_drone"] * 0.02))
             * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # regen
@@ -997,8 +1120,8 @@ class Ozzy(Hunter):
                 0.05
                 + (self.base_stats["special_chance"] * 0.0038)
                 + (self.inscryptions["i40"] * 0.005)
+                + (0.03 * self.gems["innovation_node_#3"])
             )
-            * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # special_damage
         self.special_damage = (
@@ -1073,7 +1196,8 @@ class Ozzy(Hunter):
             "mods": {
             },
             "relics": {
-                "disk_of_dawn": 0
+                "disk_of_dawn": 0,
+                "bee_gone_companion_drone": 0,
             },
             "gems": {
                 "attraction_gem": 0,
@@ -1312,18 +1436,13 @@ class Ozzy(Hunter):
             'trickster_evades': self.total_trickster_evades,
             'decay_damage': self.total_decay_damage,
             'extra_damage_from_crippling_strikes': self.total_cripple_extra_damage,
+            'medusa_kills': self.medusa_kills,
             'echo_bullets': self.total_echo,
         }
 
 
 if __name__ == "__main__":
-    b = Borge('builds/current_borge.yaml')
-    b.show_build()
-    # print(b)
-    # b.complete_stage(100)
-    # print(b)
-    # o = Ozzy('builds/current_ozzy.yaml')
-    # print(o)
-    # o.complete_stage(100)
-    # print(o)
-    
+    h = Hunter.from_file('builds/current_ozzy.yaml')
+    h.show_build()
+    h.complete_stage(150)
+    print(h)

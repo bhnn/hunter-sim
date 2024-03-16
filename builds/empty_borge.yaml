@@ -54,6 +54,7 @@ mods:
 
 relics:
   disk_of_dawn: 0
+  long_range_artillery_crawler: 0
 
 gems:
   attraction_gem: 0

@@ -49,6 +49,7 @@ mods: {}
 
 relics:
   disk_of_dawn: 0
+  bee_gone_companion_drone: 0
 
 gems:
   attraction_gem: 0
