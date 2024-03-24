@@ -520,7 +520,7 @@ class Borge(Hunter):
             )
             * (1 + (self.attributes["soul_of_ares"] * 0.01))
             * (1 + (self.inscryptions["i60"] * 0.03))
-            * (1 + (self.relics["disk_of_dawn"] * 0.02))
+            * (1 + (self.relics["disk_of_dawn"] * 0.03))
             * (1 + (0.015 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
             * (1 + (0.02 * self.gems["creation_node_#2"]))
             * (1 + (0.2 * self.gems["creation_node_#1"]))
@@ -536,7 +536,7 @@ class Borge(Hunter):
             )
             * (1 + (self.attributes["soul_of_ares"] * 0.002))
             * (1 + (self.inscryptions["i60"] * 0.03))
-            * (1 + (self.relics["long_range_artillery_crawler"] * 0.02))
+            * (1 + (self.relics["long_range_artillery_crawler"] * 0.03))
             * (1 + (0.01 * (self.meta["level"] - 39)) * self.gems["creation_node_#3"])
             * (1 + (0.02 * self.gems["creation_node_#2"]))
             * (1 + (0.03 * self.gems["innovation_node_#3"]))
@@ -1074,7 +1074,7 @@ class Ozzy(Hunter):
                 + (self.base_stats["hp"] * (2 + 0.03 * (self.base_stats["hp"] // 5)))
             )
             * (1 + (self.attributes["living_off_the_land"] * 0.02))
-            * (1 + (self.relics["disk_of_dawn"] * 0.02))
+            * (1 + (self.relics["disk_of_dawn"] * 0.03))
         )
         self.hp = self.max_hp
         # power
@@ -1084,7 +1084,7 @@ class Ozzy(Hunter):
                 + (self.base_stats["power"] * (0.3 + 0.01 * (self.base_stats["power"] // 10)))
             )
             * (1 + (self.attributes["exo_piercers"] * 0.012))
-            * (1 + (self.relics["bee_gone_companion_drone"] * 0.02))
+            * (1 + (self.relics["bee_gone_companion_drone"] * 0.03))
             * (1 + (0.03 * self.gems["innovation_node_#3"]))
         )
         # regen
