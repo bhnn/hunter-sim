@@ -1306,7 +1306,8 @@ class Ozzy(Hunter):
         regen_value = self.regen
         if self.empowered_regen > 0:
             regen_value *= 1 + (self.attributes["vectid_elixir"] * 0.15)
-            self.empowered_regen -= 1
+            if self.missing_hp > 0:
+                self.empowered_regen -= 1
         self.heal_hp(regen_value, 'regen')
 
     ### SPECIALS
@@ -1343,13 +1344,10 @@ class Ozzy(Hunter):
         ood_effect = self.attributes["soul_of_snek"] * 0.088
         enemy.regen = enemy.regen * (1 - ood_effect)
 
-    def apply_medusa(self, enemy) -> None:
-        """Apply the Gift of Medusa effect to an enemy.
-
-        Args:
-            enemy (Enemy): The enemy to apply the effect to.
+    def apply_medusa(self) -> float:
+        """Calculate the strength of the Gift of Medusa effect and return it to apply to an enemy.
         """
-        enemy.regen -= self.regen * self.attributes["gift_of_medusa"] * 0.05
+        return self.regen * (1 + (self.attributes["vectid_elixir"] * 0.15) * (self.empowered_regen > 0)) * self.attributes["gift_of_medusa"] * 0.05
 
     @property
     def power(self) -> float:

@@ -2,7 +2,7 @@ import logging
 import random
 from heapq import heapify
 from heapq import heappush as hpush
-
+from typing import Callable
 from hunters import Borge, Hunter, Ozzy
 
 unit_name_spacing: int = 7
@@ -145,8 +145,9 @@ class Enemy:
         if 'soul_of_snek' in hunter.attributes:
             hunter.apply_snek(self)
         if 'gift_of_medusa' in hunter.attributes:
-            hunter.apply_medusa(self)
-
+            self.get_medusa: Callable = hunter.apply_medusa
+        else:
+            self.get_medusa: Callable = lambda: 0
     ### CONTENT
     def queue_initial_attack(self) -> None:
         """Queue the initial attacks of the enemy.
@@ -202,7 +203,7 @@ class Enemy:
     def regen_hp(self) -> None:
         """Regenerates hp according to the regen stat.
         """
-        regen_value = self.regen
+        regen_value = self.regen - self.get_medusa()
         self.heal_hp(regen_value, 'regen')
         # handle death from Ozzy's Gift of Medusa
         if self.is_dead():
@@ -409,7 +410,7 @@ class Boss(Enemy):
     def regen_hp(self) -> None:
         """Regenerates hp according to the regen stat. Also deals with the Harden effect of the Exoscarab boss.
         """
-        regen_value = self.regen
+        regen_value = self.regen - self.get_medusa()
         if self.harden_ticks_left > 0:
             # Harden effect: 3x regen for 5 ticks
             for _ in range(3):
