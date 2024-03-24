@@ -172,10 +172,34 @@ class SimulationManager():
         """
         flat_diff, pct_diff = {}, {}
         flat_diff['is_comparison'] = not dict1.pop('is_comparison')
-        for k, v in dict1.items():
+
+        #For clearer looping
+        combinedKeys = set(dict1.keys())
+
+        for k in combinedKeys:
             if k not in ['final_stage']:
+                #combined sub keys allows for comparing even when data is missing in one dict
+                combinedSubKeys = set()
+                if k in dict1 and isinstance(dict1[k], dict) :
+                    combinedSubKeys.update(dict1[k].keys())
+                if k in dict2 and isinstance(dict2[k], dict):
+                    combinedSubKeys.update(dict2[k].keys())
+
                 flat_diff[k], pct_diff[k] = {}, {}
-                for vk in v:
+                for vk in combinedSubKeys:
+                    #populate missing subkeys
+                    if (vk not in dict1[k]):
+                        #near as I can tell, these ones are "better" at lower values, so set to inf
+                        if vk in ['elapsed_time', 'worst_lph', 'enrage_stacks:_1st_boss', 'enrage_stacks:_2nd_boss', 'enrage_stacks:_3rd_boss']:
+                            dict1[k][vk] = float('inf')
+                        #everything else gets a zero value
+                        else:
+                            dict1[k][vk] = 0
+                    if (vk not in dict2[k]):
+                        if vk in ['elapsed_time', 'worst_lph', 'enrage_stacks:_1st_boss', 'enrage_stacks:_2nd_boss', 'enrage_stacks:_3rd_boss']:
+                            dict2[k][vk] = float('inf')
+                        else:
+                            dict2[k][vk] = 0
                     if vk not in ['elapsed_time', 'worst_lph', 'enrage_stacks:_1st_boss', 'enrage_stacks:_2nd_boss', 'enrage_stacks:_3rd_boss']:
                         if dict1[k][vk] > dict2[k][vk]:
                             flat_diff[k][vk] = dict1[k][vk] - dict2[k][vk]
