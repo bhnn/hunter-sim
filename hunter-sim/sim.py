@@ -56,7 +56,52 @@ class SimulationManager():
         res, res_c = self.make_comparable(res, res_c)
         self.display_stats(res, res_c, show_stats)
 
-    def __run_sims(self, repetitions: int, num_processes: int = -1) -> dict:
+    def api_run(self, repetitions: int, num_processes: int = -1) -> dict:
+        match self.hunter_config_dict["meta"]["hunter"].lower():
+            case "borge":
+                hunter_class = Borge
+            case "ozzy":
+                hunter_class = Ozzy
+        res = self.__run_sims(repetitions, num_processes, True)
+        avg, std = self.prepare_results(res)
+        output = {
+            "hunterStats": hunter_class(self.hunter_config_dict),
+            "average": avg,
+            "stdev": std,
+        }
+        return output
+
+    def api_compare_against(self, compare_dict, repetitions: int, num_processes: int = -1) -> dict:
+        match self.hunter_config_dict["meta"]["hunter"].lower():
+            case "borge":
+                hunter_class = Borge
+            case "ozzy":
+                hunter_class = Ozzy
+        output = {
+            "hunters": [],
+            "average": [],
+            "stdev": [],
+            "compare": []
+        }
+        # Get Hunter 1 info
+        output["hunters"].append(hunter_class(self.hunter_config_dict))
+        res = self.__run_sims(repetitions, num_processes, True)
+        self.hunter_config_dict = compare_dict
+        # Get Hunter 2 info
+        output["hunters"].append(hunter_class(self.hunter_config_dict))
+        res_c = self.__run_sims(repetitions, num_processes, True)
+        (h1_a, h1_s), (h2_a, h2_s) = self.prepare_results(res), self.prepare_results(res_c)
+        hunter1, hunter2 = self.make_comparable(h1_a, h2_a)
+        # Give back all the data
+        output["average"].append(h1_a)
+        output["average"].append(h2_a)
+        output["stdev"].append(h1_s)
+        output["stdev"].append(h2_s)
+        output["compare"].append(hunter1)
+        output["compare"].append(hunter2)
+        return output
+
+    def __run_sims(self, repetitions: int, num_processes: int = -1, as_json: bool = False) -> dict:
         """Run simulations and return results.
 
         Args:
@@ -75,7 +120,8 @@ class SimulationManager():
                 hunter_class = Borge
             case "ozzy":
                 hunter_class = Ozzy
-        hunter_class(self.hunter_config_dict).show_build()
+        if not as_json:
+            hunter_class(self.hunter_config_dict).show_build()
         if num_processes > 0:
             with ProcessPoolExecutor(max_workers=num_processes) as e:
                 self.results = list(tqdm(e.map(sim_worker, [hunter_class] * repetitions, [self.hunter_config_dict] * repetitions), total=repetitions, leave=True))
